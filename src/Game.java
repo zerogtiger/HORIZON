@@ -13,19 +13,50 @@ public class Game extends Canvas implements Runnable{
     private Thread thread;
     private boolean running = false;
 
-    private Random r;
+    private Random r = new Random();
     private Handler handler;
+    private HUD hud;
+    private Stats stats;
 
     public Game() {
         handler = new Handler();
+        hud = new HUD();
+        stats = new Stats();
+
         this.addKeyListener(new KeyInput(handler));
         new Window(WIDTH, HEIGHT, "HORIZON", this);
 
-        r = new Random();
-        handler.addObject(new Player(WIDTH/2, HEIGHT/2, ID.Player));
-        handler.addObject(new Obstacle(WIDTH/2-400, -700, ID.Obstacle));
-        handler.addObject(new Obstacle(WIDTH/2+400, -1100, ID.Obstacle));
-        handler.addObject(new Obstacle(WIDTH/2-100, -1000, ID.Obstacle));
+        new Player(WIDTH/2-16, HEIGHT/2+200, ID.Player, handler);
+        for (int i = 1; i <= 10; i++) {
+            new BasicObstacle(
+                    r.nextInt(-1000, Game.WIDTH+1000),
+                    r.nextInt(-500, 300)-300,
+                    r.nextInt(50, 200),
+                    r.nextInt(200, 400),
+                    ID.Obstacle, handler);
+        }
+    }
+
+    public static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(max, val));
+    }
+    public static int reverseClamp(int val, int min, int max) {
+        if (val < min || val > max)
+            return val;
+        else if (Math.abs(val - min) > Math.abs(max - val))
+            return max;
+        else if (Math.abs(val - min) < Math.abs(max - val))
+            return min;
+        return val;
+    }
+    public static boolean isOut(int val, int min, int max) {
+        return (Math.max(min, Math.min(max, val)) == min || Math.max(min, Math.min(max, val)) == max);
+    }
+
+    private void tick() {
+        handler.tick();
+        hud.tick();
+
     }
 
     private void render() {
@@ -42,6 +73,7 @@ public class Game extends Canvas implements Runnable{
         g.fillRect(0,0,WIDTH, HEIGHT);
 
         handler.render(g);
+        hud.render(g);
 
         g.dispose();
         bs.show();
@@ -63,6 +95,7 @@ public class Game extends Canvas implements Runnable{
     }
 
     public void run() {
+        this.requestFocus();
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
@@ -88,10 +121,6 @@ public class Game extends Canvas implements Runnable{
             }
         }
         stop();
-    }
-
-    private void tick() {
-        handler.tick();
     }
 
     public static void main(String[] args) {
