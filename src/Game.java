@@ -17,6 +17,7 @@ public class Game extends Canvas implements Runnable{
     private Handler handler;
     private HUD hud;
     private Stats stats;
+    private Player player;
 
     public Game() {
         handler = new Handler();
@@ -24,9 +25,9 @@ public class Game extends Canvas implements Runnable{
         stats = new Stats();
 
         this.addKeyListener(new KeyInput(handler));
-        new Window(WIDTH, HEIGHT, "HORIZON", this);
+        new Window(WIDTH, HEIGHT, "HORIZON 極速狂飆", this);
 
-        new Player(WIDTH/2-16, HEIGHT/2+200, ID.Player, handler);
+        player = new Player(WIDTH/2-16, HEIGHT/2+200, ID.Player, handler);
         for (int i = 1; i <= 10; i++) {
             new BasicObstacle(
                     r.nextInt(-1000, Game.WIDTH+1000),

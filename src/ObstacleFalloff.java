@@ -27,6 +27,16 @@ public class ObstacleFalloff extends GameObject{
         return null;
     }
 
+    @Override
+    public Rectangle getLeftBounds() {
+        return null;
+    }
+
+    @Override
+    public Rectangle getRightBounds() {
+        return null;
+    }
+
     public void tick() {
         x += velX;
         y += velY;

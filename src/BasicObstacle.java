@@ -25,6 +25,14 @@ public class BasicObstacle extends GameObject{
         return new Rectangle(x+2, y+height-5, width-4, 5);
     }
 
+    public Rectangle getLeftBounds() {
+        return new Rectangle(x, y, width/2, height);
+    }
+
+    public Rectangle getRightBounds() {
+        return new Rectangle(x+width/2, y, width/2, height);
+    }
+
     public void tick() {
         x += velX;
         y += velY;
@@ -48,7 +56,9 @@ public class BasicObstacle extends GameObject{
             handler.removeObject(this);
         }
         velX = -Player.relX;
+
     }
+
 
 
     public void render(Graphics g) {
@@ -59,5 +69,9 @@ public class BasicObstacle extends GameObject{
         g2d.draw(getChargingBounds());
         g.setColor(Color.green);
         g2d.draw(getCollisionBounds());
+        g.setColor(Color.cyan);
+        g2d.draw(getLeftBounds());
+        g2d.draw(getRightBounds());
+
     }
 }

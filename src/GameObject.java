@@ -23,6 +23,8 @@ public abstract class GameObject {
     public abstract Rectangle getBounds();
     public abstract Rectangle getChargingBounds();
     public abstract Rectangle getCollisionBounds();
+    public abstract Rectangle getLeftBounds();
+    public abstract Rectangle getRightBounds();
 
 
     public void setX (int x) {
