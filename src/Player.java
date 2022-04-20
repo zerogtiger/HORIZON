@@ -7,7 +7,7 @@ public class Player extends GameObject{
 
     public Player (int x, int y, ID id, Handler handler) {
         super(x, y, id, handler);
-        relX = 0; relY = 3;
+        relX = 0; relY = 10;
     }
     public void tick() {
 
@@ -20,11 +20,17 @@ public class Player extends GameObject{
         if (Stats.KEYPRESS[0] && Stats.KEYPRESS[1])
             relX = 0;
         else if (Stats.KEYPRESS[0])
-            relX = -1;
+            relX = -7;
         else if (Stats.KEYPRESS[1])
-            relX = 1;
+            relX = 7;
         else
             relX = 0;
+        if (Stats.KEYPRESS[2] && Stats.CHARGE>0) {
+            relY = 15;
+            Stats.CHARGE-=1.5;
+        }
+        else
+            relY = 10;
 
     }
 
@@ -36,7 +42,7 @@ public class Player extends GameObject{
 //                    System.exit(0);
                 }
                 else if (getBounds().intersects(tempObject.getChargingBounds()))
-                    Stats.CHARGE += 1.5;
+                    Stats.CHARGE += 1;
                 if (getBounds().intersects(tempObject.getLeftBounds())) {
                     Stats.KEYPRESS[1] = false;
                 }

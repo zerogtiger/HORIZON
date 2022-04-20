@@ -34,6 +34,8 @@ public class BasicObstacle extends GameObject{
     }
 
     public void tick() {
+        velX = -Player.relX;
+        velY = Player.relY;
         x += velX;
         y += velY;
 //        if (x < -width-1000) {
@@ -55,7 +57,6 @@ public class BasicObstacle extends GameObject{
                     ID.Obstacle, handler);
             handler.removeObject(this);
         }
-        velX = -Player.relX;
 
     }
 
