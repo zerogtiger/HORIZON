@@ -3,42 +3,43 @@ import java.awt.*;
 
 public class Player extends GameObject{
 
-    public static int relX, relY;
+    public static int relVelX, relVelY;
 
     public Player (int x, int y, ID id, Handler handler) {
         super(x, y, id, handler);
-        relX = 0; relY = 10;
+        relVelX = 0; relVelY = 0;
     }
     public void tick() {
-
         collision();
-//        relX = (Stats.KEYPRESS[0]? -8: relX);
-//        relX = (Stats.KEYPRESS[1]? 8: relX);
-//        relX = (!Stats.KEYPRESS[0] && !Stats.KEYPRESS[1]? 0: relX);
-//        relX = (Stats.KEYPRESS[0] && Stats.KEYPRESS[1]? 0: relX);
-//        relX = (Stats.KEYPRESS[3]? 0: relX);
         if (Stats.KEYPRESS[0] && Stats.KEYPRESS[1])
-            relX = 0;
+            relVelX = 0;
         else if (Stats.KEYPRESS[0])
-            relX = -7;
+            relVelX = -8;
         else if (Stats.KEYPRESS[1])
-            relX = 7;
+            relVelX = 8;
         else
-            relX = 0;
+            relVelX = 0;
         if (Stats.KEYPRESS[2] && Stats.CHARGE>0) {
-            relY = 15;
+            relVelY = -15;
             Stats.CHARGE-=1.5;
         }
-        else
-            relY = 10;
+        Stats.trueY += relVelY;
+        Stats.trueX += relVelX;
 
+        for (int i = 1; i <= 150; i++) {
+            for (int j = 1; j <= 300; j++) {
+                if (Stats.obstacles[i][j] && Game.isInRange((j-150)*75, -i*75, 1500, 500)) {
+                    new BasicObstacle((j-150)*75-Stats.trueX, -i*75-Stats.trueY, 75, 75, ID.Obstacle, handler);
+                    Stats.obstacles[i][j] = false;
+                }
+            }
+        }
     }
 
     public void collision() {
         for (GameObject tempObject: handler.object) {
             if (tempObject.id == ID.Obstacle) {
                 if (getBounds().intersects(tempObject.getCollisionBounds())) {
-                    System.out.println("Collided");
 //                    System.exit(0);
                 }
                 else if (getBounds().intersects(tempObject.getChargingBounds()))

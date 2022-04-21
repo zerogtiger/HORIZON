@@ -4,13 +4,11 @@ import java.io.*;
 
 public class BasicObstacle extends GameObject{
 
-    private Random r = new Random();
-
     public BasicObstacle(int x, int y, int width, int height, ID id, Handler handler) {
         super(x, y, id, handler);
         this.width = width;
         this.height = height;
-        velY = Player.relY;
+        velY = Player.relVelY;
     }
 
     public Rectangle getBounds() {
@@ -34,8 +32,8 @@ public class BasicObstacle extends GameObject{
     }
 
     public void tick() {
-        velX = -Player.relX;
-        velY = Player.relY;
+        velX = -Player.relVelX;
+        velY = -Player.relVelY;
         x += velX;
         y += velY;
 //        if (x < -width-1000) {
@@ -49,12 +47,12 @@ public class BasicObstacle extends GameObject{
 //            handler.removeObject(this);
 //        }
         if (y > Game.HEIGHT){
-            new BasicObstacle(
-                    r.nextInt(-1000, Game.WIDTH+1000),
-                    r.nextInt(-300, 300)-600,
-                    r.nextInt(50, 200),
-                    r.nextInt(200, 400),
-                    ID.Obstacle, handler);
+//            new BasicObstacle(
+//                    r.nextInt(-1000, Game.WIDTH+1000),
+//                    r.nextInt(-300, 300)-600,
+//                    r.nextInt(50, 200),
+//                    r.nextInt(200, 400),
+//                    ID.Obstacle, handler);
             handler.removeObject(this);
         }
 

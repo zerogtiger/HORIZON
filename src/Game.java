@@ -22,20 +22,30 @@ public class Game extends Canvas implements Runnable{
     public Game() {
         handler = new Handler();
         hud = new HUD();
-        stats = new Stats();
+        stats = new Stats(handler);
 
         this.addKeyListener(new KeyInput(handler));
         new Window(WIDTH, HEIGHT, "HORIZON 極速狂飆", this);
 
         player = new Player(WIDTH/2-16, HEIGHT/2+200, ID.Player, handler);
-        for (int i = 1; i <= 10; i++) {
-            new BasicObstacle(
-                    r.nextInt(-1000, Game.WIDTH+1000),
-                    r.nextInt(-500, 300)-300,
-                    r.nextInt(50, 200),
-                    r.nextInt(200, 400),
-                    ID.Obstacle, handler);
+        handler.addObject(player);
+        for (int i = 1; i <= 150; i++) {
+            for (int j = 1; j <= 300; j++) {
+                Stats.obstacles[i][j] = Math.random()>0.95;
+            }
         }
+        new BasicObstacle(200, 200, 75, 75, ID.Obstacle, handler);
+
+//        new BasicObstacle(200, 200, 5, 5,
+//                ID.Obstacle, handler);
+//        for (int i = 1; i <= 10; i++) {
+//            new BasicObstacle(
+//                    r.nextInt(-1000, Game.WIDTH+1000),
+//                    r.nextInt(-500, 300)-300,
+//                    r.nextInt(50, 200),
+//                    r.nextInt(200, 400),
+//                    ID.Obstacle, handler);
+//        }
     }
 
     public static int clamp(int val, int min, int max) {
@@ -50,8 +60,9 @@ public class Game extends Canvas implements Runnable{
             return min;
         return val;
     }
-    public static boolean isOut(int val, int min, int max) {
-        return (Math.max(min, Math.min(max, val)) == min || Math.max(min, Math.min(max, val)) == max);
+
+    public static boolean isInRange(int relX, int relY, int HRange, int VRange) {
+        return relX > Stats.trueX - HRange && relX < Stats.trueX + HRange && relY > Stats.trueY - VRange;
     }
 
     private void tick() {
@@ -68,9 +79,8 @@ public class Game extends Canvas implements Runnable{
         }
 
         Graphics g = bs.getDrawGraphics();
-        float[] HSB = Color.RGBtoHSB(59, 56, 53, null);
 
-        g.setColor(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
+        g.setColor(new Color(59, 56, 53));
         g.fillRect(0,0,WIDTH, HEIGHT);
 
         handler.render(g);
@@ -118,6 +128,8 @@ public class Game extends Canvas implements Runnable{
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
+                System.out.println("TrueX: " + Stats.trueX);
+                System.out.println("TrueY: " + Stats.trueY);
                 frames = 0;
             }
         }
@@ -126,5 +138,11 @@ public class Game extends Canvas implements Runnable{
 
     public static void main(String[] args) {
         new Game();
+        for (int i = 1; i <= 10; i++) {
+            for (int j = 1; j <= 30; j++) {
+                System.out.printf("%5b, ", Stats.obstacles[i][j]);
+            }
+            System.out.println();
+        }
     }
 }

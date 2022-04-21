@@ -18,6 +18,8 @@ public class HUD{
         g.setColor(Color.orange);
         g.fillRect(center-width-3- (int) Stats.CHARGE, 18, (int) Stats.CHARGE, 4);
         g.fillRect(center+width+3, 18, (int) Stats.CHARGE, 4);
+        g.setColor(Color.green);
+        g.drawString(String.valueOf(-Stats.trueY), Game.WIDTH/2-5, 45);
 
     }
 }

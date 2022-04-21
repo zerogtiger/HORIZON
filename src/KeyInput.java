@@ -20,6 +20,10 @@ public class KeyInput extends KeyAdapter {
             Stats.KEYPRESS[2] = true;
         if (key == KeyEvent.VK_ESCAPE)
             System.exit(0);
+        if (key == KeyEvent.VK_UP)
+            Player.relVelY = -5;
+        if (key == KeyEvent.VK_DOWN)
+            Player.relVelY = +5;
 //        for (int i = 0; i < handler.object.size(); i++) {
 //            GameObject tempObject = handler.object.get(i);
 //            if (tempObject.getId() == ID.Player) {
@@ -46,6 +50,10 @@ public class KeyInput extends KeyAdapter {
             Stats.KEYPRESS[1] = false;
         if (key == KeyEvent.VK_SPACE)
             Stats.KEYPRESS[2] = false;
+        if (key == KeyEvent.VK_UP)
+            Player.relVelY = 0;
+        if (key == KeyEvent.VK_DOWN)
+            Player.relVelY = -0;
 //        for (int i = 0; i < handler.object.size(); i++) {
 //            GameObject tempObject = handler.object.get(i);
 //            if (tempObject.getId() == ID.Player) {
