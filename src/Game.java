@@ -18,23 +18,27 @@ public class Game extends Canvas implements Runnable{
     private HUD hud;
     private Stats stats;
     private Player player;
+    private Pursuer pursuer;
+    private Camera camera;
 
     public Game() {
         handler = new Handler();
         hud = new HUD();
-        stats = new Stats(handler);
+        stats = new Stats();
 
         this.addKeyListener(new KeyInput(handler));
         new Window(WIDTH, HEIGHT, "HORIZON 極速狂飆", this);
 
-        player = new Player(WIDTH/2-16, HEIGHT/2+200, ID.Player, handler);
-        handler.addObject(player);
+        player = new Player(-16, HEIGHT/2+200, ID.Player, handler);
+        pursuer = new Pursuer(player);
+        camera = new Camera(player);
+
+//        handler.addObject(player);
         for (int i = 1; i <= 150; i++) {
             for (int j = 1; j <= 300; j++) {
                 Stats.obstacles[i][j] = Math.random()>0.95;
             }
         }
-        new BasicObstacle(200, 200, 75, 75, ID.Obstacle, handler);
 
 //        new BasicObstacle(200, 200, 5, 5,
 //                ID.Obstacle, handler);
@@ -61,14 +65,15 @@ public class Game extends Canvas implements Runnable{
         return val;
     }
 
-    public static boolean isInRange(int relX, int relY, int HRange, int VRange) {
-        return relX > Stats.trueX - HRange && relX < Stats.trueX + HRange && relY > Stats.trueY - VRange;
-    }
+//    public static boolean isInRange(int relX, int relY, int HRange, int VRange) {
+//        return relX > Stats.trueX - HRange && relX < Stats.trueX + HRange && relY > Stats.trueY - VRange;
+//    }
 
     private void tick() {
         handler.tick();
         hud.tick();
-
+        pursuer.tick();
+        camera.tick();
     }
 
     private void render() {
@@ -85,6 +90,7 @@ public class Game extends Canvas implements Runnable{
 
         handler.render(g);
         hud.render(g);
+        pursuer.render(g);
 
         g.dispose();
         bs.show();
@@ -128,8 +134,8 @@ public class Game extends Canvas implements Runnable{
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
-                System.out.println("TrueX: " + Stats.trueX);
-                System.out.println("TrueY: " + Stats.trueY);
+                System.out.println("relX: " + Camera.getRelX());
+                System.out.println("relY: " + Camera.getRelY());
                 frames = 0;
             }
         }

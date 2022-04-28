@@ -43,6 +43,14 @@ public abstract class GameObject {
         return y;
     }
 
+    public int getRelX() {
+        return Camera.getRelX(x);
+    }
+
+    public int getRelY() {
+        return Camera.getRelY(y);
+    }
+
     public int getWidth() {
         return width;
     }

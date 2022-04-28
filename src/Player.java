@@ -3,33 +3,34 @@ import java.awt.*;
 
 public class Player extends GameObject{
 
-    public static int relVelX, relVelY;
-
     public Player (int x, int y, ID id, Handler handler) {
         super(x, y, id, handler);
-        relVelX = 0; relVelY = 0;
+        velX = 0; velY = 0;
     }
     public void tick() {
         collision();
         if (Stats.KEYPRESS[0] && Stats.KEYPRESS[1])
-            relVelX = 0;
+            velX = 0;
         else if (Stats.KEYPRESS[0])
-            relVelX = -8;
+            velX = -8;
         else if (Stats.KEYPRESS[1])
-            relVelX = 8;
+            velX = 8;
         else
-            relVelX = 0;
+            velX = 0;
         if (Stats.KEYPRESS[2] && Stats.CHARGE>0) {
-            relVelY = -15;
+            velY = -18;
             Stats.CHARGE-=1.5;
         }
-        Stats.trueY += relVelY;
-        Stats.trueX += relVelX;
+        else
+            velY = -10;
+        y += velY;
+        x += velX;
+        Stats.speederDistance += -velY;
 
         for (int i = 1; i <= 150; i++) {
             for (int j = 1; j <= 300; j++) {
-                if (Stats.obstacles[i][j] && Game.isInRange((j-150)*75, -i*75, 1500, 500)) {
-                    new BasicObstacle((j-150)*75-Stats.trueX, -i*75-Stats.trueY, 75, 75, ID.Obstacle, handler);
+                if (Stats.obstacles[i][j] && !Camera.outOfFrame((j-150)*75, -i*120, 75, 120)) {
+                    new BasicObstacle((j-150)*75, -i*120, 75, 120, ID.Obstacle, handler);
                     Stats.obstacles[i][j] = false;
                 }
             }
@@ -56,7 +57,7 @@ public class Player extends GameObject{
 
     public void render(Graphics g) {
         g.setColor(Color.red);
-        g.fillRect(x, y, 32, 48);
+        g.fillRect(getRelX(), getRelY(), 32, 48);
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.CYAN);
         g2d.draw(getBounds());
@@ -64,7 +65,7 @@ public class Player extends GameObject{
 
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, 32, 48);
+        return new Rectangle(getRelX(), getRelY(), 32, 48);
     }
 
     public Rectangle getChargingBounds() {
