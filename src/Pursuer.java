@@ -8,7 +8,7 @@ public class Pursuer {
     private Player player;
 
     public Pursuer(Player player) {
-        distance = 1100;
+        distance = 10000;
         vel = 12;
         this.player = player;
     }

@@ -36,13 +36,17 @@ public class Camera {
     }
 
     public static boolean outOfFrame(GameObject object) {
-        return (object.x > relX + width || (object.x + object.width) < relX) &&
-                (object.y > relY + height || (object.y + object.height) < relY);
+        return (object.x > relX + width || (object.x + object.width) < relX ) ||
+                (object.y > relY + height || (object.y + object.height) < relY );
+
+//        return !((object.x + object.width> relX && object.x < relX + width) && (object.y + object.height < relY && object.y < relY + height));
     }
 
     public static boolean outOfFrame(int x, int y, int objectWidth, int objectHeight) {
-        return (x > relX + width || (x + objectWidth) < relX) &&
-                (y > relY + height || (y + objectHeight) < relY);
+        return (x > relX + width || (x + objectWidth) < relX ) ||
+                (y > relY + height || (y + objectHeight) < relY );
+
+//        return !((x + objectWidth > relX && x < relX + width) && (y + objectHeight < relY && y < relY + height));
     }
 
 }

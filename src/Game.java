@@ -14,15 +14,18 @@ public class Game extends Canvas implements Runnable{
     private boolean running = false;
 
     private Random r = new Random();
-    private Handler handler;
+    private final Handler handler;
+    private final Handler ghandler;
     private HUD hud;
     private Stats stats;
     private Player player;
     private Pursuer pursuer;
     private Camera camera;
+    private final Map map;
 
     public Game() {
         handler = new Handler();
+        ghandler = new Handler();
         hud = new HUD();
         stats = new Stats();
 
@@ -32,13 +35,9 @@ public class Game extends Canvas implements Runnable{
         player = new Player(-16, HEIGHT/2+200, ID.Player, handler);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
+        map = new Map(1, 1, handler, ghandler);
 
 //        handler.addObject(player);
-        for (int i = 1; i <= 150; i++) {
-            for (int j = 1; j <= 300; j++) {
-                Stats.obstacles[i][j] = Math.random()>0.95;
-            }
-        }
 
 //        new BasicObstacle(200, 200, 5, 5,
 //                ID.Obstacle, handler);
@@ -70,7 +69,9 @@ public class Game extends Canvas implements Runnable{
 //    }
 
     private void tick() {
+        ghandler.tick();
         handler.tick();
+        map.tick();
         hud.tick();
         pursuer.tick();
         camera.tick();
@@ -88,6 +89,7 @@ public class Game extends Canvas implements Runnable{
         g.setColor(new Color(59, 56, 53));
         g.fillRect(0,0,WIDTH, HEIGHT);
 
+        ghandler.render(g);
         handler.render(g);
         hud.render(g);
         pursuer.render(g);
@@ -144,11 +146,5 @@ public class Game extends Canvas implements Runnable{
 
     public static void main(String[] args) {
         new Game();
-        for (int i = 1; i <= 10; i++) {
-            for (int j = 1; j <= 30; j++) {
-                System.out.printf("%5b, ", Stats.obstacles[i][j]);
-            }
-            System.out.println();
-        }
     }
 }

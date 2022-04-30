@@ -1,7 +1,9 @@
-import java.util.*;
 import java.awt.*;
+import java.util.Random;
 
 public class Player extends GameObject{
+
+    Random r = new Random();
 
     public Player (int x, int y, ID id, Handler handler) {
         super(x, y, id, handler);
@@ -26,15 +28,6 @@ public class Player extends GameObject{
         y += velY;
         x += velX;
         Stats.speederDistance += -velY;
-
-        for (int i = 1; i <= 150; i++) {
-            for (int j = 1; j <= 300; j++) {
-                if (Stats.obstacles[i][j] && !Camera.outOfFrame((j-150)*75, -i*120, 75, 120)) {
-                    new BasicObstacle((j-150)*75, -i*120, 75, 120, ID.Obstacle, handler);
-                    Stats.obstacles[i][j] = false;
-                }
-            }
-        }
     }
 
     public void collision() {

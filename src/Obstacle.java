@@ -1,13 +1,13 @@
 import java.awt.*;
-import java.util.*;
-import java.io.*;
 
-public class BasicObstacle extends GameObject{
+public class Obstacle extends GameObject{
 
-    public BasicObstacle(int x, int y, int width, int height, ID id, Handler handler) {
+    private Map map;
+    public Obstacle(int x, int y, int width, int height, ID id, Handler handler, Map map) {
         super(x, y, id, handler);
         this.width = width;
         this.height = height;
+        this.map = map;
     }
 
     public Rectangle getBounds() {
@@ -50,13 +50,11 @@ public class BasicObstacle extends GameObject{
 //                    ID.Obstacle, handler);
 //            System.out.println("x: " + x);
 //            System.out.println("y: " + y);
-            Stats.obstacles[-y/120][(x/75) + 150] = true;
+            map.setObstacles((-y/32), (x/32) + Map.width/2, 1);
             handler.removeObject(this);
         }
 
     }
-
-
 
     public void render(Graphics g) {
         g.setColor(Color.lightGray);
