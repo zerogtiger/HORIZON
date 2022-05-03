@@ -9,7 +9,7 @@ public class Camera {
     public Camera(Player player) {
         this.player = player;
         relX = -Game.WIDTH/2;
-        relY = 0;
+        relY = player.y-Game.HEIGHT+200;
         width = Game.WIDTH;
         height = Game.HEIGHT;
     }

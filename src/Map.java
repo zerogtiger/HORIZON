@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class Map {
-    public static int height = 450, width = 600;
+    public static int height = 450, width = 800;
     private int[][] obstacles = new int[height + 1][width + 1];
     private Handler handler, ghandler;
     Random r;

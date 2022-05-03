@@ -5,7 +5,7 @@ public class Player extends GameObject{
 
     Random r = new Random();
 
-    public Player (int x, int y, ID id, Handler handler) {
+    public Player (int x, int y, ID id, Handler handler, int normalVelY) {
         super(x, y, id, handler);
         velX = 0; velY = 0;
     }
@@ -69,12 +69,10 @@ public class Player extends GameObject{
         return null;
     }
 
-    @Override
     public Rectangle getLeftBounds() {
         return null;
     }
 
-    @Override
     public Rectangle getRightBounds() {
         return null;
     }

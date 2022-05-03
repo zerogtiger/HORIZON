@@ -21,34 +21,32 @@ public class Game extends Canvas implements Runnable{
     private Player player;
     private Pursuer pursuer;
     private Camera camera;
-    private final Map map;
+    private Map map;
+    private Menu menu;
+
+    public enum state {
+        Game,
+        Menu,
+        Options,
+        Leaderboard;
+    }
+
+    public state gameState = state.Menu;
 
     public Game() {
         handler = new Handler();
         ghandler = new Handler();
+        map = new Map(1, 1, handler, ghandler);
         hud = new HUD();
         stats = new Stats();
-
-        this.addKeyListener(new KeyInput(handler));
-        new Window(WIDTH, HEIGHT, "HORIZON 極速狂飆", this);
-
-        player = new Player(-16, HEIGHT/2+200, ID.Player, handler);
+        menu = new Menu(this, handler);
+        player = new Player(-16, HEIGHT, ID.Player, handler, 0);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
-        map = new Map(1, 1, handler, ghandler);
+        this.addMouseListener(menu);
+        this.addKeyListener(new KeyInput(handler));
 
-//        handler.addObject(player);
-
-//        new BasicObstacle(200, 200, 5, 5,
-//                ID.Obstacle, handler);
-//        for (int i = 1; i <= 10; i++) {
-//            new BasicObstacle(
-//                    r.nextInt(-1000, Game.WIDTH+1000),
-//                    r.nextInt(-500, 300)-300,
-//                    r.nextInt(50, 200),
-//                    r.nextInt(200, 400),
-//                    ID.Obstacle, handler);
-//        }
+        new Window(WIDTH, HEIGHT, "HORIZON 極速狂飆", this);
     }
 
     public static int clamp(int val, int min, int max) {
@@ -69,12 +67,19 @@ public class Game extends Canvas implements Runnable{
 //    }
 
     private void tick() {
-        ghandler.tick();
-        handler.tick();
-        map.tick();
-        hud.tick();
-        pursuer.tick();
-        camera.tick();
+        if (gameState == state.Game) {
+            ghandler.tick();
+            handler.tick();
+            map.tick();
+            hud.tick();
+            pursuer.tick();
+            camera.tick();
+
+        }
+        else if (gameState == state.Menu) {
+            menu.tick();
+        }
+
     }
 
     private void render() {
@@ -89,10 +94,15 @@ public class Game extends Canvas implements Runnable{
         g.setColor(new Color(59, 56, 53));
         g.fillRect(0,0,WIDTH, HEIGHT);
 
-        ghandler.render(g);
-        handler.render(g);
-        hud.render(g);
-        pursuer.render(g);
+        if (gameState == state.Game) {
+            ghandler.render(g);
+            handler.render(g);
+            hud.render(g);
+            pursuer.render(g);
+        }
+        else if (gameState == state.Menu) {
+            menu.render(g);
+        }
 
         g.dispose();
         bs.show();
