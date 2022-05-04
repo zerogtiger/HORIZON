@@ -4,9 +4,10 @@ import java.util.Random;
 public class Player extends GameObject{
 
     Random r = new Random();
-
-    public Player (int x, int y, ID id, Handler handler, int normalVelY) {
+    private final Game game;
+    public Player (int x, int y, ID id, Handler handler, int normalVelY, Game game) {
         super(x, y, id, handler);
+        this.game = game;
         velX = 0; velY = 0;
     }
     public void tick() {
@@ -34,7 +35,7 @@ public class Player extends GameObject{
         for (GameObject tempObject: handler.object) {
             if (tempObject.id == ID.Obstacle) {
                 if (getBounds().intersects(tempObject.getCollisionBounds())) {
-//                    System.exit(0);
+                    game.gameState = Game.state.GameOver;
                 }
                 else if (getBounds().intersects(tempObject.getChargingBounds()))
                     Stats.CHARGE += 1;

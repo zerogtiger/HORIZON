@@ -26,6 +26,9 @@ public class Game extends Canvas implements Runnable{
 
     public enum state {
         Game,
+        Login,
+        SignUp,
+        GameOver,
         Menu,
         Options,
         Leaderboard;
@@ -40,7 +43,7 @@ public class Game extends Canvas implements Runnable{
         hud = new HUD();
         stats = new Stats();
         menu = new Menu(this, handler);
-        player = new Player(-16, HEIGHT, ID.Player, handler, 0);
+        player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
         this.addMouseListener(menu);
@@ -62,6 +65,15 @@ public class Game extends Canvas implements Runnable{
         return val;
     }
 
+    public void reset() {
+        player.setY(HEIGHT);
+        player.setX(-16);
+        camera.tick();
+        pursuer.setDistance(10000);
+        Stats.speederDistance = 0;
+        Stats.CHARGE = 0;
+    }
+
 //    public static boolean isInRange(int relX, int relY, int HRange, int VRange) {
 //        return relX > Stats.trueX - HRange && relX < Stats.trueX + HRange && relY > Stats.trueY - VRange;
 //    }
@@ -70,13 +82,12 @@ public class Game extends Canvas implements Runnable{
         if (gameState == state.Game) {
             ghandler.tick();
             handler.tick();
+            camera.tick();
             map.tick();
             hud.tick();
             pursuer.tick();
-            camera.tick();
-
         }
-        else if (gameState == state.Menu) {
+        else {
             menu.tick();
         }
 
@@ -92,7 +103,7 @@ public class Game extends Canvas implements Runnable{
         Graphics g = bs.getDrawGraphics();
 
         g.setColor(new Color(59, 56, 53));
-        g.fillRect(0,0,WIDTH, HEIGHT);
+        g.fillRect(0,0,WIDTH+15, HEIGHT+15);
 
         if (gameState == state.Game) {
             ghandler.render(g);
@@ -100,7 +111,7 @@ public class Game extends Canvas implements Runnable{
             hud.render(g);
             pursuer.render(g);
         }
-        else if (gameState == state.Menu) {
+        else {
             menu.render(g);
         }
 
@@ -146,8 +157,6 @@ public class Game extends Canvas implements Runnable{
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("FPS: " + frames);
-                System.out.println("relX: " + Camera.getRelX());
-                System.out.println("relY: " + Camera.getRelY());
                 frames = 0;
             }
         }

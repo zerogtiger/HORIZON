@@ -18,8 +18,6 @@ public class KeyInput extends KeyAdapter {
             Stats.KEYPRESS[1] = true;
         if (key == KeyEvent.VK_SPACE)
             Stats.KEYPRESS[2] = true;
-        if (key == KeyEvent.VK_ESCAPE)
-            System.exit(0);
 //        if (key == KeyEvent.VK_UP)
 //            Player.relVelY = -5;
 //        if (key == KeyEvent.VK_DOWN)

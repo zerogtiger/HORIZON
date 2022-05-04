@@ -28,4 +28,8 @@ public class Pursuer {
             g.fillOval(player.getRelX() - 50, player.getRelY()-42, 132, 132);
         }
     }
+
+    public void setDistance(int distance) {
+        Pursuer.distance = distance;
+    }
 }

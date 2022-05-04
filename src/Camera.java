@@ -15,8 +15,8 @@ public class Camera {
     }
 
     public void tick() {
-        relX += player.velX;
-        relY += player.velY;
+        relX = player.x - Game.WIDTH/2+16;
+        relY = player.y-Game.HEIGHT+200;
     }
 
     public static int getRelX(int x) {
