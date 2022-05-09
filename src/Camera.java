@@ -8,15 +8,15 @@ public class Camera {
 
     public Camera(Player player) {
         this.player = player;
-        relX = -Game.WIDTH/2;
-        relY = player.y-Game.HEIGHT+200;
+        relX = player.x - Game.WIDTH/2+16;
+        relY = player.y-Game.HEIGHT+150;
         width = Game.WIDTH;
         height = Game.HEIGHT;
     }
 
     public void tick() {
         relX = player.x - Game.WIDTH/2+16;
-        relY = player.y-Game.HEIGHT+200;
+        relY = player.y-Game.HEIGHT+150;
     }
 
     public static int getRelX(int x) {

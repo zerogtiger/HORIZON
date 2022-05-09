@@ -3,11 +3,13 @@ import java.awt.*;
 public class Obstacle extends GameObject{
 
     private Map map;
-    public Obstacle(int x, int y, int width, int height, ID id, Handler handler, Map map) {
+    private Player player;
+    public Obstacle(int x, int y, int width, int height, ID id, Handler handler, Map map, Player player) {
         super(x, y, id, handler);
         this.width = width;
         this.height = height;
         this.map = map;
+        this.player = player;
     }
 
     public Rectangle getBounds() {
@@ -19,7 +21,7 @@ public class Obstacle extends GameObject{
     }
 
     public Rectangle getCollisionBounds() {
-        return new Rectangle(getRelX()+2, getRelY()+height-5, width-4, 5);
+        return new Rectangle(getRelX(), getRelY()+height, width, Math.abs(player.velY));
     }
 
     public Rectangle getLeftBounds() {
@@ -31,26 +33,9 @@ public class Obstacle extends GameObject{
     }
 
     public void tick() {
-//        if (x < -width-1000) {
-//            new BasicObstacle(r.nextInt(300)-300-width, r.nextInt(-height, Game.HEIGHT), r.nextInt(50, 200),
-//                    r.nextInt(50, 200), ID.Obstacle, handler);
-//            handler.removeObject(this);
-//        }
-//        else if (x > Game.WIDTH+1000) {
-//            new BasicObstacle(r.nextInt(300)+Game.WIDTH, r.nextInt(-height, Game.HEIGHT), r.nextInt(50, 200),
-//                    r.nextInt(50, 200), ID.Obstacle, handler);
-//            handler.removeObject(this);
-//        }
+        Game.collision(this);
         if (Camera.outOfFrame(this)){
-//            new BasicObstacle(
-//                    r.nextInt(-1000, Game.WIDTH+1000),
-//                    r.nextInt(-300, 300)-600,
-//                    r.nextInt(50, 200),
-//                    r.nextInt(200, 400),
-//                    ID.Obstacle, handler);
-//            System.out.println("x: " + x);
-//            System.out.println("y: " + y);
-            map.setObstacles((-y/32), (x/32) + Map.width/2, 1);
+            map.setObstacles((-y/Map.obstacleSize), (x/Map.obstacleSize) + Map.width/2, 1);
             handler.removeObject(this);
         }
 

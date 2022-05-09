@@ -34,8 +34,7 @@ public class Ground extends GameObject{
 
     public void tick() {
         if (Camera.outOfFrame(this)){
-            //Bug is here     |||||||||||||||||||||||||||, Array index out of bound
-            map.setObstacles(-y/32, (x/32) + Map.width/2, 2);
+            map.setObstacles(-y/Map.obstacleSize, (x/Map.obstacleSize) + Map.width/2, 2);
             handler.removeObject(this);
         }
     }

@@ -8,7 +8,7 @@ public class HUD{
     private int width = 70;
 
     public void tick() {
-        Stats.CHARGE = Game.clamp((int) Stats.CHARGE, 0, 400);
+
     }
 
     public void render(Graphics g) {
@@ -16,14 +16,12 @@ public class HUD{
         g.drawRect(center-405-width, 15, 405 ,10);
         g.drawRect(center+width, 15, 405 ,10);
         g.setColor(Color.orange);
-        g.fillRect(center-width-3- (int) Stats.CHARGE, 18, (int) Stats.CHARGE, 4);
-        g.fillRect(center+width+3, 18, (int) Stats.CHARGE, 4);
+        g.fillRect(center-width-3- Stats.CHARGE/2, 18, Stats.CHARGE/2, 4);
+        g.fillRect(center+width+3, 18, Stats.CHARGE/2, 4);
         g.setColor(Color.green);
         g.drawString(String.valueOf(Stats.speederDistance), Game.WIDTH/2-5, 45);
         g.setColor(Color.red);
         g.drawString(String.valueOf(Pursuer.distance), Game.WIDTH/2-5, 70);
-
-
     }
 
 }

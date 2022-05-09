@@ -6,18 +6,34 @@ public class KeyInput extends KeyAdapter {
 
     private Handler handler;
 
-    public KeyInput (Handler handler) {
+    public KeyInput(Handler handler) {
         this.handler = handler;
     }
 
-    public void keyPressed (KeyEvent e) {
+    public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT)
-            Stats.KEYPRESS[0] = true;
-        if (key == KeyEvent.VK_RIGHT)
-            Stats.KEYPRESS[1] = true;
-        if (key == KeyEvent.VK_SPACE)
-            Stats.KEYPRESS[2] = true;
+        if (key == KeyEvent.VK_D) {
+            Stats.debug = 1;
+        }
+        if (Stats.debug == 0) {
+            if (key == KeyEvent.VK_LEFT)
+                Stats.KEYPRESS[0][0] = true;
+            if (key == KeyEvent.VK_RIGHT)
+                Stats.KEYPRESS[0][1] = true;
+            if (key == KeyEvent.VK_SPACE)
+                Stats.KEYPRESS[0][2] = true;
+        } else {
+            if (key == KeyEvent.VK_LEFT)
+                Stats.KEYPRESS[1][0] = true;
+            if (key == KeyEvent.VK_RIGHT)
+                Stats.KEYPRESS[1][1] = true;
+            if (key == KeyEvent.VK_SPACE)
+                Stats.KEYPRESS[1][2] = true;
+            if (key == KeyEvent.VK_UP)
+                Stats.KEYPRESS[1][3] = true;
+            if (key == KeyEvent.VK_DOWN)
+                Stats.KEYPRESS[1][4] = true;
+        }
 //        if (key == KeyEvent.VK_UP)
 //            Player.relVelY = -5;
 //        if (key == KeyEvent.VK_DOWN)
@@ -40,14 +56,30 @@ public class KeyInput extends KeyAdapter {
 
     }
 
-    public void keyReleased (KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_LEFT)
-            Stats.KEYPRESS[0] = false;
-        if (key == KeyEvent.VK_RIGHT)
-            Stats.KEYPRESS[1] = false;
-        if (key == KeyEvent.VK_SPACE)
-            Stats.KEYPRESS[2] = false;
+        if (key == KeyEvent.VK_D) {
+            Stats.debug = 0;
+        }
+        if (Stats.debug == 0) {
+            if (key == KeyEvent.VK_LEFT)
+                Stats.KEYPRESS[0][0] = false;
+            if (key == KeyEvent.VK_RIGHT)
+                Stats.KEYPRESS[0][1] = false;
+            if (key == KeyEvent.VK_SPACE)
+                Stats.KEYPRESS[0][2] = false;
+        } else {
+            if (key == KeyEvent.VK_LEFT)
+                Stats.KEYPRESS[1][0] = false;
+            if (key == KeyEvent.VK_RIGHT)
+                Stats.KEYPRESS[1][1] = false;
+            if (key == KeyEvent.VK_SPACE)
+                Stats.KEYPRESS[1][2] = false;
+            if (key == KeyEvent.VK_UP)
+                Stats.KEYPRESS[1][3] = false;
+            if (key == KeyEvent.VK_DOWN)
+                Stats.KEYPRESS[1][4] = false;
+        }
 //        if (key == KeyEvent.VK_UP)
 //            Player.relVelY = 0;
 //        if (key == KeyEvent.VK_DOWN)
