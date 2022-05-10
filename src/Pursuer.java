@@ -32,4 +32,8 @@ public class Pursuer {
     public void setDistance(int distance) {
         Pursuer.distance = distance;
     }
+
+    public int getDistance() {
+        return distance;
+    }
 }

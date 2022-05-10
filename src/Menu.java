@@ -21,6 +21,7 @@ public class Menu extends MouseAdapter{
             if (mouseOver(mx, my, 60, Game.HEIGHT-280, 200, 32)) {
                 game.gameState = Game.state.Game;
                 game.reset();
+                System.out.println("Game Reset");
             }
             else if (mouseOver(mx, my, 60, Game.HEIGHT-230, 200, 32)) {
                 game.gameState = Game.state.Options;
@@ -39,6 +40,7 @@ public class Menu extends MouseAdapter{
             else if (mouseOver(mx, my, 110, Game.HEIGHT-130, 200, 32)) {
                 game.gameState = Game.state.Game;
                 game.reset();
+                System.out.println("Game Reset");
             }
         }
 

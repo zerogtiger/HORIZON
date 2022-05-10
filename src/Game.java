@@ -23,6 +23,9 @@ public class Game extends Canvas implements Runnable {
     private Camera camera;
     private Map map;
     private Menu menu;
+    private GameOrganizer gameOrganizer;
+
+    private int seed = 1;
 
     public enum state {
         Game,
@@ -46,7 +49,7 @@ public class Game extends Canvas implements Runnable {
         player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
-        map = new Map(1, 1, handler, ghandler, player);
+        gameOrganizer = new GameOrganizer(this);
         this.addMouseListener(menu);
         this.addKeyListener(new KeyInput(handler));
 
@@ -59,7 +62,7 @@ public class Game extends Canvas implements Runnable {
 
     public static void collision(GameObject obstacle) {
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
-            gameState = Game.state.GameOver;
+            gameState = state.GameOver;
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
             Stats.KEYPRESS[0][1] = false;
@@ -84,6 +87,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void reset() {
+        gameOrganizer.reset();
         player.setY(HEIGHT);
         player.setX(-16);
         camera.tick();
@@ -94,6 +98,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         if (gameState == state.Game) {
+            gameOrganizer.tick();
             ghandler.tick();
             handler.tick();
             camera.tick();
@@ -194,6 +199,52 @@ public class Game extends Canvas implements Runnable {
         }
         stop();
     }
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Player player) {
+        Game.player = player;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public Handler getGhandler() {
+        return ghandler;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public HUD getHud() {
+        return hud;
+    }
+
+    public int getSeed() {
+        return seed;
+    }
+
+    public Pursuer getPursuer() {
+        return pursuer;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+
 
     public static void main(String[] args) {
         new Game();
