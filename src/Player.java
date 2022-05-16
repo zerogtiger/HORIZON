@@ -5,6 +5,9 @@ public class Player extends GameObject {
 
     Random r = new Random();
     private final Game game;
+    private final Image[] pics = {Toolkit.getDefaultToolkit().getImage("pics/SG.png"),
+            Toolkit.getDefaultToolkit().getImage("pics/SGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("pics/SGR1.png")};
 
     public Player(int x, int y, ID id, Handler handler, int normalVelY, Game game) {
         super(x, y, id, handler);
@@ -52,13 +55,18 @@ public class Player extends GameObject {
         Stats.CHARGE = Game.clamp(Stats.CHARGE, 0, 800);
     }
 
-
     public void render(Graphics g) {
         g.setColor(Color.red);
-        g.fillRect(getRelX(), getRelY(), 32, 48);
-        Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.CYAN);
-        g2d.draw(getBounds());
+        if (velX == 0)
+            g.drawImage(pics[0], getRelX(), getRelY(), 32, 48, game);
+        else if (velX < 0)
+            g.drawImage(pics[1], getRelX(), getRelY(), 32, 48, game);
+        else if (velX > 0)
+            g.drawImage(pics[2], getRelX(), getRelY(), 32, 48, game);
+//        g.fillRect(getRelX(), getRelY(), 32, 48);
+//        Graphics2D g2d = (Graphics2D) g;
+//        g.setColor(Color.CYAN);
+//        g2d.draw(getBounds());
     }
 
 

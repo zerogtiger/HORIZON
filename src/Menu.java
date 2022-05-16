@@ -61,7 +61,9 @@ public class Menu extends MouseAdapter{
         if (game.gameState == Game.state.Menu) {
             g.setColor(Color.white);
             g.setFont(courier);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/title.png"), 60, 200, 310*3, 24*3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/mainBackground2.png"), 0, 0, 400*3, 225*3, game);
+//            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/speeder.png"), (Game.WIDTH-135*3)*2/3, 20, 135*3, 193*3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/title.png"), (Game.WIDTH-310*3)/2, 270, 310*3, 24*3, game);
             g.drawString("START", 90, Game.HEIGHT-280+21);
             g.drawString("OPTIONS", 90, Game.HEIGHT-230+21);
             g.drawString("LEADERBOARD", 90, Game.HEIGHT-180+21);
