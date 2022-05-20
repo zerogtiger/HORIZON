@@ -122,7 +122,6 @@ public class Game extends Canvas implements Runnable {
 
         g.setColor(new Color(59, 56, 53));
         g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
-        drawRuler(g);
 
         if (gameState == state.Game) {
             ghandler.render(g);
@@ -132,7 +131,7 @@ public class Game extends Canvas implements Runnable {
         } else {
             menu.render(g);
         }
-
+        drawRuler(g);
         g.dispose();
         bs.show();
     }
