@@ -24,10 +24,10 @@ public class GameOrganizer {
     }
 
     public void tick() {
-        if (counter < Stats.speederDistance/16000) {
+        if (counter < Stats.speederDistance / 16000) {
             player.setX(-16);
             player.setY(Game.HEIGHT);
-            pursuer.setDistance(pursuer.getDistance()-1000);
+            pursuer.setDistance(pursuer.getDistance() + 1000);
             game.setMap(new Map(r.nextInt(6), r.nextInt(10000), handler, ghandler, player));
             counter++;
             System.out.println("new map");

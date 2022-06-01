@@ -16,6 +16,14 @@ public class Ground extends GameObject{
         return null;
     }
 
+    public Rectangle getLeftChargingBounds() {
+        return null;
+    }
+
+    public Rectangle getRightChargingBounds() {
+        return null;
+    }
+
     public Rectangle getChargingBounds() {
         return null;
     }

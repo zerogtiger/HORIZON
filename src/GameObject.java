@@ -21,7 +21,8 @@ public abstract class GameObject {
     public abstract void tick();
     public abstract void render(Graphics g);
     public abstract Rectangle getBounds();
-    public abstract Rectangle getChargingBounds();
+    public abstract Rectangle getLeftChargingBounds();
+    public abstract Rectangle getRightChargingBounds();
     public abstract Rectangle getCollisionBounds();
     public abstract Rectangle getLeftBounds();
     public abstract Rectangle getRightBounds();

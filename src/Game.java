@@ -4,6 +4,9 @@ import java.io.*;
 import java.awt.*;
 
 public class Game extends Canvas implements Runnable {
+    //Replace canvas with JFrame, no need to implement runnable,
+    //Replace render() with paintComponent. Try without buffer and if screen flickers, use Ms. Wong's buffer system
+    //Replace render() with repaint() in run() method
 
     @Serial
     private static final long serialVersionUID = -1442798787354930462L;
@@ -62,7 +65,7 @@ public class Game extends Canvas implements Runnable {
 
     public static void collision(GameObject obstacle) {
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
-            gameState = state.GameOver;
+//            gameState = state.GameOver;
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
             Stats.KEYPRESS[0][1] = false;
@@ -72,8 +75,8 @@ public class Game extends Canvas implements Runnable {
             Stats.KEYPRESS[0][0] = false;
             Stats.KEYPRESS[1][0] = false;
         }
-        if (player.getBounds().intersects(obstacle.getChargingBounds()))
-            Stats.CHARGE += 1;
+        player.setChargingLeft(player.getBounds().intersects(obstacle.getRightChargingBounds()) || player.getIsChargingLeft());
+        player.setChargingRight(player.getBounds().intersects(obstacle.getLeftChargingBounds()) || player.getIsChargingRight());
     }
 
     public static int reverseClamp(int val, int min, int max) {

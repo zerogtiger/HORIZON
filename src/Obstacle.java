@@ -16,8 +16,12 @@ public class Obstacle extends GameObject{
         return new Rectangle(getRelX(), getRelY(), width, height);
     }
 
-    public Rectangle getChargingBounds() {
-        return new Rectangle(getRelX()-50, getRelY(), width+100, height);
+    public Rectangle getLeftChargingBounds() {
+        return new Rectangle(getRelX()-32, getRelY(), 32+width/2, height);
+    }
+
+    public Rectangle getRightChargingBounds() {
+        return new Rectangle(getRelX()+width/2, getRelY(), width/2+32, height);
     }
 
     public Rectangle getCollisionBounds() {
@@ -46,7 +50,8 @@ public class Obstacle extends GameObject{
         g.fillRect(getRelX(), getRelY(), width, height);
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.yellow);
-        g2d.draw(getChargingBounds());
+        g2d.draw(getLeftChargingBounds());
+        g2d.draw(getRightChargingBounds());
         g.setColor(Color.green);
         g2d.draw(getCollisionBounds());
         g.setColor(Color.cyan);
