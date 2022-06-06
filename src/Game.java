@@ -27,6 +27,7 @@ public class Game extends Canvas implements Runnable {
     private Map map;
     private Menu menu;
     private GameOrganizer gameOrganizer;
+    private static Leaderboard leaderboard;
 
     private int seed = 1;
 
@@ -48,11 +49,14 @@ public class Game extends Canvas implements Runnable {
         ghandler = new Handler();
         hud = new HUD();
         stats = new Stats();
-        menu = new Menu(this, handler);
+        leaderboard = new Leaderboard();
+        menu = new Menu(this, leaderboard, handler);
         player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
         gameOrganizer = new GameOrganizer(this);
+        leaderboard.add(new LeaderboardEntry("testName", 13245, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName2", 3015, 3, 0, 3, 0));
         this.addMouseListener(menu);
         this.addKeyListener(new KeyInput(handler));
 
@@ -65,7 +69,7 @@ public class Game extends Canvas implements Runnable {
 
     public static void collision(GameObject obstacle) {
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
-//            gameState = state.GameOver;
+            gameState = state.GameOver;
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
             Stats.KEYPRESS[0][1] = false;
@@ -75,8 +79,8 @@ public class Game extends Canvas implements Runnable {
             Stats.KEYPRESS[0][0] = false;
             Stats.KEYPRESS[1][0] = false;
         }
-        player.setChargingLeft(player.getBounds().intersects(obstacle.getRightChargingBounds()) || player.getIsChargingLeft());
-        player.setChargingRight(player.getBounds().intersects(obstacle.getLeftChargingBounds()) || player.getIsChargingRight());
+        player.setChargingLeft(player.getLeftChargingBounds().intersects(obstacle.getRightChargingBounds()) || player.getIsChargingLeft());
+        player.setChargingRight(player.getRightChargingBounds().intersects(obstacle.getLeftChargingBounds()) || player.getIsChargingRight());
     }
 
     public static int reverseClamp(int val, int min, int max) {
@@ -134,7 +138,7 @@ public class Game extends Canvas implements Runnable {
         } else {
             menu.render(g);
         }
-        drawRuler(g);
+//        drawRuler(g);
         g.dispose();
         bs.show();
     }

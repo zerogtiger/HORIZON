@@ -22,6 +22,12 @@ public class KeyInput extends KeyAdapter {
                 Stats.KEYPRESS[0][1] = true;
             if (key == KeyEvent.VK_SPACE)
                 Stats.KEYPRESS[0][2] = true;
+            if (key == KeyEvent.VK_UP)
+                Stats.KEYPRESS[0][3] = true;
+            if (key == KeyEvent.VK_DOWN)
+                Stats.KEYPRESS[0][4] = true;
+            if (key == KeyEvent.VK_ENTER)
+                Stats.KEYPRESS[0][5] = true;
         } else {
             if (key == KeyEvent.VK_LEFT)
                 Stats.KEYPRESS[1][0] = true;
@@ -33,6 +39,8 @@ public class KeyInput extends KeyAdapter {
                 Stats.KEYPRESS[1][3] = true;
             if (key == KeyEvent.VK_DOWN)
                 Stats.KEYPRESS[1][4] = true;
+            if (key == KeyEvent.VK_ENTER)
+                Stats.KEYPRESS[1][5] = true;
         }
 //        if (key == KeyEvent.VK_UP)
 //            Player.relVelY = -5;
@@ -68,6 +76,12 @@ public class KeyInput extends KeyAdapter {
                 Stats.KEYPRESS[0][1] = false;
             if (key == KeyEvent.VK_SPACE)
                 Stats.KEYPRESS[0][2] = false;
+            if (key == KeyEvent.VK_UP)
+                Stats.KEYPRESS[0][3] = false;
+            if (key == KeyEvent.VK_DOWN)
+                Stats.KEYPRESS[0][4] = false;
+            if (key == KeyEvent.VK_ENTER)
+                Stats.KEYPRESS[0][5] = false;
         } else {
             if (key == KeyEvent.VK_LEFT)
                 Stats.KEYPRESS[1][0] = false;
@@ -79,6 +93,8 @@ public class KeyInput extends KeyAdapter {
                 Stats.KEYPRESS[1][3] = false;
             if (key == KeyEvent.VK_DOWN)
                 Stats.KEYPRESS[1][4] = false;
+            if (key == KeyEvent.VK_ENTER)
+                Stats.KEYPRESS[1][5] = false;
         }
 //        if (key == KeyEvent.VK_UP)
 //            Player.relVelY = 0;

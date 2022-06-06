@@ -76,10 +76,11 @@ public class Player extends GameObject {
             g.fillRect(getRelX() - 32, getRelY() + 32, 48, 5);
         if (isChargingRight)
             g.fillRect(getRelX() + 16, getRelY() + 32, 48, 5);
+
 //        g.fillRect(getRelX(), getRelY(), 32, 48);
-//        Graphics2D g2d = (Graphics2D) g;
-//        g.setColor(Color.CYAN);
-//        g2d.draw(getBounds());
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.CYAN);
+//        g2d.draw(getLeftChargingBounds());
     }
 
 
@@ -120,11 +121,11 @@ public class Player extends GameObject {
     }
 
     public Rectangle getLeftChargingBounds() {
-        return null;
+        return new Rectangle(getRelX(), getRelY()+32, 32, 2);
     }
 
     public Rectangle getRightChargingBounds() {
-        return null;
+        return new Rectangle(getRelX(), getRelY()+32, 32, 2);
     }
 
     public Rectangle getCollisionBounds() {
