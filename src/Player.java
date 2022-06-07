@@ -20,33 +20,33 @@ public class Player extends GameObject {
         if (Pursuer.distance <= 0)
             Game.gameState = Game.state.GameOver;
         if (Stats.debug == 0) {
-            if (Stats.KEYPRESS[0][0] && Stats.KEYPRESS[0][1])
+            if (Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1])
                 velX = 0;
-            else if (Stats.KEYPRESS[0][0])
+            else if (Stats.getKeyPress()[0][0])
                 velX = -8;
-            else if (Stats.KEYPRESS[0][1])
+            else if (Stats.getKeyPress()[0][1])
                 velX = 8;
             else
                 velX = 0;
-            if ((Stats.KEYPRESS[0][2] || Stats.KEYPRESS[0][0] && Stats.KEYPRESS[0][1]) && Stats.CHARGE > 0) {
+            if ((Stats.getKeyPress()[0][2] || Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) && Stats.CHARGE > 0) {
                 velY = -18;
                 Stats.CHARGE -= 3;
             } else
                 velY = -10;
         } else {
-            if (Stats.KEYPRESS[1][0] && Stats.KEYPRESS[1][1])
+            if (Stats.getKeyPress()[1][0] && Stats.getKeyPress()[1][1])
                 velX = 0;
-            else if (Stats.KEYPRESS[1][0])
+            else if (Stats.getKeyPress()[1][0])
                 velX = -8;
-            else if (Stats.KEYPRESS[1][1])
+            else if (Stats.getKeyPress()[1][1])
                 velX = 8;
             else
                 velX = 0;
-            if (Stats.KEYPRESS[1][3] && Stats.KEYPRESS[1][4])
+            if (Stats.getKeyPress()[1][3] && Stats.getKeyPress()[1][4])
                 velY = 0;
-            else if (Stats.KEYPRESS[1][3])
+            else if (Stats.getKeyPress()[1][3])
                 velY = -8;
-            else if (Stats.KEYPRESS[1][4])
+            else if (Stats.getKeyPress()[1][4])
                 velY = 8;
             else
                 velY = 0;

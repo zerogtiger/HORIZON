@@ -41,7 +41,7 @@ public class Menu implements MouseListener {
                 new Button("Reload", 110, Game.HEIGHT - 200, 200, 27, game)
         };
         buttons[2] = new Button[]{
-                new Button("Back", 60, Game.HEIGHT - 40, 200, 27, game),
+                new Button("Back", 60, Game.HEIGHT - 45, 200, 27, game),
         };
         buttons[3] = new Button[]{
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
@@ -162,25 +162,25 @@ public class Menu implements MouseListener {
             lmy = my;
         }
         //If a key is pressed
-        if ((lastKeyboardState[0] != Stats.KEYPRESS[0][3] || lastKeyboardState[1] != Stats.KEYPRESS[0][4])
-                || lastKeyboardState[2] != Stats.KEYPRESS[0][5]) {
+        if ((lastKeyboardState[0] != Stats.getKeyPress()[0][3] || lastKeyboardState[1] != Stats.getKeyPress()[0][4])
+                || lastKeyboardState[2] != Stats.getKeyPress()[0][5]) {
             //If ENTER is either pressed or lifted && is currently pressed
-            if (lastKeyboardState[2] != Stats.KEYPRESS[0][5] && Stats.KEYPRESS[0][5]) {
+            if (lastKeyboardState[2] != Stats.getKeyPress()[0][5] && Stats.getKeyPress()[0][5]) {
                 buttonEntered();
             }
             //If UP is either pressed or lifted && is currently pressed
-            else if (lastKeyboardState[0] != Stats.KEYPRESS[0][3] && Stats.KEYPRESS[0][3]) {
+            else if (lastKeyboardState[0] != Stats.getKeyPress()[0][3] && Stats.getKeyPress()[0][3]) {
                 focus = (focus + buttons[menuScreen].length - 1) % buttons[menuScreen].length;
             }
             //If DOWN is either pressed or lifted && is currently pressed
-            else if (lastKeyboardState[1] != Stats.KEYPRESS[0][4] && Stats.KEYPRESS[0][4]) {
+            else if (lastKeyboardState[1] != Stats.getKeyPress()[0][4] && Stats.getKeyPress()[0][4]) {
                 focus = (focus + 1) % buttons[menuScreen].length;
             }
             //Must check if state changed for computer to read the actively changing key
             //Update all keyboard states
-            lastKeyboardState[0] = Stats.KEYPRESS[0][3];
-            lastKeyboardState[1] = Stats.KEYPRESS[0][4];
-            lastKeyboardState[2] = Stats.KEYPRESS[0][5];
+            lastKeyboardState[0] = Stats.getKeyPress()[0][3];
+            lastKeyboardState[1] = Stats.getKeyPress()[0][4];
+            lastKeyboardState[2] = Stats.getKeyPress()[0][5];
         }
 
         //Require reset of focus for each menu change
@@ -223,5 +223,9 @@ public class Menu implements MouseListener {
         for (Button b : buttons[menuScreen]) {
             b.render(g);
         }
+    }
+
+    public void setFocus(int focus) {
+        this.focus = focus;
     }
 }

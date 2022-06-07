@@ -24,10 +24,6 @@ public class Ground extends GameObject{
         return null;
     }
 
-    public Rectangle getChargingBounds() {
-        return null;
-    }
-
     public Rectangle getCollisionBounds() {
         return null;
     }

@@ -1,15 +1,12 @@
-import java.awt.image.BufferStrategy;
+import javax.swing.*;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
 
-public class Game extends Canvas implements Runnable {
-    //Replace canvas with JFrame, no need to implement runnable,
+public class Game extends JPanel implements Runnable {
+    //Replace canvas with JPanel, no need to implement runnable,
     //Replace render() with paintComponent. Try without buffer and if screen flickers, use Ms. Wong's buffer system
     //Replace render() with repaint() in run() method
-
-    @Serial
-    private static final long serialVersionUID = -1442798787354930462L;
 
     public static final int WIDTH = 1200, HEIGHT = WIDTH / 16 * 9;
 
@@ -25,20 +22,22 @@ public class Game extends Canvas implements Runnable {
     private Pursuer pursuer;
     private Camera camera;
     private Map map;
-    private Menu menu;
+    private static Menu menu;
+    private KeyInput keyInput;
     private GameOrganizer gameOrganizer;
     private static Leaderboard leaderboard;
 
     private int seed = 1;
 
+    private long startTime, timeElapsed, frameCount = 0;
+
     public enum state {
         Game,
-        Login,
-        SignUp,
         GameOver,
         Menu,
         Options,
         Leaderboard,
+        LeaderboardEntry,
         Pause;
     }
 
@@ -51,14 +50,22 @@ public class Game extends Canvas implements Runnable {
         stats = new Stats();
         leaderboard = new Leaderboard();
         menu = new Menu(this, leaderboard, handler);
+        keyInput = new KeyInput();
         player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
         pursuer = new Pursuer(player);
         camera = new Camera(player);
         gameOrganizer = new GameOrganizer(this);
         leaderboard.add(new LeaderboardEntry("testName", 13245, 1, 1, 2, 1));
         leaderboard.add(new LeaderboardEntry("testName2", 3015, 3, 0, 3, 0));
-        this.addMouseListener(menu);
-        this.addKeyListener(new KeyInput(handler));
+        leaderboard.add(new LeaderboardEntry("testName", 1325, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 1345, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 1245, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 3245, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 1345, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 13215, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 2245, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 15, 1, 1, 2, 1));
+        leaderboard.add(new LeaderboardEntry("testName", 31135, 1, 1, 2, 1));
 
         new Window(WIDTH, HEIGHT, "HORIZON極速狂飆", this);
     }
@@ -70,14 +77,15 @@ public class Game extends Canvas implements Runnable {
     public static void collision(GameObject obstacle) {
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
             gameState = state.GameOver;
+            menu.setFocus(0);
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
-            Stats.KEYPRESS[0][1] = false;
-            Stats.KEYPRESS[1][1] = false;
+            Stats.setKeyPress(0, 1, false);
+            Stats.setKeyPress(1, 1, false);
         } else if (player.getBounds().intersects(obstacle.getRightBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() + obstacle.width);
-            Stats.KEYPRESS[0][0] = false;
-            Stats.KEYPRESS[1][0] = false;
+            Stats.setKeyPress(0, 0, false);
+            Stats.setKeyPress(1, 0, false);
         }
         player.setChargingLeft(player.getLeftChargingBounds().intersects(obstacle.getRightChargingBounds()) || player.getIsChargingLeft());
         player.setChargingRight(player.getRightChargingBounds().intersects(obstacle.getLeftChargingBounds()) || player.getIsChargingRight());
@@ -115,17 +123,13 @@ public class Game extends Canvas implements Runnable {
         } else {
             menu.tick();
         }
+        timeElapsed = System.currentTimeMillis() - startTime;
+        frameCount++;
 
     }
 
-    private void render() {
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            this.createBufferStrategy(3);
-            return;
-        }
-
-        Graphics g = bs.getDrawGraphics();
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         g.setColor(new Color(59, 56, 53));
         g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
@@ -140,7 +144,6 @@ public class Game extends Canvas implements Runnable {
         }
 //        drawRuler(g);
         g.dispose();
-        bs.show();
     }
 
     public void drawRuler(Graphics g) {
@@ -166,6 +169,8 @@ public class Game extends Canvas implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
+        startTime = System.currentTimeMillis();
+        timeElapsed = 0;
     }
 
     public synchronized void stop() {
@@ -178,30 +183,15 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run() {
-        this.requestFocus();
-        long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
-        double delta = 0;
-        long timer = System.currentTimeMillis();
-        int frames = 0;
         while (running) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-            while (delta >= 1) {
-                tick();
-                delta--;
+            tick();
+            this.repaint();
+            try {
+                Thread.sleep(1000/60);
+            }catch(Exception e) {
+                e.printStackTrace();
             }
-            if (running)
-                render();
-            frames++;
-
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
-                System.out.println("FPS: " + frames);
-                frames = 0;
-            }
+            System.out.println("FPS: " + (double) frameCount / (timeElapsed/1000.0));
         }
         stop();
     }
@@ -250,7 +240,13 @@ public class Game extends Canvas implements Runnable {
         this.map = map;
     }
 
+    public KeyInput getKeyInput() {
+        return keyInput;
+    }
 
+    public Menu getMenu() {
+        return menu;
+    }
 
     public static void main(String[] args) {
         new Game();
