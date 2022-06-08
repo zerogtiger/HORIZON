@@ -27,7 +27,9 @@ public class Game extends JPanel implements Runnable {
     private GameOrganizer gameOrganizer;
     private static Leaderboard leaderboard;
 
-    private int seed = 1;
+//    private JTextField textField;
+
+    private static int seed = 1;
 
     private long startTime, timeElapsed, frameCount = 0;
 
@@ -63,9 +65,17 @@ public class Game extends JPanel implements Runnable {
         leaderboard.add(new LeaderboardEntry("testName", 3245, 1, 1, 2, 1));
         leaderboard.add(new LeaderboardEntry("testName", 1345, 1, 1, 2, 1));
         leaderboard.add(new LeaderboardEntry("testName", 13215, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 2245, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 15, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 31135, 1, 1, 2, 1));
+//        leaderboard.add(new LeaderboardEntry("testName", 2245, 1, 1, 2, 1));
+//        leaderboard.add(new LeaderboardEntry("testName", 15, 1, 1, 2, 1));
+//        leaderboard.add(new LeaderboardEntry("testName", 31135, 1, 1, 2, 1));
+
+//        textField = new JTextField("Test");
+//        this.setLayout(null);
+//        this.add(textField);
+//        textField.setBounds(25, 20, 200, 25);
+//        textField.setBackground(new Color(255,255,255));
+//        textField.setFont(new Font("Monospaced", Font.BOLD, 18));
+//        textField.setVisible(false);
 
         new Window(WIDTH, HEIGHT, "HORIZON極速狂飆", this);
     }
@@ -76,8 +86,9 @@ public class Game extends JPanel implements Runnable {
 
     public static void collision(GameObject obstacle) {
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
-            gameState = state.GameOver;
             menu.setFocus(0);
+            gameOver(Stats.speederDistance, seed, 0);
+
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
             Stats.setKeyPress(0, 1, false);
@@ -101,6 +112,15 @@ public class Game extends JPanel implements Runnable {
         return val;
     }
 
+    public static void gameOver(int distance, int seed, int deathMethod) {
+        if (leaderboard.isOnLeaderboard(distance)) {
+            menu.setTempLeaderboard(distance, seed, deathMethod);
+            gameState = state.LeaderboardEntry;
+        } else {
+            gameState = state.GameOver;
+        }
+    }
+
     public void reset() {
         gameOrganizer.reset();
         player.setY(HEIGHT);
@@ -109,6 +129,29 @@ public class Game extends JPanel implements Runnable {
         pursuer.setDistance(10000);
         Stats.speederDistance = 0;
         Stats.CHARGE = 0;
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        g.setColor(new Color(59, 56, 53));
+        g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
+
+        if (gameState == state.Game) {
+            ghandler.render(g);
+            handler.render(g);
+            hud.render(g);
+            pursuer.render(g);
+        } else {
+            menu.render(g);
+        }
+//        if (gameState == state.LeaderboardEntry) {
+//            textField.setVisible(true);
+//        }
+//        else
+//            textField.setVisible(false);
+        drawRuler(g);
+        g.dispose();
     }
 
     private void tick() {
@@ -126,24 +169,6 @@ public class Game extends JPanel implements Runnable {
         timeElapsed = System.currentTimeMillis() - startTime;
         frameCount++;
 
-    }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        g.setColor(new Color(59, 56, 53));
-        g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
-
-        if (gameState == state.Game) {
-            ghandler.render(g);
-            handler.render(g);
-            hud.render(g);
-            pursuer.render(g);
-        } else {
-            menu.render(g);
-        }
-//        drawRuler(g);
-        g.dispose();
     }
 
     public void drawRuler(Graphics g) {
@@ -187,11 +212,11 @@ public class Game extends JPanel implements Runnable {
             tick();
             this.repaint();
             try {
-                Thread.sleep(1000/60);
-            }catch(Exception e) {
+                Thread.sleep(1000 / 60);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("FPS: " + (double) frameCount / (timeElapsed/1000.0));
+            System.out.println("FPS: " + (double) frameCount / (timeElapsed / 1000.0));
         }
         stop();
     }

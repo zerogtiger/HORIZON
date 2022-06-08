@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -9,7 +10,10 @@ public class Menu implements MouseListener {
     private Leaderboard leaderboard;
     private Button[][] buttons; //menuButtons, gameOverButtons, leaderboardButtons, optionsButtons;
     private int focus, lastFocus, menuScreen = menuCode.get(Game.gameState);
-    ;
+    private TextField textField;
+    private int tempSeed, tempDistance, tempDeathMethod;
+    private LeaderboardEntry tempLeaderboardEntry;
+
     private int lmx, lmy;
     private boolean[] lastKeyboardState = new boolean[3]; // 0 for up, 1 for down, 2 for enter.
     private static HashMap<Game.state, Integer> menuCode = new HashMap<>() {
@@ -18,6 +22,7 @@ public class Menu implements MouseListener {
             put(Game.state.GameOver, 1);
             put(Game.state.Leaderboard, 2);
             put(Game.state.Options, 3);
+            put(Game.state.LeaderboardEntry, 4);
         }
     };
 
@@ -29,7 +34,15 @@ public class Menu implements MouseListener {
         this.game = game;
         this.leaderboard = leaderboard;
         this.handler = handler;
-        buttons = new Button[4][];
+        textField = new TextField("Player");
+        game.setLayout(null);
+        game.add(textField);
+        textField.setBounds(262, Game.HEIGHT-300, 400, 25);
+        textField.setBackground(new Color(255,255,255));
+        textField.setFont(new Font("Monospaced", Font.BOLD, 18));
+        textField.setVisible(false);
+
+        buttons = new Button[5][];
         buttons[0] = new Button[]{
                 new Button("Start", 90, Game.HEIGHT - 220 + 21, 200, 27, game),
                 new Button("Options", 90, Game.HEIGHT - 180 + 21, 200, 27, game),
@@ -46,104 +59,14 @@ public class Menu implements MouseListener {
         buttons[3] = new Button[]{
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
         };
-
+        buttons[4] = new Button[]{
+                new Button("Enter", 740, Game.HEIGHT - 300, 200, 27, game),
+        };
     }
 
-    public void buttonEntered() {
-        if (game.gameState == Game.state.Menu) {
-            if (focus == 0) {
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
-            } else if (focus == 1) {
-                focus = 0;
-                game.gameState = Game.state.Options;
-            } else if (focus == 2) {
-                focus = 0;
-                game.gameState = Game.state.Leaderboard;
-            } else if (focus == 3) {
-                System.exit(0);
-            }
-        } else if (game.gameState == Game.state.GameOver) {
-            if (focus == 0) {
-                game.gameState = Game.state.Menu;
-            } else if (focus == 1) {
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
-            }
-        } else if (game.gameState == Game.state.Leaderboard) {
-            if (focus == 0) {
-                game.gameState = Game.state.Menu;
-            }
-        } else if (game.gameState == Game.state.Options) {
-            if (focus == 0) {
-                game.gameState = Game.state.Menu;
-            }
-        }
-    }
-
-    public void buttonEntered(int mx, int my) {
-        if (game.gameState == Game.state.Menu) {
-            if (buttons[0][0].isOver(mx, my)) {
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
-            } else if (buttons[0][1].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Options;
-            } else if (buttons[0][2].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Leaderboard;
-            } else if (buttons[0][3].isOver(mx, my)) {
-                System.exit(0);
-            }
-        } else if (game.gameState == Game.state.GameOver) {
-            if (buttons[1][0].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Menu;
-            } else if (buttons[1][1].isOver(mx, my)) {
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
-            }
-        } else if (game.gameState == Game.state.Leaderboard) {
-            if (buttons[2][0].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Menu;
-            }
-        } else if (game.gameState == Game.state.Options) {
-            if (buttons[3][0].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Menu;
-            }
-        }
-    }
-
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    public void mousePressed(MouseEvent e) {
-        int mx = e.getX();
-        int my = e.getY();
-        buttonEntered(mx, my);
-    }
-
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
-        return (mx >= x && mx <= x + width && my >= y && my <= y + height);
+    public void setTempLeaderboard(int distance, int seed, int deathMethod) {
+        tempLeaderboardEntry = new LeaderboardEntry(distance, seed, deathMethod, 150, Game.HEIGHT-350);
+        textField.setVisible(true);
     }
 
     public void tick() {
@@ -189,6 +112,11 @@ public class Menu implements MouseListener {
         }
         buttons[menuScreen][focus].setFocused(true);
 
+        if (Game.gameState == Game.state.LeaderboardEntry) {
+            //>>>>>>>>>>>>>>>>>>Should remove all spaces
+            //A few spaces added to avoid StringIndexOutOfBounds when cutting the string as it is edited
+            tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
+        }
     }
 
     public void render(Graphics g) {
@@ -220,9 +148,131 @@ public class Menu implements MouseListener {
         if (game.gameState == Game.state.Options) {
             g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
         }
+        if (game.gameState == Game.state.LeaderboardEntry) {
+            g.setFont(new Font("Courier New", Font.PLAIN, 25));
+            g.setColor(Color.white);
+            g.drawString("Congratulations! You have entered the leaderboard!", 150, Game.HEIGHT - 400);
+            g.setFont(new Font("Courier New", Font.PLAIN, 18));
+            g.drawString("Enter your name below (16 character max): ", 150, Game.HEIGHT - 380);
+            tempLeaderboardEntry.render(g);
+        }
+
         for (Button b : buttons[menuScreen]) {
             b.render(g);
         }
+    }
+
+    public void buttonEntered() {
+        if (game.gameState == Game.state.Menu) {
+            if (focus == 0) {
+                game.gameState = Game.state.Game;
+                game.reset();
+                System.out.println("Game Reset");
+            } else if (focus == 1) {
+                focus = 0;
+                game.gameState = Game.state.Options;
+            } else if (focus == 2) {
+                focus = 0;
+                game.gameState = Game.state.Leaderboard;
+            } else if (focus == 3) {
+                System.exit(0);
+            }
+        } else if (game.gameState == Game.state.GameOver) {
+            if (focus == 0) {
+                game.gameState = Game.state.Menu;
+            } else if (focus == 1) {
+                game.gameState = Game.state.Game;
+                game.reset();
+                System.out.println("Game Reset");
+            }
+        } else if (game.gameState == Game.state.Leaderboard) {
+            if (focus == 0) {
+                game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.Options) {
+            if (focus == 0) {
+                game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.LeaderboardEntry) {
+            if (focus == 0) {
+                tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
+                leaderboard.add(tempLeaderboardEntry);
+                textField.setVisible(false);
+                textField.setText("Player");
+                game.gameState = Game.state.GameOver;
+            }
+        }
+    }
+
+    public void buttonEntered(int mx, int my) {
+        if (game.gameState == Game.state.Menu) {
+            if (buttons[0][0].isOver(mx, my)) {
+                game.gameState = Game.state.Game;
+                game.reset();
+                System.out.println("Game Reset");
+            } else if (buttons[0][1].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Options;
+            } else if (buttons[0][2].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Leaderboard;
+            } else if (buttons[0][3].isOver(mx, my)) {
+                System.exit(0);
+            }
+        } else if (game.gameState == Game.state.GameOver) {
+            if (buttons[1][0].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
+            } else if (buttons[1][1].isOver(mx, my)) {
+                game.gameState = Game.state.Game;
+                game.reset();
+                System.out.println("Game Reset");
+            }
+        } else if (game.gameState == Game.state.Leaderboard) {
+            if (buttons[2][0].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.Options) {
+            if (buttons[3][0].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.LeaderboardEntry) {
+            if (buttons[4][0].isOver(mx, my)) {
+                tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
+                leaderboard.add(tempLeaderboardEntry);
+                textField.setVisible(false);
+                textField.setText("Player");
+                game.gameState = Game.state.GameOver;
+            }
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    public void mousePressed(MouseEvent e) {
+        int mx = e.getX();
+        int my = e.getY();
+        buttonEntered(mx, my);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
+        return (mx >= x && mx <= x + width && my >= y && my <= y + height);
     }
 
     public void setFocus(int focus) {

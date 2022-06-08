@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.*;
 import java.io.*;
 
-public class Window extends JFrame {
+public class Window {
 
     private JPanel game;
 
@@ -19,7 +19,7 @@ public class Window extends JFrame {
 
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(game);
+        frame.setContentPane(game);
         frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);

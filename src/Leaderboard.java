@@ -14,6 +14,7 @@ public class Leaderboard {
     }
 
     public void add(LeaderboardEntry entry) {
+        entry.setX(70);
         boolean isIn = false;
         int placement = 1;
         for (int i = 1; i <= 10; i++) {
@@ -31,6 +32,10 @@ public class Leaderboard {
             entry.setPlacement(placement);
             entries[placement] = entry;
         }
+    }
+
+    public boolean isOnLeaderboard(int distance) {
+        return (entries[10].getDistance() < distance);
     }
 
     public void render(Graphics g) {

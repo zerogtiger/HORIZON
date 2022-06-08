@@ -17,8 +17,9 @@ public class Player extends GameObject {
     }
 
     public void tick() {
-        if (Pursuer.distance <= 0)
-            Game.gameState = Game.state.GameOver;
+        if (Pursuer.distance <= 0) {
+            Game.gameOver(Stats.speederDistance, game.getSeed(), 1);
+        }
         if (Stats.debug == 0) {
             if (Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1])
                 velX = 0;

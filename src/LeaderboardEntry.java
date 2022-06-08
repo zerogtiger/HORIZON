@@ -8,7 +8,7 @@ public class LeaderboardEntry {
             timeOfDays[] = {"Morning", "Noon", "Evening", "Night"},
             deathMethods[] = {"Collision", "Pursuer"},
             placementIdentifier[] = {">>>>", ">>>", ">>", ">"};
-    private int placement, distance, seed, weather, timeOfDay, deathMethod;
+    private int placement, distance, seed, weather, timeOfDay, deathMethod, x, y;
     private Color[] colors = {new Color(218, 26, 26),
             new Color(255, 204, 0),
             new Color(0, 178, 255),
@@ -22,12 +22,27 @@ public class LeaderboardEntry {
         this.weather = weather;
         this.timeOfDay = timeOfDay;
         this.deathMethod = deathMethod;
+        x = 70;
         isInitialized = true;
     }
 
     public LeaderboardEntry(int placement) {
         this.placement = placement;
+        x = 70;
+        y = placement * 50 + 70;
         isInitialized = false;
+    }
+
+    public LeaderboardEntry(int distance, int seed, int deathMethod, int x, int y) {
+        this.name = "Player";
+        this.distance = distance;
+        this.seed = seed;
+        this.weather = seed/100000;
+        this.timeOfDay = (seed%100000)/10000;
+        this.deathMethod = deathMethod;
+        this.x = x;
+        this.y = y;
+        isInitialized = true;
     }
 
     public String toString() {
@@ -49,14 +64,14 @@ public class LeaderboardEntry {
 
     public void render(Graphics g) {
         g.setColor(new Color(0, 0, 0, 200));
-        g.fillRect(70, placement * 50 + 70, 915, 40);
+        g.fillRect(x, y, 915, 40);
         g.setFont(new Font("Consolas", Font.BOLD, 25));
         g.setColor(colors[Game.clamp(placement, 1, 4) - 1]);
         g.drawString(String.format("%4s", placementIdentifier[Game.clamp(placement, 1, 4) - 1]),
-                85, placement * 50 + 70 + 26);
+                x+15, y + 26);
         g.setFont(new Font("Consolas", Font.PLAIN, 18));
         g.setColor(Color.white);
-        g.drawString(toString(), 153, placement * 50 + 70 + 26);
+        g.drawString(toString(), x+73, y + 26);
     }
 
     public int getDistance() {
@@ -65,6 +80,14 @@ public class LeaderboardEntry {
 
     public void setPlacement(int placement) {
         this.placement = placement;
+        y = placement * 50 + 70;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
 }
