@@ -13,6 +13,7 @@ public class Menu implements MouseListener {
     private TextField textField;
     private int tempSeed, tempDistance, tempDeathMethod;
     private LeaderboardEntry tempLeaderboardEntry;
+    private boolean isInvalid;
 
     private int lmx, lmy;
     private boolean[] lastKeyboardState = new boolean[3]; // 0 for up, 1 for down, 2 for enter.
@@ -37,10 +38,12 @@ public class Menu implements MouseListener {
         textField = new TextField("Player");
         game.setLayout(null);
         game.add(textField);
-        textField.setBounds(262, Game.HEIGHT-300, 400, 25);
-        textField.setBackground(new Color(255,255,255));
+        textField.setBounds(262, Game.HEIGHT - 220, 400, 25);
+        textField.setBackground(new Color(255, 255, 255));
         textField.setFont(new Font("Monospaced", Font.BOLD, 18));
         textField.setVisible(false);
+
+        isInvalid = false;
 
         buttons = new Button[5][];
         buttons[0] = new Button[]{
@@ -60,16 +63,17 @@ public class Menu implements MouseListener {
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
         };
         buttons[4] = new Button[]{
-                new Button("Enter", 740, Game.HEIGHT - 300, 200, 27, game),
+                new Button("Enter", 850, Game.HEIGHT - 220, 200, 27, game),
+                new Button("Skip", 850, Game.HEIGHT - 180, 200, 27, game),
         };
     }
 
     public void setTempLeaderboard(int distance, int seed, int deathMethod) {
-        tempLeaderboardEntry = new LeaderboardEntry(distance, seed, deathMethod, 150, Game.HEIGHT-350);
+        tempLeaderboardEntry = new LeaderboardEntry(distance, seed, deathMethod, 150, Game.HEIGHT - 270);
         textField.setVisible(true);
     }
 
-    public void tick() {
+    public void tick() throws IOException {
         Point p = MouseInfo.getPointerInfo().getLocation();
         int mx = (int) (p.getX() - game.getLocationOnScreen().getX());
         int my = (int) (p.getY() - game.getLocationOnScreen().getY());
@@ -113,9 +117,8 @@ public class Menu implements MouseListener {
         buttons[menuScreen][focus].setFocused(true);
 
         if (Game.gameState == Game.state.LeaderboardEntry) {
-            //>>>>>>>>>>>>>>>>>>Should remove all spaces
             //A few spaces added to avoid StringIndexOutOfBounds when cutting the string as it is edited
-            tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
+            tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
         }
     }
 
@@ -126,34 +129,42 @@ public class Menu implements MouseListener {
         if (game.gameState == Game.state.Menu) {
             g.setColor(Color.white);
             g.setFont(courier);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/title.png"), (Game.WIDTH - 310 * 3) / 2, 270, 310 * 3, 24 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 310 * 3) / 2, 270, 310 * 3, 24 * 3, game);
         }
         if (game.gameState == Game.state.GameOver) {
             g.setFont(courier2);
             g.setColor(new Color(219, 198, 191, 50));
             g.fillRect(70, 70, Game.WIDTH - 140, Game.HEIGHT - 140);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/gameOver.png"), 110, 110, 138 * 3, 42 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 110, 110, 138 * 3, 42 * 3, game);
             g.setColor(Color.white);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/distance.png"), 110, 300, 83 * 3, 5 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 110, 300, 83 * 3, 5 * 3, game);
             g.drawString(String.valueOf(Stats.speederDistance), 110, 380);
         }
         if (game.gameState == Game.state.Leaderboard) {
             g.setFont(courier2);
             g.setColor(new Color(0, 0, 0, 200));
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/leaderboardBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/leaderboard.png"), 60, 40, 318 * 3, 15 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/leaderboardBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/leaderboard.png"), 60, 40, 318 * 3, 15 * 3, game);
             leaderboard.render(g);
         }
         if (game.gameState == Game.state.Options) {
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("pics/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
         }
         if (game.gameState == Game.state.LeaderboardEntry) {
+            g.setColor(new Color(219, 198, 191, 50));
+            g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
             g.setFont(new Font("Courier New", Font.PLAIN, 25));
             g.setColor(Color.white);
-            g.drawString("Congratulations! You have entered the leaderboard!", 150, Game.HEIGHT - 400);
+            g.drawString("Congratulations! You have entered the leaderboard!", 150, Game.HEIGHT - 320);
             g.setFont(new Font("Courier New", Font.PLAIN, 18));
-            g.drawString("Enter your name below (16 character max): ", 150, Game.HEIGHT - 380);
+            g.drawString("Enter your name below (16 character max): ", 150, Game.HEIGHT - 290);
+            if (isInvalid) {
+                g.setColor(Color.red);
+                g.setFont(new Font("Courier New", Font.BOLD, 18));
+                g.drawString("<E> Invalid Name.", 270, Game.HEIGHT - 170);
+            }
             tempLeaderboardEntry.render(g);
         }
 
@@ -162,7 +173,7 @@ public class Menu implements MouseListener {
         }
     }
 
-    public void buttonEntered() {
+    public void buttonEntered() throws IOException {
         if (game.gameState == Game.state.Menu) {
             if (focus == 0) {
                 game.gameState = Game.state.Game;
@@ -195,16 +206,26 @@ public class Menu implements MouseListener {
             }
         } else if (game.gameState == Game.state.LeaderboardEntry) {
             if (focus == 0) {
-                tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
-                leaderboard.add(tempLeaderboardEntry);
+                tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
+                if (tempLeaderboardEntry.getName().equals("")) {
+                    isInvalid = true;
+                } else {
+                    leaderboard.add(tempLeaderboardEntry);
+                    textField.setVisible(false);
+                    textField.setText("Player");
+                    isInvalid = false;
+                    game.gameState = Game.state.GameOver;
+                }
+            } else if (focus == 1) {
                 textField.setVisible(false);
                 textField.setText("Player");
+                isInvalid = false;
                 game.gameState = Game.state.GameOver;
             }
         }
     }
 
-    public void buttonEntered(int mx, int my) {
+    public void buttonEntered(int mx, int my) throws IOException {
         if (game.gameState == Game.state.Menu) {
             if (buttons[0][0].isOver(mx, my)) {
                 game.gameState = Game.state.Game;
@@ -240,13 +261,33 @@ public class Menu implements MouseListener {
             }
         } else if (game.gameState == Game.state.LeaderboardEntry) {
             if (buttons[4][0].isOver(mx, my)) {
-                tempLeaderboardEntry.setName((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length())));
-                leaderboard.add(tempLeaderboardEntry);
+                tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
+                if (tempLeaderboardEntry.getName().equals("")) {
+                    isInvalid = true;
+                } else {
+                    leaderboard.add(tempLeaderboardEntry);
+                    textField.setVisible(false);
+                    textField.setText("Player");
+                    isInvalid = false;
+                    game.gameState = Game.state.GameOver;
+                }
+            } else if (buttons[4][1].isOver(mx, my)) {
                 textField.setVisible(false);
                 textField.setText("Player");
+                isInvalid = false;
                 game.gameState = Game.state.GameOver;
             }
         }
+    }
+
+    private String removeSpaces(String s) {
+        StringBuilder sb = new StringBuilder();
+        String[] temp = s.split(" ");
+        for (String tempString : temp) {
+            sb.append(tempString);
+        }
+        System.out.println(Arrays.toString(temp));
+        return sb.toString();
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -256,7 +297,11 @@ public class Menu implements MouseListener {
     public void mousePressed(MouseEvent e) {
         int mx = e.getX();
         int my = e.getY();
-        buttonEntered(mx, my);
+        try {
+            buttonEntered(mx, my);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void mouseReleased(MouseEvent e) {

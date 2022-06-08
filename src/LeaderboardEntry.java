@@ -15,12 +15,12 @@ public class LeaderboardEntry {
             new Color(255, 255, 255)};
     private boolean isInitialized;
 
-    public LeaderboardEntry(String name, int distance, int seed, int weather, int timeOfDay, int deathMethod) {
+    public LeaderboardEntry(String name, int distance, int seed, int deathMethod) {
         this.name = name;
         this.distance = distance;
         this.seed = seed;
-        this.weather = weather;
-        this.timeOfDay = timeOfDay;
+        this.weather = seed/100000;
+        this.timeOfDay = (seed%100000)/10000;
         this.deathMethod = deathMethod;
         x = 70;
         isInitialized = true;
@@ -45,6 +45,10 @@ public class LeaderboardEntry {
         isInitialized = true;
     }
 
+    public String toFileString() {
+        return (name + " " + distance + " " + seed + " " + deathMethod);
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%2d", placement));
@@ -52,7 +56,6 @@ public class LeaderboardEntry {
         if (isInitialized) {
             sb.append(String.format("%-20s", name));
             sb.append(String.format("%-6d", distance)).append("m    ");
-            //Add unit -----------------------------------------^here
             sb.append(String.format("%-13s", weathers[weather]));
             sb.append(String.format("%-11s", timeOfDays[timeOfDay]));
             sb.append(String.format("%-13s", deathMethods[deathMethod]));
@@ -85,6 +88,14 @@ public class LeaderboardEntry {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean getInitialized() {
+        return isInitialized;
     }
 
     public void setX(int x) {

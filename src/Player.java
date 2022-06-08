@@ -5,9 +5,9 @@ public class Player extends GameObject {
 
     private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false;
     private final Game game;
-    private final Image[] pics = {Toolkit.getDefaultToolkit().getImage("pics/SG.png"),
-            Toolkit.getDefaultToolkit().getImage("pics/SGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("pics/SGR1.png")};
+    private final Image[] pics = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png")};
 
     public Player(int x, int y, ID id, Handler handler, int normalVelY, Game game) {
         super(x, y, id, handler);

@@ -45,7 +45,7 @@ public class Game extends JPanel implements Runnable {
 
     public static state gameState = state.Menu;
 
-    public Game() {
+    public Game() throws IOException {
         handler = new Handler();
         ghandler = new Handler();
         hud = new HUD();
@@ -57,17 +57,6 @@ public class Game extends JPanel implements Runnable {
         pursuer = new Pursuer(player);
         camera = new Camera(player);
         gameOrganizer = new GameOrganizer(this);
-        leaderboard.add(new LeaderboardEntry("testName", 13245, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName2", 3015, 3, 0, 3, 0));
-        leaderboard.add(new LeaderboardEntry("testName", 1325, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 1345, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 1245, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 3245, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 1345, 1, 1, 2, 1));
-        leaderboard.add(new LeaderboardEntry("testName", 13215, 1, 1, 2, 1));
-//        leaderboard.add(new LeaderboardEntry("testName", 2245, 1, 1, 2, 1));
-//        leaderboard.add(new LeaderboardEntry("testName", 15, 1, 1, 2, 1));
-//        leaderboard.add(new LeaderboardEntry("testName", 31135, 1, 1, 2, 1));
 
 //        textField = new JTextField("Test");
 //        this.setLayout(null);
@@ -154,7 +143,7 @@ public class Game extends JPanel implements Runnable {
         g.dispose();
     }
 
-    private void tick() {
+    private void tick() throws IOException {
         if (gameState == state.Game) {
             gameOrganizer.tick();
             ghandler.tick();
@@ -209,7 +198,11 @@ public class Game extends JPanel implements Runnable {
 
     public void run() {
         while (running) {
-            tick();
+            try {
+                tick();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             this.repaint();
             try {
                 Thread.sleep(1000 / 60);
@@ -273,7 +266,7 @@ public class Game extends JPanel implements Runnable {
         return menu;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new Game();
     }
 }

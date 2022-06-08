@@ -10,8 +10,8 @@ public class Button{
     private String label;
     private int x, y, width, height;
     private Image[] borders = new Image[]{
-            Toolkit.getDefaultToolkit().getImage("pics/buttonBorderLeft.png"),
-            Toolkit.getDefaultToolkit().getImage("pics/buttonBorderRight.png")
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/buttonBorderLeft.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/buttonBorderRight.png")
     };
     private boolean isFocused;
     private Color color = Color.white;
