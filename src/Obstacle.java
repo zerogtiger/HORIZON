@@ -1,9 +1,10 @@
 import java.awt.*;
 
-public class Obstacle extends GameObject{
+public class Obstacle extends GameObject {
 
     private Map map;
     private Player player;
+
     public Obstacle(int x, int y, int width, int height, ID id, Handler handler, Map map, Player player) {
         super(x, y, id, handler);
         this.width = width;
@@ -17,29 +18,37 @@ public class Obstacle extends GameObject{
     }
 
     public Rectangle getLeftChargingBounds() {
-        return new Rectangle(getRelX()-32, getRelY(), 32+width/2, height);
+        return new Rectangle(getRelX() - 32, getRelY(), 32 + width / 2, height);
     }
 
     public Rectangle getRightChargingBounds() {
-        return new Rectangle(getRelX()+width/2, getRelY(), width/2+32, height);
+        return new Rectangle(getRelX() + width / 2, getRelY(), width / 2 + 32, height);
+    }
+
+    public Rectangle getLeftScratchingBounds() {
+        return new Rectangle(getRelX() - 1, getRelY(), 1 + width / 2, height);
+    }
+
+    public Rectangle getRightScratchingBounds() {
+        return new Rectangle(getRelX() + width / 2, getRelY(), width / 2 + 1, height);
     }
 
     public Rectangle getCollisionBounds() {
-        return new Rectangle(getRelX(), getRelY()+height, width, Math.abs(player.velY));
+        return new Rectangle(getRelX(), getRelY() + height, width, Math.abs(player.velY));
     }
 
     public Rectangle getLeftBounds() {
-        return new Rectangle(getRelX(), getRelY(), width/2, height);
+        return new Rectangle(getRelX(), getRelY(), width / 2, height);
     }
 
     public Rectangle getRightBounds() {
-        return new Rectangle(getRelX()+width/2, getRelY(), width/2, height);
+        return new Rectangle(getRelX() + width / 2, getRelY(), width / 2, height);
     }
 
     public void tick() {
         Game.collision(this);
-        if (Camera.outOfFrame(this)){
-            map.setObstacles((-y/Map.obstacleSize), (x/Map.obstacleSize) + Map.width/2, 1);
+        if (Camera.outOfFrame(this)) {
+            map.setObstacles((-y / Map.obstacleSize), (x / Map.obstacleSize) + Map.width / 2, 1);
             handler.removeObject(this);
         }
 
@@ -55,8 +64,8 @@ public class Obstacle extends GameObject{
         g.setColor(Color.green);
         g2d.draw(getCollisionBounds());
         g.setColor(Color.cyan);
-        g2d.draw(getLeftBounds());
-        g2d.draw(getRightBounds());
+        g2d.draw(getLeftScratchingBounds());
+        g2d.draw(getRightScratchingBounds());
 
     }
 }

@@ -14,8 +14,8 @@ public class Pursuer {
     }
 
     public void tick() {
-        if (player.velY == -18)
-            vel = -1;
+        if (player.velY <= -11)
+            vel = -player.velY/5;
         else
             vel = (Stats.speederDistance) / 10000 + 14;
         distance = Game.clamp(distance - (vel + player.velY), 0, 11000);

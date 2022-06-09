@@ -89,6 +89,9 @@ public class Game extends JPanel implements Runnable {
         }
         player.setChargingLeft(player.getLeftChargingBounds().intersects(obstacle.getRightChargingBounds()) || player.getIsChargingLeft());
         player.setChargingRight(player.getRightChargingBounds().intersects(obstacle.getLeftChargingBounds()) || player.getIsChargingRight());
+        player.setScratchingLeft(player.getLeftChargingBounds().intersects(obstacle.getRightScratchingBounds()) || player.getIsScratchingLeft());
+        player.setScratchingRight(player.getRightChargingBounds().intersects(obstacle.getLeftScratchingBounds()) || player.getIsScratchingRight());
+
     }
 
     public static int reverseClamp(int val, int min, int max) {
@@ -126,24 +129,24 @@ public class Game extends JPanel implements Runnable {
         g.setColor(new Color(59, 56, 53));
         g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
 
-        if (gameState == state.Game) {
+        if (gameState == state.Game || gameState == state.Pause) {
             ghandler.render(g);
             handler.render(g);
             hud.render(g);
             pursuer.render(g);
-        } else {
-            menu.render(g);
         }
 //        if (gameState == state.LeaderboardEntry) {
 //            textField.setVisible(true);
 //        }
 //        else
 //            textField.setVisible(false);
+        menu.render(g);
         drawRuler(g);
         g.dispose();
     }
 
     private void tick() throws IOException {
+        menu.tick();
         if (gameState == state.Game) {
             gameOrganizer.tick();
             ghandler.tick();
@@ -152,8 +155,6 @@ public class Game extends JPanel implements Runnable {
             map.tick();
             hud.tick();
             pursuer.tick();
-        } else {
-            menu.tick();
         }
         timeElapsed = System.currentTimeMillis() - startTime;
         frameCount++;

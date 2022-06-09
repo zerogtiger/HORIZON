@@ -24,6 +24,14 @@ public class Ground extends GameObject{
         return null;
     }
 
+    public Rectangle getLeftScratchingBounds() {
+        return null;
+    }
+
+    public Rectangle getRightScratchingBounds() {
+        return null;
+    }
+
     public Rectangle getCollisionBounds() {
         return null;
     }

@@ -8,7 +8,7 @@ public class Menu implements MouseListener {
     private Handler handler;
     private Game game;
     private Leaderboard leaderboard;
-    private Button[][] buttons; //menuButtons, gameOverButtons, leaderboardButtons, optionsButtons;
+    private Button[][] buttons; //menuButtons, gameOverButtons, leaderboardButtons, optionsButtons, pauseButtons, gameButtons;
     private int focus, lastFocus, menuScreen = menuCode.get(Game.gameState);
     private TextField textField;
     private int tempSeed, tempDistance, tempDeathMethod;
@@ -16,7 +16,7 @@ public class Menu implements MouseListener {
     private boolean isInvalid;
 
     private int lmx, lmy;
-    private boolean[] lastKeyboardState = new boolean[3]; // 0 for up, 1 for down, 2 for enter.
+    private boolean[] lastKeyboardState = new boolean[4]; // 0 for up, 1 for down, 2 for enter, 4 for esc.
     private static HashMap<Game.state, Integer> menuCode = new HashMap<>() {
         {
             put(Game.state.Menu, 0);
@@ -24,6 +24,8 @@ public class Menu implements MouseListener {
             put(Game.state.Leaderboard, 2);
             put(Game.state.Options, 3);
             put(Game.state.LeaderboardEntry, 4);
+            put(Game.state.Pause, 5);
+            put(Game.state.Game, 6);
         }
     };
 
@@ -45,7 +47,7 @@ public class Menu implements MouseListener {
 
         isInvalid = false;
 
-        buttons = new Button[5][];
+        buttons = new Button[7][];
         buttons[0] = new Button[]{
                 new Button("Start", 90, Game.HEIGHT - 220 + 21, 200, 27, game),
                 new Button("Options", 90, Game.HEIGHT - 180 + 21, 200, 27, game),
@@ -53,8 +55,8 @@ public class Menu implements MouseListener {
                 new Button("Quit", 90, Game.HEIGHT - 100 + 21, 200, 27, game),
         };
         buttons[1] = new Button[]{
-                new Button("Menu", 110, Game.HEIGHT - 240, 200, 27, game),
-                new Button("Reload", 110, Game.HEIGHT - 200, 200, 27, game)
+                new Button("Reload", 110, Game.HEIGHT - 240, 200, 27, game),
+                new Button("Menu", 110, Game.HEIGHT - 200, 200, 27, game)
         };
         buttons[2] = new Button[]{
                 new Button("Back", 60, Game.HEIGHT - 45, 200, 27, game),
@@ -65,6 +67,13 @@ public class Menu implements MouseListener {
         buttons[4] = new Button[]{
                 new Button("Enter", 850, Game.HEIGHT - 220, 200, 27, game),
                 new Button("Skip", 850, Game.HEIGHT - 180, 200, 27, game),
+        };
+        buttons[5] = new Button[]{
+                new Button("Resume", 850, Game.HEIGHT - 220, 200, 27, game),
+                new Button("Menu", 850, Game.HEIGHT - 180, 200, 27, game),
+        };
+        buttons[6] = new Button[]{
+                new Button("Pause", 960, Game.HEIGHT - 40, 200, 27, game),
         };
     }
 
@@ -90,7 +99,7 @@ public class Menu implements MouseListener {
         }
         //If a key is pressed
         if ((lastKeyboardState[0] != Stats.getKeyPress()[0][3] || lastKeyboardState[1] != Stats.getKeyPress()[0][4])
-                || lastKeyboardState[2] != Stats.getKeyPress()[0][5]) {
+                || lastKeyboardState[2] != Stats.getKeyPress()[0][5] || lastKeyboardState[3] != Stats.getKeyPress()[0][6]) {
             //If ENTER is either pressed or lifted && is currently pressed
             if (lastKeyboardState[2] != Stats.getKeyPress()[0][5] && Stats.getKeyPress()[0][5]) {
                 buttonEntered();
@@ -102,12 +111,15 @@ public class Menu implements MouseListener {
             //If DOWN is either pressed or lifted && is currently pressed
             else if (lastKeyboardState[1] != Stats.getKeyPress()[0][4] && Stats.getKeyPress()[0][4]) {
                 focus = (focus + 1) % buttons[menuScreen].length;
+            } else if (lastKeyboardState[3] != Stats.getKeyPress()[0][6] && Stats.getKeyPress()[0][6] && Game.gameState == Game.state.Game) {
+                Game.gameState = Game.state.Pause;
             }
             //Must check if state changed for computer to read the actively changing key
             //Update all keyboard states
             lastKeyboardState[0] = Stats.getKeyPress()[0][3];
             lastKeyboardState[1] = Stats.getKeyPress()[0][4];
             lastKeyboardState[2] = Stats.getKeyPress()[0][5];
+            lastKeyboardState[3] = Stats.getKeyPress()[0][6];
         }
 
         //Require reset of focus for each menu change
@@ -118,7 +130,7 @@ public class Menu implements MouseListener {
 
         if (Game.gameState == Game.state.LeaderboardEntry) {
             //A few spaces added to avoid StringIndexOutOfBounds when cutting the string as it is edited
-            tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
+            tempLeaderboardEntry.setName(removeSpaces((removeSpaces(textField.getText()) + "   ").substring(0, Math.min(16, removeSpaces(textField.getText()).length()))));
         }
     }
 
@@ -167,7 +179,19 @@ public class Menu implements MouseListener {
             }
             tempLeaderboardEntry.render(g);
         }
-
+        if (game.gameState == Game.state.Pause) {
+            g.setColor(new Color(35, 35, 35, 199));
+            g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gamePaused.png"), 155, 170, 189 * 3, 40 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 155, 360, 83 * 3, 5 * 3, game);
+            g.setColor(Color.white);
+            g.setFont(courier2);
+            g.drawString(String.valueOf(Stats.speederDistance), 155, 440);
+        }
+        if (game.gameState == Game.state.Game) {
+            g.setColor(new Color(35, 35, 35, 199));
+            g.fillRect(943, Game.HEIGHT-45, 234, 37);
+        }
         for (Button b : buttons[menuScreen]) {
             b.render(g);
         }
@@ -190,11 +214,12 @@ public class Menu implements MouseListener {
             }
         } else if (game.gameState == Game.state.GameOver) {
             if (focus == 0) {
-                game.gameState = Game.state.Menu;
-            } else if (focus == 1) {
                 game.gameState = Game.state.Game;
                 game.reset();
                 System.out.println("Game Reset");
+            } else if (focus == 1) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
             }
         } else if (game.gameState == Game.state.Leaderboard) {
             if (focus == 0) {
@@ -217,17 +242,33 @@ public class Menu implements MouseListener {
                     game.gameState = Game.state.GameOver;
                 }
             } else if (focus == 1) {
+                focus = 0;
                 textField.setVisible(false);
                 textField.setText("Player");
                 isInvalid = false;
                 game.gameState = Game.state.GameOver;
             }
+        } else if (game.gameState == Game.state.Pause) {
+            if (focus == 0) {
+                focus = 0;
+                Game.gameState = Game.state.Game;
+            } else if (focus == 1) {
+                focus = 0;
+                Game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.Game) {
+            if (focus == 0) {
+                focus = 0;
+                Game.gameState = Game.state.Pause;
+            }
         }
     }
+
 
     public void buttonEntered(int mx, int my) throws IOException {
         if (game.gameState == Game.state.Menu) {
             if (buttons[0][0].isOver(mx, my)) {
+                focus = 0;
                 game.gameState = Game.state.Game;
                 game.reset();
                 System.out.println("Game Reset");
@@ -243,11 +284,12 @@ public class Menu implements MouseListener {
         } else if (game.gameState == Game.state.GameOver) {
             if (buttons[1][0].isOver(mx, my)) {
                 focus = 0;
-                game.gameState = Game.state.Menu;
-            } else if (buttons[1][1].isOver(mx, my)) {
                 game.gameState = Game.state.Game;
                 game.reset();
                 System.out.println("Game Reset");
+            } else if (buttons[1][1].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
             }
         } else if (game.gameState == Game.state.Leaderboard) {
             if (buttons[2][0].isOver(mx, my)) {
@@ -269,13 +311,28 @@ public class Menu implements MouseListener {
                     textField.setVisible(false);
                     textField.setText("Player");
                     isInvalid = false;
+                    focus = 0;
                     game.gameState = Game.state.GameOver;
                 }
             } else if (buttons[4][1].isOver(mx, my)) {
                 textField.setVisible(false);
                 textField.setText("Player");
                 isInvalid = false;
+                focus = 0;
                 game.gameState = Game.state.GameOver;
+            }
+        } else if (game.gameState == Game.state.Pause) {
+            if (buttons[5][0].isOver(mx, my)) {
+                focus = 0;
+                Game.gameState = Game.state.Game;
+            } else if (buttons[5][1].isOver(mx, my)) {
+                focus = 0;
+                Game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.Game) {
+            if (buttons[6][0].isOver(mx, my)) {
+                focus = 0;
+                Game.gameState = Game.state.Pause;
             }
         }
     }

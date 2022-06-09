@@ -31,6 +31,8 @@ public class KeyInput implements KeyListener {
                 Stats.setKeyPress(0,4, true);
             if (key == KeyEvent.VK_ENTER)
                 Stats.setKeyPress(0,5, true);
+            if (key == KeyEvent.VK_ESCAPE)
+                Stats.setKeyPress(0,6, true);
         } else {
             if (key == KeyEvent.VK_LEFT)
                 Stats.setKeyPress(1,0, true);
@@ -44,6 +46,8 @@ public class KeyInput implements KeyListener {
                 Stats.setKeyPress(1,4, true);
             if (key == KeyEvent.VK_ENTER)
                 Stats.setKeyPress(1,5, true);
+            if (key == KeyEvent.VK_ESCAPE)
+                Stats.setKeyPress(1,6, true);
         }
 
     }
@@ -66,6 +70,8 @@ public class KeyInput implements KeyListener {
                 Stats.setKeyPress(0,4, false);
             if (key == KeyEvent.VK_ENTER)
                 Stats.setKeyPress(0,5, false);
+            if (key == KeyEvent.VK_ESCAPE)
+                Stats.setKeyPress(0,6, false);
         } else {
             if (key == KeyEvent.VK_LEFT)
                 Stats.setKeyPress(1,0, false);
@@ -79,6 +85,8 @@ public class KeyInput implements KeyListener {
                 Stats.setKeyPress(1,4, false);
             if (key == KeyEvent.VK_ENTER)
                 Stats.setKeyPress(1,5, false);
+            if (key == KeyEvent.VK_ESCAPE)
+                Stats.setKeyPress(1,6, false);
         }
 
     }
