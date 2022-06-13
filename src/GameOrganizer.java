@@ -15,7 +15,7 @@ public class GameOrganizer {
     public GameOrganizer(Game game) {
         this.game = game;
         this.seed = game.getSeed();
-        r = new Random(seed);
+        r = new Random(seed%10000);
         this.handler = game.getHandler();
         this.ghandler = game.getGhandler();
         this.player = Game.getPlayer();
@@ -35,7 +35,11 @@ public class GameOrganizer {
     }
 
     public void reset() {
-        r.setSeed(seed);
+        r.setSeed(seed%10000);
         counter = -1;
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
     }
 }

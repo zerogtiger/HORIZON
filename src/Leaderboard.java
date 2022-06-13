@@ -4,7 +4,6 @@ import java.io.*;
 public class Leaderboard {
 
     private LeaderboardEntry[] entries;
-    private int last;
     private Scanner inFile;
     private PrintWriter outFile;
 

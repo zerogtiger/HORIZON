@@ -29,9 +29,11 @@ public class Game extends JPanel implements Runnable {
 
 //    private JTextField textField;
 
-    private static int seed = 1;
+    private static int seed;
 
     private long startTime, timeElapsed, frameCount = 0;
+
+    public static state gameState = state.Lead;
 
     public enum state {
         Game,
@@ -40,12 +42,15 @@ public class Game extends JPanel implements Runnable {
         Options,
         Leaderboard,
         LeaderboardEntry,
-        Pause;
+        Pause,
+        Lead,
+        GameReady;
     }
 
-    public static state gameState = state.Menu;
-
     public Game() throws IOException {
+        seed = r.nextInt( 4)*100000;
+        seed += r.nextInt( 4)*10000;
+        seed+= r.nextInt(10000);
         handler = new Handler();
         ghandler = new Handler();
         hud = new HUD();
@@ -80,10 +85,14 @@ public class Game extends JPanel implements Runnable {
 
         } else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() - 32);
+            player.setVelX(0);
+            player.setVelY(clamp(player.getVelY() + 10, -25, -3));
             Stats.setKeyPress(0, 1, false);
             Stats.setKeyPress(1, 1, false);
         } else if (player.getBounds().intersects(obstacle.getRightBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setX(obstacle.getX() + obstacle.width);
+            player.setVelX(0);
+            player.setVelY(clamp(player.getVelY() + 7, -25, -3));
             Stats.setKeyPress(0, 0, false);
             Stats.setKeyPress(1, 0, false);
         }
@@ -114,6 +123,7 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void reset() {
+        gameOrganizer.setSeed(seed);
         gameOrganizer.reset();
         player.setY(HEIGHT);
         player.setX(-16);
@@ -141,7 +151,7 @@ public class Game extends JPanel implements Runnable {
 //        else
 //            textField.setVisible(false);
         menu.render(g);
-        drawRuler(g);
+//        drawRuler(g);
         g.dispose();
     }
 
@@ -245,6 +255,10 @@ public class Game extends JPanel implements Runnable {
 
     public int getSeed() {
         return seed;
+    }
+
+    public static void setSeed(int seed) {
+        Game.seed = seed;
     }
 
     public Pursuer getPursuer() {

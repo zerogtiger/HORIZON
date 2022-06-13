@@ -9,9 +9,8 @@ public class Menu implements MouseListener {
     private Game game;
     private Leaderboard leaderboard;
     private Button[][] buttons; //menuButtons, gameOverButtons, leaderboardButtons, optionsButtons, pauseButtons, gameButtons;
-    private int focus, lastFocus, menuScreen = menuCode.get(Game.gameState);
-    private TextField textField;
-    private int tempSeed, tempDistance, tempDeathMethod;
+    private int focus, lastFocus, menuScreen = menuCode.get(Game.gameState), iterator;
+    private TextField leaderboardEntryTextField, seedEntryTextField;
     private LeaderboardEntry tempLeaderboardEntry;
     private boolean isInvalid;
 
@@ -26,6 +25,8 @@ public class Menu implements MouseListener {
             put(Game.state.LeaderboardEntry, 4);
             put(Game.state.Pause, 5);
             put(Game.state.Game, 6);
+            put(Game.state.Lead, 7);
+            put(Game.state.GameReady, 8);
         }
     };
 
@@ -34,25 +35,32 @@ public class Menu implements MouseListener {
         lastFocus = 0;
         lmx = 0;
         lmy = 0;
+        iterator = 0;
         this.game = game;
         this.leaderboard = leaderboard;
         this.handler = handler;
-        textField = new TextField("Player");
+        leaderboardEntryTextField = new TextField("Player");
+        seedEntryTextField = new TextField(String.format("%06d", game.getSeed()));
         game.setLayout(null);
-        game.add(textField);
-        textField.setBounds(262, Game.HEIGHT - 220, 400, 25);
-        textField.setBackground(new Color(255, 255, 255));
-        textField.setFont(new Font("Monospaced", Font.BOLD, 18));
-        textField.setVisible(false);
+        game.add(leaderboardEntryTextField);
+        game.add(seedEntryTextField);
+        leaderboardEntryTextField.setBounds(262, Game.HEIGHT - 220, 400, 25);
+        leaderboardEntryTextField.setBackground(new Color(255, 255, 255));
+        leaderboardEntryTextField.setFont(new Font("Monospaced", Font.BOLD, 18));
+        leaderboardEntryTextField.setVisible(false);
+
+        seedEntryTextField.setBounds(352, Game.HEIGHT - 280, 82, 27);
+        seedEntryTextField.setBackground(new Color(255, 255, 255));
+        seedEntryTextField.setFont(new Font("Monospaced", Font.BOLD, 21));
+        seedEntryTextField.setVisible(false);
 
         isInvalid = false;
 
-        buttons = new Button[7][];
+        buttons = new Button[9][];
         buttons[0] = new Button[]{
-                new Button("Start", 90, Game.HEIGHT - 220 + 21, 200, 27, game),
-                new Button("Options", 90, Game.HEIGHT - 180 + 21, 200, 27, game),
-                new Button("Leaderboard", 90, Game.HEIGHT - 140 + 21, 200, 27, game),
-                new Button("Quit", 90, Game.HEIGHT - 100 + 21, 200, 27, game),
+                new Button("Start Game", 90, Game.HEIGHT - 200 + 21, 200, 27, game),
+                new Button("Options", 90, Game.HEIGHT - 160 + 21, 200, 27, game),
+                new Button("Quit", 90, Game.HEIGHT - 120 + 21, 200, 27, game),
         };
         buttons[1] = new Button[]{
                 new Button("Reload", 110, Game.HEIGHT - 240, 200, 27, game),
@@ -75,14 +83,25 @@ public class Menu implements MouseListener {
         buttons[6] = new Button[]{
                 new Button("Pause", 960, Game.HEIGHT - 40, 200, 27, game),
         };
+        buttons[7] = new Button[]{
+                new Button("Skip", 970, Game.HEIGHT - 40, 200, 27, game),
+        };
+        buttons[8] = new Button[]{
+                new Button("Start", 122, Game.HEIGHT - 280, 200, 27, game),
+                new Button("Set Seed", 122, Game.HEIGHT - 240, 200, 27, game),
+                new Button("Leaderboard", 122, Game.HEIGHT - 200, 200, 27, game),
+                new Button("Back", 122, Game.HEIGHT - 160, 200, 27, game),
+        };
+
     }
 
     public void setTempLeaderboard(int distance, int seed, int deathMethod) {
         tempLeaderboardEntry = new LeaderboardEntry(distance, seed, deathMethod, 150, Game.HEIGHT - 270);
-        textField.setVisible(true);
+        leaderboardEntryTextField.setVisible(true);
     }
 
     public void tick() throws IOException {
+        iterator = (iterator + 1) % 1080;
         Point p = MouseInfo.getPointerInfo().getLocation();
         int mx = (int) (p.getX() - game.getLocationOnScreen().getX());
         int my = (int) (p.getY() - game.getLocationOnScreen().getY());
@@ -130,7 +149,12 @@ public class Menu implements MouseListener {
 
         if (Game.gameState == Game.state.LeaderboardEntry) {
             //A few spaces added to avoid StringIndexOutOfBounds when cutting the string as it is edited
-            tempLeaderboardEntry.setName(removeSpaces((removeSpaces(textField.getText()) + "   ").substring(0, Math.min(16, removeSpaces(textField.getText()).length()))));
+            tempLeaderboardEntry.setName(removeSpaces((removeSpaces(leaderboardEntryTextField.getText()) + "   ").substring(0, Math.min(16, removeSpaces(leaderboardEntryTextField.getText()).length()))));
+        }
+        if (Game.gameState != Game.state.GameReady) {
+            seedEntryTextField.setVisible(false);
+        } else if (seedEntryTextField.isVisible()) {
+            isInvalid = !isSeedValid(seedEntryTextField.getText());
         }
     }
 
@@ -142,7 +166,7 @@ public class Menu implements MouseListener {
             g.setColor(Color.white);
             g.setFont(courier);
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 310 * 3) / 2, 270, 310 * 3, 24 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
         }
         if (game.gameState == Game.state.GameOver) {
             g.setFont(courier2);
@@ -190,7 +214,52 @@ public class Menu implements MouseListener {
         }
         if (game.gameState == Game.state.Game) {
             g.setColor(new Color(35, 35, 35, 199));
-            g.fillRect(943, Game.HEIGHT-45, 234, 37);
+            g.fillRect(943, Game.HEIGHT - 45, 234, 37);
+        }
+        if (game.gameState == Game.state.Lead) {
+            Image[] leadImages = {
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E1.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E2.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E3.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C1.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C2.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C3.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C4.png")
+            };
+            if (iterator >= 720)
+                game.gameState = Game.state.Menu;
+            else {
+                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
+                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);                g.setColor(new Color(0, 0, 0, (int) ((1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1)) * 255)));
+                g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+                Graphics2D g2d = (Graphics2D) g;
+                float opacity = (float) (iterator >= 480 ? 1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1) : Math.min(iterator / 60.0, 1));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                g2d.drawImage(leadImages[0], 200, 75 - 20, 177 * 3, 15 * 3, null);
+                g2d.drawImage(leadImages[3], 200, 320 - 20, 171 * 3, 15 * 3, null);
+                opacity = (float) (iterator >= 480 ? 1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1) : Math.min((Math.max(0, (iterator - 120) / 60.0)), 1));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                g2d.drawImage(leadImages[1], 200, 150 - 20, 212 * 3, 15 * 3, null);
+                g2d.drawImage(leadImages[4], 200, 395 - 20, 281 * 3, 15 * 3, null);
+                opacity = (float) (iterator >= 480 ? 1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1) : Math.min((Math.max(0, (iterator - 240) / 60.0)), 1));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                g2d.drawImage(leadImages[2], 200, 225 - 20, 149 * 3, 15 * 3, null);
+                g2d.drawImage(leadImages[5], 200, 470 - 20, 200 * 3, 15 * 3, null);
+                opacity = (float) (iterator >= 480 ? 1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1) : Math.min((Math.max(0, (iterator - 360) / 60.0)), 1));
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                g2d.drawImage(leadImages[6], 200, 545, 286 * 3, 15 * 3, null);
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+            }
+
+        }
+        if (game.gameState == Game.state.GameReady) {
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameReadyBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameReady.png"), 110, 250, 128 * 3, 30 * 3, game);
+            if (isInvalid && seedEntryTextField.isVisible()) {
+                g.setColor(Color.red);
+                g.setFont(new Font("Courier New", Font.BOLD, 20));
+                g.drawString("<E> Invalid Seed.", 452, Game.HEIGHT - 262);
+            }
         }
         for (Button b : buttons[menuScreen]) {
             b.render(g);
@@ -200,16 +269,11 @@ public class Menu implements MouseListener {
     public void buttonEntered() throws IOException {
         if (game.gameState == Game.state.Menu) {
             if (focus == 0) {
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
+                game.gameState = Game.state.GameReady;
             } else if (focus == 1) {
                 focus = 0;
                 game.gameState = Game.state.Options;
             } else if (focus == 2) {
-                focus = 0;
-                game.gameState = Game.state.Leaderboard;
-            } else if (focus == 3) {
                 System.exit(0);
             }
         } else if (game.gameState == Game.state.GameOver) {
@@ -219,11 +283,11 @@ public class Menu implements MouseListener {
                 System.out.println("Game Reset");
             } else if (focus == 1) {
                 focus = 0;
-                game.gameState = Game.state.Menu;
+                game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Leaderboard) {
             if (focus == 0) {
-                game.gameState = Game.state.Menu;
+                game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Options) {
             if (focus == 0) {
@@ -231,20 +295,20 @@ public class Menu implements MouseListener {
             }
         } else if (game.gameState == Game.state.LeaderboardEntry) {
             if (focus == 0) {
-                tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
+                tempLeaderboardEntry.setName(removeSpaces((removeSpaces(leaderboardEntryTextField.getText()) + "   ").substring(0, Math.min(16, removeSpaces(leaderboardEntryTextField.getText()).length()))));
                 if (tempLeaderboardEntry.getName().equals("")) {
                     isInvalid = true;
                 } else {
                     leaderboard.add(tempLeaderboardEntry);
-                    textField.setVisible(false);
-                    textField.setText("Player");
+                    leaderboardEntryTextField.setVisible(false);
+                    leaderboardEntryTextField.setText("Player");
                     isInvalid = false;
                     game.gameState = Game.state.GameOver;
                 }
             } else if (focus == 1) {
                 focus = 0;
-                textField.setVisible(false);
-                textField.setText("Player");
+                leaderboardEntryTextField.setVisible(false);
+                leaderboardEntryTextField.setText("Player");
                 isInvalid = false;
                 game.gameState = Game.state.GameOver;
             }
@@ -254,12 +318,38 @@ public class Menu implements MouseListener {
                 Game.gameState = Game.state.Game;
             } else if (focus == 1) {
                 focus = 0;
-                Game.gameState = Game.state.Menu;
+                Game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Game) {
             if (focus == 0) {
                 focus = 0;
                 Game.gameState = Game.state.Pause;
+            }
+        } else if (game.gameState == Game.state.Lead) {
+            if (focus == 0) {
+                focus = 0;
+                Game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.GameReady) {
+            if (focus == 0) {
+                if (seedEntryTextField.isVisible() && !isInvalid) {
+                    game.setSeed(Integer.parseInt(seedEntryTextField.getText()));
+                    game.gameState = Game.state.Game;
+                    game.reset();
+                    System.out.println("Game Reset");
+                } else if (!seedEntryTextField.isVisible()) {
+                    game.gameState = Game.state.Game;
+                    game.reset();
+                    System.out.println("Game Reset");
+                }
+            } else if (focus == 1) {
+                seedEntryTextField.setVisible(!seedEntryTextField.isVisible());
+            } else if (focus == 2) {
+                focus = 0;
+                game.gameState = Game.state.Leaderboard;
+            } else if (focus == 3) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
             }
         }
     }
@@ -269,16 +359,11 @@ public class Menu implements MouseListener {
         if (game.gameState == Game.state.Menu) {
             if (buttons[0][0].isOver(mx, my)) {
                 focus = 0;
-                game.gameState = Game.state.Game;
-                game.reset();
-                System.out.println("Game Reset");
+                game.gameState = Game.state.GameReady;
             } else if (buttons[0][1].isOver(mx, my)) {
                 focus = 0;
                 game.gameState = Game.state.Options;
             } else if (buttons[0][2].isOver(mx, my)) {
-                focus = 0;
-                game.gameState = Game.state.Leaderboard;
-            } else if (buttons[0][3].isOver(mx, my)) {
                 System.exit(0);
             }
         } else if (game.gameState == Game.state.GameOver) {
@@ -289,12 +374,12 @@ public class Menu implements MouseListener {
                 System.out.println("Game Reset");
             } else if (buttons[1][1].isOver(mx, my)) {
                 focus = 0;
-                game.gameState = Game.state.Menu;
+                game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Leaderboard) {
             if (buttons[2][0].isOver(mx, my)) {
                 focus = 0;
-                game.gameState = Game.state.Menu;
+                game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Options) {
             if (buttons[3][0].isOver(mx, my)) {
@@ -303,20 +388,20 @@ public class Menu implements MouseListener {
             }
         } else if (game.gameState == Game.state.LeaderboardEntry) {
             if (buttons[4][0].isOver(mx, my)) {
-                tempLeaderboardEntry.setName(removeSpaces((textField.getText() + "   ").substring(0, Math.min(16, textField.getText().length()))));
+                tempLeaderboardEntry.setName(removeSpaces((removeSpaces(leaderboardEntryTextField.getText()) + "   ").substring(0, Math.min(16, removeSpaces(leaderboardEntryTextField.getText()).length()))));
                 if (tempLeaderboardEntry.getName().equals("")) {
                     isInvalid = true;
                 } else {
                     leaderboard.add(tempLeaderboardEntry);
-                    textField.setVisible(false);
-                    textField.setText("Player");
+                    leaderboardEntryTextField.setVisible(false);
+                    leaderboardEntryTextField.setText("Player");
                     isInvalid = false;
                     focus = 0;
                     game.gameState = Game.state.GameOver;
                 }
             } else if (buttons[4][1].isOver(mx, my)) {
-                textField.setVisible(false);
-                textField.setText("Player");
+                leaderboardEntryTextField.setVisible(false);
+                leaderboardEntryTextField.setText("Player");
                 isInvalid = false;
                 focus = 0;
                 game.gameState = Game.state.GameOver;
@@ -327,12 +412,40 @@ public class Menu implements MouseListener {
                 Game.gameState = Game.state.Game;
             } else if (buttons[5][1].isOver(mx, my)) {
                 focus = 0;
-                Game.gameState = Game.state.Menu;
+                Game.gameState = Game.state.GameReady;
             }
         } else if (game.gameState == Game.state.Game) {
             if (buttons[6][0].isOver(mx, my)) {
                 focus = 0;
                 Game.gameState = Game.state.Pause;
+            }
+        } else if (game.gameState == Game.state.Lead) {
+            if (buttons[7][0].isOver(mx, my)) {
+                focus = 0;
+                Game.gameState = Game.state.Menu;
+            }
+        } else if (game.gameState == Game.state.GameReady) {
+            if (buttons[8][0].isOver(mx, my)) {
+                if (seedEntryTextField.isVisible() && !isInvalid) {
+                    focus = 0;
+                    game.setSeed(Integer.parseInt(seedEntryTextField.getText()));
+                    game.gameState = Game.state.Game;
+                    game.reset();
+                    System.out.println("Game Reset");
+                } else if (!seedEntryTextField.isVisible()) {
+                    focus = 0;
+                    game.gameState = Game.state.Game;
+                    game.reset();
+                    System.out.println("Game Reset");
+                }
+            } else if (buttons[8][1].isOver(mx, my)) {
+                seedEntryTextField.setVisible(!seedEntryTextField.isVisible());
+            } else if (buttons[8][2].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Leaderboard;
+            } else if (buttons[8][3].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
             }
         }
     }
@@ -345,6 +458,23 @@ public class Menu implements MouseListener {
         }
         System.out.println(Arrays.toString(temp));
         return sb.toString();
+    }
+
+    private boolean isSeedValid(String s) {
+        boolean isSeedValid = true;
+        int i = 0;
+        try {
+            i = Integer.parseInt(s);
+            if (!(i / 100000 >= 0 && i / 100000 <= 3 && (i % 100000) / 10000 >= 0 && (i % 100000) / 10000 <= 3 && i > 0 && i < 1000000 && i % 10000 > 0)) {
+                isSeedValid = false;
+            }
+            if (s.length() != 6) {
+                isSeedValid = false;
+            }
+        } catch (Exception e) {
+            isSeedValid = false;
+        }
+        return isSeedValid;
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -371,10 +501,6 @@ public class Menu implements MouseListener {
 
     public void mouseExited(MouseEvent e) {
 
-    }
-
-    private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
-        return (mx >= x && mx <= x + width && my >= y && my <= y + height);
     }
 
     public void setFocus(int focus) {

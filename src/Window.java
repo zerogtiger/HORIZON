@@ -6,7 +6,7 @@ import java.io.*;
 public class Window {
 
     private JPanel game;
-
+    private JFrame frame;
 
     public Window(int width, int height, String title, Game game) {
         this.game = game;
@@ -17,7 +17,8 @@ public class Window {
         game.addKeyListener(game.getKeyInput());
         game.addMouseListener(game.getMenu());
 
-        JFrame frame = new JFrame(title);
+        frame = new JFrame(title);
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/icon.png"));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(game);
         frame.setResizable(false);

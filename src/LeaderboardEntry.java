@@ -9,7 +9,7 @@ public class LeaderboardEntry {
             deathMethods[] = {"Collision", "Pursuer"},
             placementIdentifier[] = {">>>>", ">>>", ">>", ">"};
     private int placement, distance, seed, weather, timeOfDay, deathMethod, x, y;
-    private Color[] colors = {new Color(218, 26, 26),
+    private static Color[] colors = {new Color(218, 26, 26),
             new Color(255, 204, 0),
             new Color(0, 178, 255),
             new Color(255, 255, 255)};

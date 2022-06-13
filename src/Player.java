@@ -7,7 +7,9 @@ public class Player extends GameObject {
     private final Game game;
     private final Image[] pics = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png")};
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")};
     private int iterator[];
     private int iteratorValue = 3;
 
@@ -38,11 +40,9 @@ public class Player extends GameObject {
                     velY = Game.clamp(velY - (iterator[0] % 5 == 0 ? 1 : 0), -10, 0);
                 }
             }
-            if (Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) {
-
-            } else if (Stats.getKeyPress()[0][0]) {
+            if (Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]) {
                 velX = Game.clamp(velX - (iterator[1] % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
-            } else if (Stats.getKeyPress()[0][1]) {
+            } else if (Stats.getKeyPress()[0][1] && !Stats.getKeyPress()[0][0]) {
                 velX = Game.clamp(velX + (iterator[1] % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
             } else {
                 if (velX > 0) {
@@ -91,12 +91,16 @@ public class Player extends GameObject {
 
     public void render(Graphics g) {
         g.setColor(Color.red);
-        if (velX == 0)
+        if ((Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || (!Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]))
             g.drawImage(pics[0], getRelX(), getRelY(), 32, 48, game);
-        else if (velX < 0)
+        else if (Stats.getKeyPress()[0][0] && velX > -7)
             g.drawImage(pics[1], getRelX(), getRelY(), 32, 48, game);
-        else if (velX > 0)
+        else if (Stats.getKeyPress()[0][0])
             g.drawImage(pics[2], getRelX(), getRelY(), 32, 48, game);
+        else if (Stats.getKeyPress()[0][1] && velX < 7)
+            g.drawImage(pics[3], getRelX(), getRelY(), 32, 48, game);
+        else if (Stats.getKeyPress()[0][1])
+            g.drawImage(pics[4], getRelX(), getRelY(), 32, 48, game);
         if (isChargingLeft && velY < -8)
             g.fillRect(getRelX() - 32, getRelY() + 32, 48, 5);
         if (isChargingRight && velY < -8)
