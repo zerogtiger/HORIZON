@@ -127,6 +127,8 @@ public class Game extends JPanel implements Runnable {
         gameOrganizer.reset();
         player.setY(HEIGHT);
         player.setX(-16);
+        player.setVelX(0);
+        player.setVelY(-10);
         camera.tick();
         pursuer.setDistance(10000);
         Stats.speederDistance = 0;
@@ -216,7 +218,7 @@ public class Game extends JPanel implements Runnable {
             }
             this.repaint();
             try {
-                Thread.sleep(1000 / 60);
+                Thread.sleep(1000 / 65);
             } catch (Exception e) {
                 e.printStackTrace();
             }

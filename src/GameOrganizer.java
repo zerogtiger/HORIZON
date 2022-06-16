@@ -28,7 +28,7 @@ public class GameOrganizer {
             player.setX(-16);
             player.setY(Game.HEIGHT);
             pursuer.setDistance(pursuer.getDistance() + 1000);
-            game.setMap(new Map(r.nextInt(6), r.nextInt(10000), handler, ghandler, player));
+            game.setMap(new Map(r.nextInt(1,3), r.nextInt(10000), handler, ghandler, player));
             counter++;
             System.out.println("new map");
         }

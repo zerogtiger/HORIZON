@@ -4,13 +4,17 @@ public class Obstacle extends GameObject {
 
     private Map map;
     private Player player;
+    private Image image;
+    private int value;
 
-    public Obstacle(int x, int y, int width, int height, ID id, Handler handler, Map map, Player player) {
+    public Obstacle(Image image, int value, int x, int y, int width, int height, ID id, Handler handler, Map map, Player player) {
         super(x, y, id, handler);
+        this.image = image;
         this.width = width;
         this.height = height;
         this.map = map;
         this.player = player;
+        this.value = value;
     }
 
     public Rectangle getBounds() {
@@ -48,24 +52,25 @@ public class Obstacle extends GameObject {
     public void tick() {
         Game.collision(this);
         if (Camera.outOfFrame(this)) {
-            map.setObstacles((-y / Map.obstacleSize), (x / Map.obstacleSize) + Map.width / 2, 1);
+            map.setObstacles((-y / Map.obstacleSize), (x / Map.obstacleSize) + Map.width / 2, value);
             handler.removeObject(this);
         }
 
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.lightGray);
-        g.fillRect(getRelX(), getRelY(), width, height);
-        Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.yellow);
-        g2d.draw(getLeftChargingBounds());
-        g2d.draw(getRightChargingBounds());
-        g.setColor(Color.green);
-        g2d.draw(getCollisionBounds());
-        g.setColor(Color.cyan);
-        g2d.draw(getLeftScratchingBounds());
-        g2d.draw(getRightScratchingBounds());
+//        g.setColor(Color.lightGray);
+//        g.fillRect(getRelX(), getRelY(), width, height);
+//        Graphics2D g2d = (Graphics2D) g;
+//        g.setColor(Color.yellow);
+//        g2d.draw(getLeftChargingBounds());
+//        g2d.draw(getRightChargingBounds());
+//        g.setColor(Color.green);
+//        g2d.draw(getCollisionBounds());
+//        g.setColor(Color.cyan);
+//        g2d.draw(getLeftScratchingBounds());
+//        g2d.draw(getRightScratchingBounds());
+        g.drawImage(image, getRelX(), getRelY(), width, height, null);
 
     }
 }
