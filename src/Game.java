@@ -27,6 +27,7 @@ public class Game extends JPanel implements Runnable {
     private KeyInput keyInput;
     private GameOrganizer gameOrganizer;
     private static Leaderboard leaderboard;
+    private Environment environment;
 
 //    private JTextField textField;
 
@@ -64,6 +65,7 @@ public class Game extends JPanel implements Runnable {
         pursuer = new Pursuer(player);
         camera = new Camera(player);
         gameOrganizer = new GameOrganizer(this);
+        environment = new Environment(seed);
 
 //        textField = new JTextField("Test");
 //        this.setLayout(null);
@@ -127,6 +129,7 @@ public class Game extends JPanel implements Runnable {
     public void reset() {
         gameOrganizer.setSeed(seed);
         gameOrganizer.reset();
+        environment.reset(seed);
         player.setY(HEIGHT);
         player.setX(-16);
         player.setVelX(0);
@@ -148,6 +151,7 @@ public class Game extends JPanel implements Runnable {
             ghandler.render(g);
             handler.render(g);
             ahandler.render(g);
+            environment.render(g);
             hud.render(g);
             pursuer.render(g);
         }
@@ -157,7 +161,6 @@ public class Game extends JPanel implements Runnable {
 //        else
 //            textField.setVisible(false);
         menu.render(g);
-        g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/sandstormTest.png"), 0, 0, WIDTH, HEIGHT, this);
 //        drawRuler(g);
         g.dispose();
     }
@@ -173,6 +176,7 @@ public class Game extends JPanel implements Runnable {
             map.tick();
             hud.tick();
             pursuer.tick();
+            environment.tick();
         }
         timeElapsed = System.currentTimeMillis() - startTime;
         frameCount++;

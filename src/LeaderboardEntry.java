@@ -4,7 +4,7 @@ import java.io.*;
 
 public class LeaderboardEntry {
     private String name;
-    private static String weathers[] = {"Clear", "Rain", "Sandstorm", "Overcast"},
+    private static String weathers[] = {"Clear", "Overcast", "Rain", "Sandstorm"},
             timeOfDays[] = {"Morning", "Noon", "Evening", "Night"},
             deathMethods[] = {"Collision", "Pursuer"},
             placementIdentifier[] = {">>>>", ">>>", ">>", ">"};
