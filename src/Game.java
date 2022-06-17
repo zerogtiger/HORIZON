@@ -16,6 +16,7 @@ public class Game extends JPanel implements Runnable {
     private Random r = new Random();
     private final Handler handler;
     private final Handler ghandler;
+    private final Handler ahandler;
     private HUD hud;
     private Stats stats;
     private static Player player;
@@ -53,6 +54,7 @@ public class Game extends JPanel implements Runnable {
         seed+= r.nextInt(10000);
         handler = new Handler();
         ghandler = new Handler();
+        ahandler = new Handler();
         hud = new HUD();
         stats = new Stats();
         leaderboard = new Leaderboard();
@@ -133,6 +135,7 @@ public class Game extends JPanel implements Runnable {
         pursuer.setDistance(10000);
         Stats.speederDistance = 0;
         Stats.CHARGE = 0;
+        keyInput.reset();
     }
 
     public void paintComponent(Graphics g) {
@@ -144,6 +147,7 @@ public class Game extends JPanel implements Runnable {
         if (gameState == state.Game || gameState == state.Pause) {
             ghandler.render(g);
             handler.render(g);
+            ahandler.render(g);
             hud.render(g);
             pursuer.render(g);
         }
@@ -153,6 +157,7 @@ public class Game extends JPanel implements Runnable {
 //        else
 //            textField.setVisible(false);
         menu.render(g);
+        g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/sandstormTest.png"), 0, 0, WIDTH, HEIGHT, this);
 //        drawRuler(g);
         g.dispose();
     }
@@ -163,6 +168,7 @@ public class Game extends JPanel implements Runnable {
             gameOrganizer.tick();
             ghandler.tick();
             handler.tick();
+            ahandler.tick();
             camera.tick();
             map.tick();
             hud.tick();
@@ -218,7 +224,7 @@ public class Game extends JPanel implements Runnable {
             }
             this.repaint();
             try {
-                Thread.sleep(1000 / 65);
+                Thread.sleep(1000 / 70);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -245,6 +251,10 @@ public class Game extends JPanel implements Runnable {
 
     public Handler getGhandler() {
         return ghandler;
+    }
+
+    public Handler getAhandler() {
+        return ahandler;
     }
 
     public Handler getHandler() {

@@ -8,7 +8,7 @@ public class GameOrganizer {
     private Player player;
     private Pursuer pursuer;
     private Map map;
-    private Handler handler, ghandler;
+    private Handler handler, ghandler, ahandler;
     private long counter = -1;
     private int seed;
 
@@ -18,6 +18,7 @@ public class GameOrganizer {
         r = new Random(seed%10000);
         this.handler = game.getHandler();
         this.ghandler = game.getGhandler();
+        this.ahandler = game.getAhandler();
         this.player = Game.getPlayer();
         this.pursuer = game.getPursuer();
         this.map = game.getMap();
@@ -28,7 +29,7 @@ public class GameOrganizer {
             player.setX(-16);
             player.setY(Game.HEIGHT);
             pursuer.setDistance(pursuer.getDistance() + 1000);
-            game.setMap(new Map(r.nextInt(1,3), r.nextInt(10000), handler, ghandler, player));
+            game.setMap(new Map(r.nextInt(1,3), r.nextInt(10000), handler, ghandler, ahandler, player));
             counter++;
             System.out.println("new map");
         }

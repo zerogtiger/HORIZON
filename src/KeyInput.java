@@ -13,6 +13,14 @@ public class KeyInput implements KeyListener {
 
     }
 
+    public void reset() {
+        for (int i = 0; i <= 1; i++) {
+            for (int j = 0; j <= 6; j++) {
+                Stats.setKeyPress(i,j, false);
+            }
+        }
+    }
+
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_D) {
