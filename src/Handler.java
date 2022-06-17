@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Handler {
 
-    LinkedList<GameObject> object = new LinkedList<>();
+    ArrayList<GameObject> object = new ArrayList<>();
 
     public void tick() {
         for (int i = 0; i < object.size(); i++) {

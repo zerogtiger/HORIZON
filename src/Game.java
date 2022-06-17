@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.image.BufferStrategy;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -11,6 +12,7 @@ public class Game extends JPanel implements Runnable {
     public static final int WIDTH = 1200, HEIGHT = WIDTH / 16 * 9;
 
     private Thread thread;
+    private JFrame frame;
     private boolean running = false;
 
     private Random r = new Random();
@@ -28,6 +30,9 @@ public class Game extends JPanel implements Runnable {
     private GameOrganizer gameOrganizer;
     private static Leaderboard leaderboard;
     private Environment environment;
+
+    Image offScreenImage;
+    private Graphics offScreenBuffer;
 
 //    private JTextField textField;
 
@@ -50,9 +55,9 @@ public class Game extends JPanel implements Runnable {
     }
 
     public Game() throws IOException {
-        seed = r.nextInt( 4)*100000;
-        seed += r.nextInt( 4)*10000;
-        seed+= r.nextInt(10000);
+        seed = r.nextInt(4) * 100000;
+        seed += r.nextInt(4) * 10000;
+        seed += r.nextInt(10000);
         handler = new Handler();
         ghandler = new Handler();
         ahandler = new Handler();
@@ -74,8 +79,23 @@ public class Game extends JPanel implements Runnable {
 //        textField.setBackground(new Color(255,255,255));
 //        textField.setFont(new Font("Monospaced", Font.BOLD, 18));
 //        textField.setVisible(false);
+        this.setDoubleBuffered(true);
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setMaximumSize(new Dimension(WIDTH, HEIGHT));
+        this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        this.setFocusable(true);
+        this.addKeyListener(this.getKeyInput());
+        this.addMouseListener(this.getMenu());
 
-        new Window(WIDTH, HEIGHT, "HORIZON極速狂飆", this);
+        frame = new JFrame("HORIZON極速狂飆");
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/icon.png"));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(this);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        this.start();
     }
 
     public static int clamp(int val, int min, int max) {
@@ -141,27 +161,63 @@ public class Game extends JPanel implements Runnable {
         keyInput.reset();
     }
 
+    public void update(Graphics g) {
+        paint(g);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+//        g = bs.getDrawGraphics();
 
-        g.setColor(new Color(59, 56, 53));
-        g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
+//        g.setColor(new Color(59, 56, 53));
+//        g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
+//
+//        if (gameState == state.Game || gameState == state.Pause) {
+//            ghandler.render(g);
+//            handler.render(g);
+//            ahandler.render(g);
+//            environment.render(g);
+//            hud.render(g);
+//            pursuer.render(g);
+//        }
+//        menu.render(g);
+//        g.dispose();
 
+        // Set up the offscreen buffer the first time paint() is called
+        if (offScreenBuffer == null) {
+            offScreenImage = createImage(WIDTH, HEIGHT);
+            offScreenBuffer = offScreenImage.getGraphics();
+        }
+
+        // All of the drawing is done to an off screen buffer which is
+        // then copied to the screen.  This will prevent flickering
+        // Clear the offScreenBuffer first
+        offScreenBuffer.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+        super.paintComponent(g);
+        offScreenBuffer.setColor(new Color(59, 56, 53));
+        offScreenBuffer.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
         if (gameState == state.Game || gameState == state.Pause) {
-            ghandler.render(g);
-            handler.render(g);
-            ahandler.render(g);
-            environment.render(g);
-            hud.render(g);
-            pursuer.render(g);
+            offScreenBuffer.setColor(new Color(59, 56, 53));
+            offScreenBuffer.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
+            ghandler.render(offScreenBuffer);
+            handler.render(offScreenBuffer);
+            ahandler.render(offScreenBuffer);
+            environment.render(offScreenBuffer);
+            hud.render(offScreenBuffer);
+            pursuer.render(offScreenBuffer);
         }
 //        if (gameState == state.LeaderboardEntry) {
 //            textField.setVisible(true);
 //        }
 //        else
 //            textField.setVisible(false);
-        menu.render(g);
+        menu.render(offScreenBuffer);
 //        drawRuler(g);
+
+        // Transfer the offScreenBuffer to the screen
+        g.drawImage(offScreenImage, 0, 0, WIDTH, HEIGHT, this);
         g.dispose();
     }
 
