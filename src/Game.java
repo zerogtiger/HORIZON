@@ -67,7 +67,7 @@ public class Game extends JPanel implements Runnable {
         menu = new Menu(this, leaderboard, handler);
         keyInput = new KeyInput();
         player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
-        pursuer = new Pursuer(player);
+        pursuer = new Pursuer(player, this);
         camera = new Camera(player);
         gameOrganizer = new GameOrganizer(this);
         environment = new Environment(seed);
@@ -167,7 +167,7 @@ public class Game extends JPanel implements Runnable {
 
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        //super.paintComponent(g);
 //        g = bs.getDrawGraphics();
 
 //        g.setColor(new Color(59, 56, 53));
@@ -195,7 +195,7 @@ public class Game extends JPanel implements Runnable {
         // Clear the offScreenBuffer first
         offScreenBuffer.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-        super.paintComponent(g);
+    //    super.paintComponent(g);
         offScreenBuffer.setColor(new Color(59, 56, 53));
         offScreenBuffer.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
         if (gameState == state.Game || gameState == state.Pause) {
@@ -204,7 +204,7 @@ public class Game extends JPanel implements Runnable {
             ghandler.render(offScreenBuffer);
             handler.render(offScreenBuffer);
             ahandler.render(offScreenBuffer);
-            environment.render(offScreenBuffer);
+//            environment.render(offScreenBuffer);
             hud.render(offScreenBuffer);
             pursuer.render(offScreenBuffer);
         }

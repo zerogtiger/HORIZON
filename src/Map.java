@@ -80,6 +80,13 @@ public class Map {
         } else if (type == 2) {
             diamondSwarm.generateMap();
         }
+        this.type = 2;
+        for (int i = 1; i <= height; i++) {
+            for (int j = 1; j <= width; j++) {
+                if (j % 6 == 0 && i % 15 < 14) obstacles[i][j] = 221;
+                else obstacles[i][j] = 201;
+            }
+        }
     }
 
     public int[][] getObstacles() {

@@ -5,50 +5,66 @@ public class Player extends GameObject {
 
     private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
     private final Game game;
-    private final Image[] pics = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
+    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL2.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")};
-    private int iterator[];
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")},
+            soundBarrier = new Image[9],
+            scratchingLeft = new Image[8], scratchingRight = new Image[8], chargingLeft = new Image[9], chargingRight = new Image[9];
+    private int iterator;
     private int iteratorValue = 3;
 
     public Player(int x, int y, ID id, Handler handler, int normalVelY, Game game) {
         super(x, y, id, handler);
-        iterator = new int[]{0, 0}; //Y, X
+        iterator = 0;
         this.game = game;
         velX = 0;
         velY = 0;
+        for (int i = 0; i < 9; i++) {
+            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/soundBarrier/" + String.format("%04d", i + 1) + ".png");
+        }
+        for (int i = 0; i < 8; i++) {
+            scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/left/" + String.format("%04d", i + 8) + ".png");
+        }
+        for (int i = 0; i < 8; i++) {
+            scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/right/" + String.format("%04d", i + 8) + ".png");
+        }
+        for (int i = 0; i < 9; i++) {
+            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/left/" + String.format("%04d", i + 1) + ".png");
+        }
+        for (int i = 0; i < 9; i++) {
+            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/right/" + String.format("%04d", i + 1) + ".png");
+        }
     }
 
     public void tick() {
-        iterator[0] = (iterator[0] + 1) % 360;
-        iterator[1] = (iterator[1] + 1) % 360;
+        iterator = (iterator + 1) % 360;
         if (Pursuer.distance <= 0) {
             Game.gameOver(Stats.speederDistance, game.getSeed(), 1);
         }
         if (Stats.debug == 0) {
             if (isScratchingLeft || isScratchingRight)
-                velY = Game.clamp(velY + (iterator[0] % 3 == 0 ? 1 : 0), -25, -3);
+                velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
             else if ((Stats.getKeyPress()[0][2] || Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) && Stats.CHARGE > 0) {
-                velY = Game.clamp(velY - (iterator[0] % 3 == 0 ? 1 : 0), -25, 0);
+                velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
                 Stats.CHARGE -= 3;
             } else {
                 if (velY < -10) {
-                    velY = Game.clamp(velY + (iterator[0] % 4 == 0 ? 1 : 0), -25, -10);
+                    velY = Game.clamp(velY + (iterator % 4 == 0 ? 1 : 0), -25, -10);
                 } else {
-                    velY = Game.clamp(velY - (iterator[0] % 5 == 0 ? 1 : 0), -10, 0);
+                    velY = Game.clamp(velY - (iterator % 5 == 0 ? 1 : 0), -10, 0);
                 }
             }
             if (Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]) {
-                velX = Game.clamp(velX - (iterator[1] % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
+                velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
             } else if (Stats.getKeyPress()[0][1] && !Stats.getKeyPress()[0][0]) {
-                velX = Game.clamp(velX + (iterator[1] % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
+                velX = Game.clamp(velX + (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
             } else {
                 if (velX > 0) {
-                    velX = Game.clamp(velX - (iterator[1] % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
+                    velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
                 } else if (velX < 0) {
-                    velX = Game.clamp(velX + (iterator[1] % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
+                    velX = Game.clamp(velX + (iterator % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
                 }
             }
         } else {
@@ -61,14 +77,14 @@ public class Player extends GameObject {
             else
                 velY = 0;
             if (Stats.getKeyPress()[1][0]) {
-                velX = Game.clamp(velX - (iterator[1] % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
+                velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
             } else if (Stats.getKeyPress()[1][1]) {
-                velX = Game.clamp(velX + (iterator[1] % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
+                velX = Game.clamp(velX + (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
             } else {
                 if (velX > 0) {
-                    velX = Game.clamp(velX - (iterator[1] % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
+                    velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
                 } else if (velX < 0) {
-                    velX = Game.clamp(velX + (iterator[1] % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
+                    velX = Game.clamp(velX + (iterator % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
                 }
             }
 
@@ -92,24 +108,41 @@ public class Player extends GameObject {
     public void render(Graphics g) {
         g.setColor(Color.red);
         if ((Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || (!Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]))
-            g.drawImage(pics[0], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage(speeder[0], getRelX(), getRelY(), 32, 48, game);
         else if (Stats.getKeyPress()[0][0] && velX > -7)
-            g.drawImage(pics[1], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage(speeder[1], getRelX(), getRelY(), 32, 48, game);
         else if (Stats.getKeyPress()[0][0])
-            g.drawImage(pics[2], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage(speeder[2], getRelX(), getRelY(), 32, 48, game);
         else if (Stats.getKeyPress()[0][1] && velX < 7)
-            g.drawImage(pics[3], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage(speeder[3], getRelX(), getRelY(), 32, 48, game);
         else if (Stats.getKeyPress()[0][1])
-            g.drawImage(pics[4], getRelX(), getRelY(), 32, 48, game);
-        if (isChargingLeft && velY < -8)
-            g.fillRect(getRelX() - 32, getRelY() + 32, 48, 5);
-        if (isChargingRight && velY < -8)
-            g.fillRect(getRelX() + 16, getRelY() + 32, 48, 5);
+            g.drawImage(speeder[4], getRelX(), getRelY(), 32, 48, game);
+        if (isChargingLeft && velY < -8) {
+            int index = iterator % 18 / 2;
+            g.drawImage(chargingLeft[index], getRelX() - 32, getRelY() + 32, 48, 10, game);
+        }
+//            g.fillRect(getRelX() - 32, getRelY() + 32, 48, 5);
+        if (isChargingRight && velY < -8) {
+            int index = iterator % 18 / 2;
+            g.drawImage(chargingRight[index], getRelX() + 16, getRelY() + 32, 48, 10, game);
+        }
 
 //        g.fillRect(getRelX(), getRelY(), 32, 48);
-        Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.CYAN);
 //        g2d.draw(getLeftChargingBounds());
+        if (isScratchingLeft) {
+            int index = iterator % 16 / 2;
+            g.drawImage(scratchingLeft[index], getRelX(), getRelY() + 37, 10, 10, game);
+        }
+        if (isScratchingRight) {
+            int index = iterator % 16 / 2;
+            g.drawImage(scratchingRight[index], getRelX() + 32 - 15, getRelY() + 37, 10, 10, game);
+        }
+        Graphics2D g2d = (Graphics2D) g;
+        int index = (iterator%18)/2;
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) (Math.min(0, velY + 11) / -14.0)));
+        g2d.drawImage(soundBarrier[index], getRelX() - 8, getRelY() + 5, 48, 40, game);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
     }
 
 
@@ -185,11 +218,11 @@ public class Player extends GameObject {
         return null;
     }
 
-    public int[] getIterator() {
+    public int getIterator() {
         return iterator;
     }
 
-    public void setIterator(int index, int value) {
-        iterator[index] = value;
+    public void setIterator(int value) {
+        iterator = value;
     }
 }
