@@ -100,7 +100,7 @@ public class LeaderboardEntry {
         //Append user data if it is initialized
         if (isInitialized) {
             sb.append(String.format("%-20s", name));
-            sb.append(String.format("%-6d", distance)).append("m    ");
+            sb.append(String.format("%-7d", distance)).append("m    ");
             sb.append(String.format("%-13s", weathers[weather]));
             sb.append(String.format("%-11s", timeOfDays[timeOfDay]));
             sb.append(String.format("%-13s", deathMethods[deathMethod]));
@@ -108,7 +108,7 @@ public class LeaderboardEntry {
         }
         //If not, just append dashes
         else
-            sb.append("----------------    ------m    ---------    -------    ---------    ------");
+            sb.append("----------------    -------m    ---------    -------    ---------    ------");
         return sb.toString();
     }
 
@@ -118,8 +118,8 @@ public class LeaderboardEntry {
     public void render(Graphics g) {
 
         //Background for the entry
-        g.setColor(new Color(0, 0, 0, 200));
-        g.fillRect(x, y, 915, 40);
+        g.setColor(new Color(0, 0, 0, 181));
+        g.fillRect(x, y, 920, 40);
 
         //Placement identifiers
         g.setFont(new Font("Consolas", Font.BOLD, 25));
@@ -129,7 +129,7 @@ public class LeaderboardEntry {
 
         //Actual entry data
         g.setFont(new Font("Consolas", Font.PLAIN, 18));
-        g.setColor(Color.white);
+        g.setColor((isInitialized? Color.white: Color.gray));
         g.drawString(toString(), x + 73, y + 26);
     }
 
@@ -139,7 +139,7 @@ public class LeaderboardEntry {
 
     public void setPlacement(int placement) {
         this.placement = placement;
-        y = placement * 50 + 70;
+        y = placement * 48 + 96;
     }
 
     public void setName(String name) {

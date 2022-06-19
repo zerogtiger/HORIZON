@@ -63,8 +63,11 @@ public class HUD{
         g2d.drawLine(1200, 40, (int) (1200-(10000-Pursuer.distance)/10000.0*600), 40);
 
         //Speeder distance
-        g.setFont(new Font("Courier New", Font.BOLD, 30));
-        g.drawString(String.valueOf(Stats.speederDistance), Game.WIDTH/2-25, 75);
+        g.setFont(new Font("Courier New", Font.BOLD, 34));
+
+        //Centering the distance
+        int digits = String.valueOf(Stats.speederDistance).length();
+        g.drawString(String.valueOf(Stats.speederDistance), 600-10*digits, 85);
 
     }
 

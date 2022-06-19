@@ -72,8 +72,8 @@ public class Leaderboard {
         //Add the new entry into the array and shuffle all lower entries downwards
         if (isIn) {
             for (int i = 9; i >= placement; i--) {
-                entries[i+1] = entries[i];
-                entries[i+1].setPlacement(i+1);
+                entries[i + 1] = entries[i];
+                entries[i + 1].setPlacement(i + 1);
             }
             entry.setPlacement(placement);
             entries[placement] = entry;
@@ -100,6 +100,11 @@ public class Leaderboard {
     //Parameters: the Graphics object to draw the entries
     //Return: void
     public void render(Graphics g) {
+
+        //Entry information label
+        g.setColor(Color.white);
+        g.setFont(new Font("Consolas", Font.PLAIN, 18));
+        g.drawString(" P  Name                Distance    Weather      Time       Death        Seed", 143, 135);
 
         //Render all LeaderboardEntry objects in the array
         for (int i = 1; i <= 10; i++) {

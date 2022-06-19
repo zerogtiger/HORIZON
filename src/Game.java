@@ -301,10 +301,11 @@ public class Game extends JPanel implements Runnable {
 
         //Render the menu
         menu.render(offScreenBuffer);
-//        drawRuler(g);
 
         //Transfer the offScreenBuffer to the screen
         g.drawImage(offScreenImage, 0, 0, WIDTH, HEIGHT, this);
+
+        drawRuler(g);
         g.dispose();
     }
 

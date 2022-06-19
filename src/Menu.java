@@ -102,7 +102,7 @@ public class Menu implements MouseListener {
                 new Button("Menu", 110, Game.HEIGHT - 200, 200, 27, game)
         };
         buttons[2] = new Button[]{
-                new Button("Back", 60, Game.HEIGHT - 45, 200, 27, game),
+                new Button("Back", 60, Game.HEIGHT - 40, 200, 27, game),
         };
         buttons[3] = new Button[]{
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
