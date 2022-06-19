@@ -1,26 +1,55 @@
+/*
+
+Description:
+
+Main player/speeder for the game to be controlled by the user. Responsible for rendering the speeder in various
+postures depending on its velocities and states; rendering the visual effects, including charging, scratching, sound
+barrier, &c; responsible for updating the velocities and position of the speeder according to the states of key-presses
+to reflect a dynamic, airborne sensation; responsible for updating charge of the speeder.
+
+*/
+
 import java.awt.*;
-import java.util.Random;
+import java.util.*;
 
 public class Player extends GameObject {
 
+    //Booleans to report the state of the speeder
     private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
+
+    //Game which the speeder belongs to
     private final Game game;
+
+    //Images of speeder postures
     private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL2.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png"),
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")},
-            soundBarrier = new Image[9],
-            scratchingLeft = new Image[8], scratchingRight = new Image[8], chargingLeft = new Image[9], chargingRight = new Image[9];
-    private int iterator;
-    private int iteratorValue = 3;
 
+    //Images of effects
+            soundBarrier = new Image[9],
+            scratchingLeft = new Image[8],
+            scratchingRight = new Image[8],
+            chargingLeft = new Image[9],
+            chargingRight = new Image[9];
+
+    //iterator to assist in displaying animations
+    private int iterator;
+
+    //Constructor
     public Player(int x, int y, ID id, Handler handler, int normalVelY, Game game) {
+
+        //Super GameObject
         super(x, y, id, handler);
+
+        //Initialize variables
         iterator = 0;
         this.game = game;
         velX = 0;
         velY = 0;
+
+        //Compile images of effects
         for (int i = 0; i < 9; i++) {
             soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/soundBarrier/" + String.format("%04d", i + 1) + ".png");
         }
@@ -38,12 +67,22 @@ public class Player extends GameObject {
         }
     }
 
+    //Description: updates the speeder velocity, position with reference to the key-pressed states. Updates charge and distance travelled
+    //Parameters: none
+    //Return: void
     public void tick() {
+
+        //Forward iterator
         iterator = (iterator + 1) % 360;
+
+        //Check pursuer distance
         if (Pursuer.distance <= 0) {
             Game.gameOver(Stats.speederDistance, game.getSeed(), 1);
         }
+
+        //Update speeder velocities depending on the key states
         if (Stats.debug == 0) {
+            //y-velocity
             if (isScratchingLeft || isScratchingRight)
                 velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
             else if ((Stats.getKeyPress()[0][2] || Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) && Stats.CHARGE > 0) {
@@ -56,6 +95,8 @@ public class Player extends GameObject {
                     velY = Game.clamp(velY - (iterator % 5 == 0 ? 1 : 0), -10, 0);
                 }
             }
+
+            //x-velocity
             if (Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]) {
                 velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
             } else if (Stats.getKeyPress()[0][1] && !Stats.getKeyPress()[0][0]) {
@@ -89,23 +130,34 @@ public class Player extends GameObject {
             }
 
         }
+
+        //Increase charge
         if (isChargingLeft && velY < -8)
             Stats.CHARGE += 2;
         if (isChargingRight && velY < -8)
             Stats.CHARGE += 2;
 
-
+        //Update location of speeder
         y += velY;
         x += velX;
+
+        //Update distance
         Stats.speederDistance += -velY;
         Stats.CHARGE = Game.clamp(Stats.CHARGE, 0, 800);
+
+        //Reset speeder states
         isChargingLeft = false;
         isChargingRight = false;
         isScratchingLeft = false;
         isScratchingRight = false;
     }
 
+    //Description: renders the speeder
+    //Parameters: the Graphics object to draw the speeder
+    //Return: void
     public void render(Graphics g) {
+
+        //Render specific speeder posture
         g.setColor(Color.red);
         if ((Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || (!Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]))
             g.drawImage(speeder[0], getRelX(), getRelY(), 32, 48, game);
@@ -117,19 +169,18 @@ public class Player extends GameObject {
             g.drawImage(speeder[3], getRelX(), getRelY(), 32, 48, game);
         else if (Stats.getKeyPress()[0][1])
             g.drawImage(speeder[4], getRelX(), getRelY(), 32, 48, game);
+
+        //Renders charging effects
         if (isChargingLeft && velY < -8) {
             int index = iterator % 18 / 2;
             g.drawImage(chargingLeft[index], getRelX() - 32, getRelY() + 32, 48, 10, game);
         }
-//            g.fillRect(getRelX() - 32, getRelY() + 32, 48, 5);
         if (isChargingRight && velY < -8) {
             int index = iterator % 18 / 2;
             g.drawImage(chargingRight[index], getRelX() + 16, getRelY() + 32, 48, 10, game);
         }
 
-//        g.fillRect(getRelX(), getRelY(), 32, 48);
-        g.setColor(Color.CYAN);
-//        g2d.draw(getLeftChargingBounds());
+        //Renders scratching effects
         if (isScratchingLeft) {
             int index = iterator % 16 / 2;
             g.drawImage(scratchingLeft[index], getRelX(), getRelY() + 37, 10, 10, game);
@@ -138,6 +189,8 @@ public class Player extends GameObject {
             int index = iterator % 16 / 2;
             g.drawImage(scratchingRight[index], getRelX() + 32 - 15, getRelY() + 37, 10, 10, game);
         }
+
+        //Renders sound barrier effects
         Graphics2D g2d = (Graphics2D) g;
         int index = (iterator%18)/2;
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) (Math.min(0, velY + 11) / -14.0)));
