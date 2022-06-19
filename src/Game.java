@@ -94,7 +94,7 @@ public class Game extends JPanel implements Runnable {
         menu = new Menu(this, leaderboard, handler);
         keyInput = new KeyInput();
 
-        player = new Player(-16, HEIGHT, ID.Player, handler, 0, this);
+        player = new Player(-16, HEIGHT * 2, ID.Player, handler, 0, this);
         pursuer = new Pursuer(player, this);
         camera = new Camera(player);
 
@@ -144,7 +144,7 @@ public class Game extends JPanel implements Runnable {
         //If the speeder is intersecting with the collision bounds, then end the current game
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
             menu.setFocus(0);
-            gameOver(Stats.speederDistance, seed, 0);
+//            gameOver(Stats.speederDistance, seed, 0);
         }
 
         //If the speeder is intersecting with the sides of the obstacle, then move the speeder outside the obstacle
@@ -210,7 +210,7 @@ public class Game extends JPanel implements Runnable {
         environment.reset(seed);
 
         //Reset the player position and velocity
-        player.setY(HEIGHT);
+        player.setY(HEIGHT * 2);
         player.setX(-16);
         player.setVelX(0);
         player.setVelY(-10);
@@ -271,6 +271,21 @@ public class Game extends JPanel implements Runnable {
         //Render objects to the off-screen buffer
         //Only render certain objects in certain designated game states to avoid inefficient use of resources
         if (gameState == state.Game || gameState == state.Pause) {
+
+            //Draw zone warning
+            int nextType = gameOrganizer.getTempType();
+            long zoneCount = gameOrganizer.getCurrCounter();
+
+            if ((Stats.speederDistance+8500)/17000 == zoneCount) {
+
+                offScreenBuffer.setColor(Color.white);
+                offScreenBuffer.setFont(new Font("Courier New", Font.PLAIN, 25));
+                offScreenBuffer.drawString("Incoming Zone: " + (nextType == 1? "Sand Spear Nest": "Diamond Swarm"), 140, 150);
+
+                offScreenBuffer.setFont(new Font("Courier New", Font.PLAIN, 16));
+                offScreenBuffer.drawString("Total Zone Travelled: " + zoneCount, 140, 180);
+            }
+
             ghandler.render(offScreenBuffer);
             handler.render(offScreenBuffer);
             ahandler.render(offScreenBuffer);

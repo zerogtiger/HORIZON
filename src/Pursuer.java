@@ -53,7 +53,7 @@ public class Pursuer {
         if (player.velY <= -11)
             vel = -player.velY / 5;
         else
-            vel = (Stats.speederDistance) / 10000 + 14;
+            vel = (Stats.speederDistance) / 17000 + 14;
 
         //Updates pursuer distance relative to speeder
         distance = Game.clamp(distance - (vel + player.velY), 0, 11000);
