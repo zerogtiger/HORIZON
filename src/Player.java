@@ -19,6 +19,9 @@ import java.util.*;
 
 public class Player extends GameObject {
 
+    //Store the states of speeder to be used for phantom
+    private Queue<Tuple> playerState;
+
     //Booleans to report the state of the speeder
     private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
 
@@ -56,6 +59,7 @@ public class Player extends GameObject {
         this.game = game;
         velX = 0;
         velY = 0;
+        playerState = new LinkedList<>();
 
         //Loading sound effects
         try {
@@ -191,6 +195,9 @@ public class Player extends GameObject {
             Stats.CHARGE += 2;
         if (isChargingRight && velY < -8)
             Stats.CHARGE += 2;
+
+        //Save state of speeder into queue
+        playerState.add(new Tuple(x, y, velX, velY, isChargingLeft, isChargingRight, isScratchingLeft, isScratchingRight));
 
         //Update location of speeder
         y += velY;
@@ -379,5 +386,13 @@ public class Player extends GameObject {
             scratching.stop();
         if (collision.isActive())
             collision.stop();
+    }
+
+    public Queue<Tuple> getPlayerState() {
+        return playerState;
+    }
+
+    public void setPlayerState(Queue<Tuple> playerState) {
+        this.playerState = playerState;
     }
 }

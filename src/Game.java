@@ -40,6 +40,7 @@ public class Game extends JPanel implements Runnable {
     private Camera camera;
     private static Player player;
     private Pursuer pursuer;
+    private Phantom phantom;
 
     private GameOrganizer gameOrganizer;
     private Map map;
@@ -64,6 +65,9 @@ public class Game extends JPanel implements Runnable {
 
     //Seed for game
     private static int seed;
+
+    //Boolean to keep track of whether the seed has been altered
+    private boolean isSeedChanged;
 
     //Game state to be referenced when displaying components
     public static state gameState = state.Lead;
@@ -90,6 +94,8 @@ public class Game extends JPanel implements Runnable {
         seed += r.nextInt(4) * 10000;
         seed += r.nextInt(10000);
 
+        isSeedChanged = false;
+
         //Initialize objects and variables
         handler = new Handler();
         ghandler = new Handler();
@@ -103,6 +109,7 @@ public class Game extends JPanel implements Runnable {
         keyInput = new KeyInput();
 
         player = new Player(-16, HEIGHT * 2, ID.Player, handler, 0, this);
+        phantom = new Phantom(-16, HEIGHT*2, ID.Phantom, handler, new LinkedList<>(), this);
         pursuer = new Pursuer(player, this);
         camera = new Camera(player);
 
@@ -263,6 +270,14 @@ public class Game extends JPanel implements Runnable {
         player.setVelX(0);
         player.setVelY(-10);
 
+        //Reset phantom
+        phantom.reset();
+        if (!isSeedChanged) {
+            Queue<Tuple> tempPlayerState = player.getPlayerState();
+            phantom = new Phantom(-16, HEIGHT*2, ID.Phantom, handler, tempPlayerState, this);
+        }
+        player.setPlayerState(new LinkedList<>());
+
         //Ensures the camera is locked onto the player at the start of the next game
         camera.tick();
 
@@ -275,6 +290,9 @@ public class Game extends JPanel implements Runnable {
 
         //Reset the keyboard states
         keyInput.reset();
+
+        //Reset seedChange variable
+        isSeedChanged = false;
     }
 
     //Smoother graphics
@@ -574,6 +592,9 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void setSeed(int seed) {
+        if (this.seed%10000 != seed%10000) {
+            isSeedChanged = true;
+        }
         this.seed = seed;
     }
 
