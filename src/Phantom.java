@@ -26,11 +26,11 @@ public class Phantom extends GameObject {
     private final Game game;
 
     //Images of phantom postures
-    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/PG.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGL2.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGR1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGR2.png")},
+    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/PG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/PGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/PGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/PGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/PGR2.png")},
 
     //Images of effects
     soundBarrier = new Image[9],
@@ -80,19 +80,19 @@ public class Phantom extends GameObject {
 
         //Compile images of effects
         for (int i = 0; i < 9; i++) {
-            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomSoundBarrier/" + String.format("%04d", i + 1) + ".png");
+            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/soundBarrier/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 8; i++) {
-            scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/left/" + String.format("%04d", i + 8) + ".png");
+            scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/scratching/left/" + String.format("%04d", i + 8) + ".png");
         }
         for (int i = 0; i < 8; i++) {
-            scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/right/" + String.format("%04d", i + 8) + ".png");
+            scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/scratching/right/" + String.format("%04d", i + 8) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomCharging/left/" + String.format("%04d", i + 1) + ".png");
+            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/charging/left/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomCharging/right/" + String.format("%04d", i + 1) + ".png");
+            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/phantom/charging/right/" + String.format("%04d", i + 1) + ".png");
         }
     }
 

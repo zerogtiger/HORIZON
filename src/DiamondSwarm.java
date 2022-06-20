@@ -52,14 +52,14 @@ public class DiamondSwarm {
         diamond = new Image[3][5];
         for (int i = 1; i <= 2; i++) {
             for (int j = 1; j <= 4; j++) {
-                diamond[i][j] = Toolkit.getDefaultToolkit().getImage("appdata/pics/diamondSwarm/diamond/" + i + j + ".png");
+                diamond[i][j] = Toolkit.getDefaultToolkit().getImage("appdata/images/diamondSwarm/diamond/" + i + j + ".png");
             }
         }
 
         //Compile images of grounds
         ground = new Image[19];
         for (int i = 1; i <= 18; i++) {
-            ground[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/diamondSwarm/ground" + i + ".png");
+            ground[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/diamondSwarm/ground/ground" + i + ".png");
         }
     }
 

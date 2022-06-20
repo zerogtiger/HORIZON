@@ -69,7 +69,7 @@ public class Pursuer {
 
         //Compile frames for pursuer "net" animation
         for (int i = 0; i < 250; i++) {
-            frames[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/pursuer/" + String.format("%04d", i + 1) + ".png");
+            frames[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/pursuer/" + String.format("%04d", i + 1) + ".png");
         }
     }
 

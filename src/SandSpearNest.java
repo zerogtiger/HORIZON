@@ -52,23 +52,23 @@ public class SandSpearNest {
         //Compile images of obstacles
         wall = new Image[17];
         for (int i = 1; i <= 16; i++) {
-            wall[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/sandSpearNest/wall/" + i + ".png");
+            wall[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/sandSpearNest/wall/" + i + ".png");
         }
         sandSpear = new Image[57];
         for (int i = 1; i <= 16; i++) {
-            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/sandSpearNest/sandSpear/" + i + ".png");
+            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/sandSpearNest/sandSpear/" + i + ".png");
         }
         for (int i = 21; i <= 36; i++) {
-            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/sandSpearNest/sandSpear/" + i + ".png");
+            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/sandSpearNest/sandSpear/" + i + ".png");
         }
         for (int i = 41; i <= 56; i++) {
-            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/sandSpearNest/sandSpear/" + i + ".png");
+            sandSpear[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/sandSpearNest/sandSpear/" + i + ".png");
         }
 
         //Compile images of grounds
         ground = new Image[9];
         for (int i = 1; i <= 8; i++) {
-            ground[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/sandSpearNest/ground" + i + ".png");
+            ground[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/sandSpearNest/ground/ground" + i + ".png");
         }
     }
 

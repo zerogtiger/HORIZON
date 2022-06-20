@@ -134,7 +134,7 @@ public class Map {
                         !Camera.outOfFrame((j - width / 2) * obstacleSize, -i * obstacleSize,
                                 airborneObject[i][j].x, airborneObject[i][j].y)) {
 
-                    new AirborneObject("appdata/pics/drone/", ID.AirBorne,
+                    new AirborneObject("appdata/images/drone/", ID.AirBorne,
                             (j - width / 2) * obstacleSize, -i * obstacleSize,
                             airborneObject[i][j].x, airborneObject[i][j].y,
                             airborneObject[i][j].v, airborneObject[i][j].w,

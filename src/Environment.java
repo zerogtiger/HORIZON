@@ -45,22 +45,22 @@ public class Environment {
 
         rain = new Image[80];
         for (int i = 0; i < 80; i++) {
-            rain[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/rainFrames/" + String.format("%04d", i + 1) + ".png");
+            rain[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/weather/rainFrames/" + String.format("%04d", i + 1) + ".png");
         }
 
         sandstorm = new Image[40];
         for (int i = 0; i < 40; i++) {
-            sandstorm[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/sandstormFrames/" + String.format("%04d", i + 1) + ".png");
+            sandstorm[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/weather/sandstormFrames/" + String.format("%04d", i + 1) + ".png");
         }
 
-        sandstormOverlay =Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/sandstorm.png");
+        sandstormOverlay =Toolkit.getDefaultToolkit().getImage("appdata/images/weather/sandstorm.png");
 
         //Times-of-day:
         timesOfDay = new Image[4];
-        timesOfDay[0] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/morning.png");
-        timesOfDay[1] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/noon.png");
-        timesOfDay[2] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/evening.png");
-        timesOfDay[3] = Toolkit.getDefaultToolkit().getImage("appdata/pics/weather/night.png");
+        timesOfDay[0] = Toolkit.getDefaultToolkit().getImage("appdata/images/timeOfDay/morning.png");
+        timesOfDay[1] = Toolkit.getDefaultToolkit().getImage("appdata/images/timeOfDay/noon.png");
+        timesOfDay[2] = Toolkit.getDefaultToolkit().getImage("appdata/images/timeOfDay/evening.png");
+        timesOfDay[3] = Toolkit.getDefaultToolkit().getImage("appdata/images/timeOfDay/night.png");
     }
 
     //Description: resets the seed for the environment

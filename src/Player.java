@@ -29,11 +29,11 @@ public class Player extends GameObject {
     private final Game game;
 
     //Images of speeder postures
-    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL2.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")},
+    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGR2.png")},
 
     //Images of effects
     soundBarrier = new Image[9],
@@ -110,19 +110,19 @@ public class Player extends GameObject {
 
         //Compile images of effects
         for (int i = 0; i < 9; i++) {
-            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/soundBarrier/" + String.format("%04d", i + 1) + ".png");
+            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/soundBarrier/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 8; i++) {
-            scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/left/" + String.format("%04d", i + 8) + ".png");
+            scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/scratching/left/" + String.format("%04d", i + 8) + ".png");
         }
         for (int i = 0; i < 8; i++) {
-            scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/right/" + String.format("%04d", i + 8) + ".png");
+            scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/scratching/right/" + String.format("%04d", i + 8) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/left/" + String.format("%04d", i + 1) + ".png");
+            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/charging/left/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/right/" + String.format("%04d", i + 1) + ".png");
+            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/charging/right/" + String.format("%04d", i + 1) + ".png");
         }
     }
 

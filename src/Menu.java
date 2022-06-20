@@ -247,21 +247,21 @@ public class Menu implements MouseListener {
 
         //Main menu:
         if (game.gameState == Game.state.Menu) {
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
         }
 
         //Game over:
         else if (game.gameState == Game.state.GameOver) {
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
 
             g.setFont(courier2);
             g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 155, 380, 83 * 3, 5 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/distance.png"), 155, 380, 83 * 3, 5 * 3, game);
 
             g.setColor(Color.white);
             g.drawString(String.valueOf(Stats.speederDistance), 155, 460);
@@ -270,8 +270,8 @@ public class Menu implements MouseListener {
         //Leaderboard:
         else if (game.gameState == Game.state.Leaderboard) {
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/leaderboardBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/leaderboard.png"), 60, 40, 318 * 3, 15 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/leaderboardBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/leaderboard.png"), 60, 40, 318 * 3, 15 * 3, game);
 
             leaderboard.render(g);
         }
@@ -283,7 +283,7 @@ public class Menu implements MouseListener {
 //                    new Button("Toggle", 120, 190, 200, 27, game),
 //                    new Button("Toggle", 120, 230, 200, 27, game),
 //
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
 
             //Game music options
             g.setColor(Color.white);
@@ -304,12 +304,12 @@ public class Menu implements MouseListener {
         //Leaderboard entry:
         else if (game.gameState == Game.state.LeaderboardEntry) {
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
 
             g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
 
             g.setColor(Color.white);
             g.setFont(new Font("Courier New", Font.PLAIN, 25));
@@ -334,8 +334,8 @@ public class Menu implements MouseListener {
             g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gamePaused.png"), 155, 170, 189 * 3, 40 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 155, 360, 83 * 3, 5 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/gamePaused.png"), 155, 170, 189 * 3, 40 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/distance.png"), 155, 360, 83 * 3, 5 * 3, game);
 
             g.setColor(Color.white);
             g.setFont(courier2);
@@ -353,13 +353,13 @@ public class Menu implements MouseListener {
 
             //Images that will be used
             Image[] leadImages = {
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E1.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E2.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/E3.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C1.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C2.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C3.png"),
-                    Toolkit.getDefaultToolkit().getImage("appdata/pics/lead/C4.png")
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/E1.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/E2.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/E3.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/C1.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/C2.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/C3.png"),
+                    Toolkit.getDefaultToolkit().getImage("appdata/images/lead/C4.png")
             };
 
             //Switch to main menu if the number of frames exceeds designated range
@@ -368,8 +368,8 @@ public class Menu implements MouseListener {
             else {
 
                 //Main menu background to smooth transition
-                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
-                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
+                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
+                g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
 
                 //Changes opacity of background near the end of the lead
                 g.setColor(new Color(0, 0, 0, (int) ((1 - Math.min(Math.max(0, (iterator - 580) / 140.0), 1)) * 255)));
@@ -406,8 +406,8 @@ public class Menu implements MouseListener {
         //Game ready:
         else if (game.gameState == Game.state.GameReady) {
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameReadyBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameReady.png"), 110, 250, 128 * 3, 30 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/gameReadyBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/gameReady.png"), 110, 250, 128 * 3, 30 * 3, game);
 
             if (isInvalid && seedEntryTextField.isVisible()) {
                 g.setColor(Color.red);
@@ -419,8 +419,8 @@ public class Menu implements MouseListener {
         //Tutorial:
         else if (game.gameState == Game.state.Tutorial) {
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/tutorialBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/instructions.png"), 120, 110, 207 * 3, 10 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/tutorialBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/instructions.png"), 120, 110, 207 * 3, 10 * 3, game);
 
             //Instructions text
             g.setColor(Color.white);

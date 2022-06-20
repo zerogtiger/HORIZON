@@ -37,7 +37,7 @@ public class Window {
         frame = new JFrame(title);
 
         //Set JFrame properties
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/icon.png"));
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/images/icon.png"));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(game);
         frame.setResizable(false);

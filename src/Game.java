@@ -168,7 +168,7 @@ public class Game extends JPanel implements Runnable {
         this.addMouseListener(this.getMenu());
 
         frame = new JFrame("HORIZON極速狂飆");
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/icon.png"));
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/images/icon.png"));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
         frame.setResizable(false);

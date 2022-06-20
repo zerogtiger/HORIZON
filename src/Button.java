@@ -26,8 +26,8 @@ public class Button{
 
     //Border images
     private Image[] borders = new Image[]{
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/buttonBorderLeft.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/buttonBorderRight.png")
+            Toolkit.getDefaultToolkit().getImage("appdata/images/text/buttonBorderLeft.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/text/buttonBorderRight.png")
     };
 
     //Whether the button is focused by the user
