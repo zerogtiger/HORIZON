@@ -20,17 +20,17 @@ public class Phantom extends GameObject {
     private Queue<Tuple> lastState;
 
     //Booleans to replicate the state of the speeder
-    private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
+    private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false;
 
     //Game which the phantom belongs to
     private final Game game;
 
     //Images of phantom postures
-    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/SG.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGL2.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")},
+    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/pics/PG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/pics/PGR2.png")},
 
     //Images of effects
     soundBarrier = new Image[9],
@@ -80,7 +80,7 @@ public class Phantom extends GameObject {
 
         //Compile images of effects
         for (int i = 0; i < 9; i++) {
-            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/soundBarrier/" + String.format("%04d", i + 1) + ".png");
+            soundBarrier[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomSoundBarrier/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 8; i++) {
             scratchingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/left/" + String.format("%04d", i + 8) + ".png");
@@ -89,10 +89,10 @@ public class Phantom extends GameObject {
             scratchingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/scratching/right/" + String.format("%04d", i + 8) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/left/" + String.format("%04d", i + 1) + ".png");
+            chargingLeft[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomCharging/left/" + String.format("%04d", i + 1) + ".png");
         }
         for (int i = 0; i < 9; i++) {
-            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/charging/right/" + String.format("%04d", i + 1) + ".png");
+            chargingRight[i] = Toolkit.getDefaultToolkit().getImage("appdata/pics/phantomCharging/right/" + String.format("%04d", i + 1) + ".png");
         }
     }
 
