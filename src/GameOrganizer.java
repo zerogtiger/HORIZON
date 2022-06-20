@@ -95,6 +95,10 @@ public class GameOrganizer {
         r.setSeed(seed%10000);
         zoneCounter = -1;
         currCounter = 0;
+
+        //Generate next seed and zone type
+        tempType = r.nextInt(1,3);
+        tempSeed = r.nextInt(10000);
     }
 
     public void setSeed(int seed) {

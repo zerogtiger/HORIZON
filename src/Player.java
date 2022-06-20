@@ -9,7 +9,12 @@ to reflect a dynamic, airborne sensation; responsible for updating charge of the
 
 */
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.awt.*;
+import java.io.File;
 import java.util.*;
 
 public class Player extends GameObject {
@@ -28,11 +33,14 @@ public class Player extends GameObject {
             Toolkit.getDefaultToolkit().getImage("appdata/pics/SGR2.png")},
 
     //Images of effects
-            soundBarrier = new Image[9],
+    soundBarrier = new Image[9],
             scratchingLeft = new Image[8],
             scratchingRight = new Image[8],
             chargingLeft = new Image[9],
             chargingRight = new Image[9];
+
+    //Sound effects
+    private Clip charging, collision, scratching;
 
     //iterator to assist in displaying animations
     private int iterator;
@@ -48,6 +56,53 @@ public class Player extends GameObject {
         this.game = game;
         velX = 0;
         velY = 0;
+
+        //Loading sound effects
+        try {
+
+            //Charging
+            AudioInputStream sound = AudioSystem.getAudioInputStream(new File("appdata/audio/charging.wav"));
+            charging = AudioSystem.getClip();
+            charging.open(sound);
+
+            //Volume of charging sound
+            FloatControl gainControl = (FloatControl) charging.getControl(FloatControl.Type.MASTER_GAIN);
+            float range = gainControl.getMaximum() - gainControl.getMinimum();
+            float gain = (float) ((range * 0.85) + gainControl.getMinimum());
+            gainControl.setValue(gain);
+
+            charging.loop(Clip.LOOP_CONTINUOUSLY);
+            charging.stop();
+
+            //Collision
+            sound = AudioSystem.getAudioInputStream(new File("appdata/audio/collision2.wav"));
+            collision = AudioSystem.getClip();
+            collision.open(sound);
+
+            //Volume of collision sound
+            gainControl = (FloatControl) collision.getControl(FloatControl.Type.MASTER_GAIN);
+            range = gainControl.getMaximum() - gainControl.getMinimum();
+            gain = (float) ((range * 0.9) + gainControl.getMinimum());
+            gainControl.setValue(gain);
+
+            //Scratching
+            sound = AudioSystem.getAudioInputStream(new File("appdata/audio/scratching.wav"));
+            scratching = AudioSystem.getClip();
+            scratching.open(sound);
+
+            //Volume of scratching sound
+            gainControl = (FloatControl) scratching.getControl(FloatControl.Type.MASTER_GAIN);
+            range = gainControl.getMaximum() - gainControl.getMinimum();
+            gain = (float) ((range * 0.85) + gainControl.getMinimum());
+            gainControl.setValue(gain);
+
+            scratching.loop(Clip.LOOP_CONTINUOUSLY);
+            scratching.stop();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         //Compile images of effects
         for (int i = 0; i < 9; i++) {
@@ -145,11 +200,49 @@ public class Player extends GameObject {
         Stats.speederDistance += -velY;
         Stats.CHARGE = Game.clamp(Stats.CHARGE, 0, 800);
 
+//        if ((isChargingLeft || isChargingRight) && velY < -8) {
+//            game.setCharging(true);
+//        } else {
+//            game.setCharging(false);
+//        }
+//        if (isScratchingLeft || isScratchingRight) {
+//            game.setScratching(true);
+//        } else {
+//            game.setScratching(false);
+//        }
+//        if (isBumped) {
+//            game.setCollision(true);
+//        }
+
+        //Play sound effects according to speeder states
+        if (game.getGameEffect()) {
+            if (((isChargingLeft || isChargingRight) && velY < -8)) {
+                charging.loop(Clip.LOOP_CONTINUOUSLY);
+                charging.start();
+            } else if (charging.isActive()) {
+                charging.stop();
+            }
+            if (isScratchingLeft || isScratchingRight) {
+                scratching.loop(Clip.LOOP_CONTINUOUSLY);
+                scratching.start();
+            } else if (scratching.isActive()) {
+                scratching.stop();
+            }
+            if (isBumped && !collision.isActive()) {
+                collision.setFramePosition(0);
+                collision.start();
+            }
+        } else {
+            stopSounds();
+        }
+
+
         //Reset speeder states
         isChargingLeft = false;
         isChargingRight = false;
         isScratchingLeft = false;
         isScratchingRight = false;
+        isBumped = false;
     }
 
     //Description: renders the speeder
@@ -192,7 +285,7 @@ public class Player extends GameObject {
 
         //Renders sound barrier effects
         Graphics2D g2d = (Graphics2D) g;
-        int index = (iterator%18)/2;
+        int index = (iterator % 18) / 2;
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) (Math.min(0, velY + 11) / -14.0)));
         g2d.drawImage(soundBarrier[index], getRelX() - 8, getRelY() + 5, 48, 40, game);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
@@ -277,5 +370,14 @@ public class Player extends GameObject {
 
     public void setIterator(int value) {
         iterator = value;
+    }
+
+    public void stopSounds() {
+        if (charging.isActive())
+            charging.stop();
+        if (scratching.isActive())
+            scratching.stop();
+        if (collision.isActive())
+            collision.stop();
     }
 }

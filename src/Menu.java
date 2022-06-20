@@ -100,13 +100,16 @@ public class Menu implements MouseListener {
                 new Button("Quit", 90, Game.HEIGHT - 120 + 21, 200, 27, game),
         };
         buttons[1] = new Button[]{
-                new Button("Reload", 110, Game.HEIGHT - 240, 200, 27, game),
-                new Button("Menu", 110, Game.HEIGHT - 200, 200, 27, game)
+                new Button("Reload", 820, 420, 200, 27, game),
+                new Button("Menu", 820, 460, 200, 27, game),
         };
         buttons[2] = new Button[]{
                 new Button("Back", 60, Game.HEIGHT - 40, 200, 27, game),
         };
         buttons[3] = new Button[]{
+                new Button("Toggle", 550, 228, 200, 27, game),
+                new Button("Toggle", 550, 288, 200, 27, game),
+                new Button("Toggle", 550, 348, 200, 27, game),
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
         };
         buttons[4] = new Button[]{
@@ -255,13 +258,13 @@ public class Menu implements MouseListener {
 
             g.setFont(courier2);
             g.setColor(new Color(35, 35, 35, 199));
-            g.fillRect(70, 70, Game.WIDTH - 140, Game.HEIGHT - 140);
+            g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 110, 110, 138 * 3, 42 * 3, game);
-            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 110, 300, 83 * 3, 5 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/distance.png"), 155, 380, 83 * 3, 5 * 3, game);
 
             g.setColor(Color.white);
-            g.drawString(String.valueOf(Stats.speederDistance), 110, 380);
+            g.drawString(String.valueOf(Stats.speederDistance), 155, 460);
         }
 
         //Leaderboard:
@@ -275,7 +278,27 @@ public class Menu implements MouseListener {
 
         //Options:
         else if (game.gameState == Game.state.Options) {
+
+//            new Button("Toggle", 120, 150, 200, 27, game),
+//                    new Button("Toggle", 120, 190, 200, 27, game),
+//                    new Button("Toggle", 120, 230, 200, 27, game),
+//
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+
+            //Game music options
+            g.setColor(Color.white);
+            g.setFont(new Font("Courier New", Font.PLAIN, 25));
+            g.drawString("Menu Background Music: ", 120, 250);
+            g.drawString("Game Background Music: ", 120, 310);
+            g.drawString("In-Game Sound Effects: ", 120, 370);
+
+            g.setFont(new Font("Courier New", Font.BOLD, 25));
+            g.setColor((game.getMenuMusic() ? Color.white : Color.lightGray));
+            g.drawString(String.format("%3s", (game.getMenuMusic() ? "ON" : "OFF")), 460, 250);
+            g.setColor((game.getGameMusic() ? Color.white : Color.lightGray));
+            g.drawString(String.format("%3s", (game.getGameMusic() ? "ON" : "OFF")), 460, 310);
+            g.setColor((game.getGameEffect() ? Color.white : Color.lightGray));
+            g.drawString(String.format("%3s", (game.getGameEffect() ? "ON" : "OFF")), 460, 370);
         }
 
         //Leaderboard entry:
@@ -408,7 +431,7 @@ public class Menu implements MouseListener {
             g.drawString("Master your speed through mystical landscapes as you escape from a", sx, sy);
             g.drawString("mysterious pursuer. Dodge obstacles to avoid collisions and draw close", sx, sy + lineSpace);
             g.drawString("alongside them to obtain charges to accelerate and outrun the pursuer.", sx, sy + 2 * lineSpace);
-            g.drawString( "The HORIZON is ahead.", sx, sy + 3 * lineSpace);
+            g.drawString("The HORIZON is ahead.", sx, sy + 3 * lineSpace);
 
             g.setFont(new Font("Courier New", Font.BOLD, 23));
             g.drawString("Menu Navigation:", sx, sy + 5 * lineSpace);
@@ -418,7 +441,7 @@ public class Menu implements MouseListener {
             g.drawString("click on the button or press ENTER on the keyboard to select.", sx, sy + 8 * lineSpace);
 
             g.setFont(new Font("Courier New", Font.BOLD, 23));
-            g.drawString( "In-game operations:", sx, sy + 10 * lineSpace);
+            g.drawString("In-game operations:", sx, sy + 10 * lineSpace);
 
             g.setFont(new Font("Courier New", Font.PLAIN, 18));
             g.drawString("Use the left and right-arrow keys to control the direction of the", sx, sy + 12 * lineSpace);
@@ -477,6 +500,13 @@ public class Menu implements MouseListener {
         //Options:
         else if (game.gameState == Game.state.Options) {
             if (focus == 0) {
+                game.setMenuMusic(!game.getMenuMusic());
+            } else if (focus == 1) {
+                game.setGameMusic(!game.getGameMusic());
+            } else if (focus == 2) {
+                game.setGameEffect(!game.getGameEffect());
+            } else if (focus == 3) {
+                focus = 0;
                 game.gameState = Game.state.Menu;
             }
         }
@@ -539,9 +569,9 @@ public class Menu implements MouseListener {
                 //Perform various actions based on whether the seed entry textfield is visible
                 if (seedEntryTextField.isVisible() && !isInvalid) {
                     game.setSeed(Integer.parseInt(seedEntryTextField.getText()));
-                    game.gameState = Game.state.Game;
                     game.reset();
-                    System.out.println("Game Reset");
+                    game.gameState = Game.state.Game;
+                    System.out.println("Game Reset seed");
                 } else if (!seedEntryTextField.isVisible()) {
                     game.gameState = Game.state.Game;
                     game.reset();
@@ -613,6 +643,12 @@ public class Menu implements MouseListener {
         //Options:
         else if (game.gameState == Game.state.Options) {
             if (buttons[3][0].isOver(mx, my)) {
+                game.setMenuMusic(!game.getMenuMusic());
+            } else if (buttons[3][1].isOver(mx, my)) {
+                game.setGameMusic(!game.getGameMusic());
+            } else if (buttons[3][2].isOver(mx, my)) {
+                game.setGameEffect(!game.getGameEffect());
+            } else if (buttons[3][3].isOver(mx, my)) {
                 focus = 0;
                 game.gameState = Game.state.Menu;
             }

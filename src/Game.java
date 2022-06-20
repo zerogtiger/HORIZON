@@ -10,6 +10,7 @@ paintComponent methods utilizing the off-screen buffer.
 
 */
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
@@ -47,6 +48,12 @@ public class Game extends JPanel implements Runnable {
     private static Leaderboard leaderboard;
     private static Menu menu;
     private KeyInput keyInput;
+
+    //Game music
+    private Clip menuMusic, inGameMusic;
+
+    //Music control variables
+    private boolean isMenuMusic, isGameMusic, isGameEffect;
 
     //Off-screen buffer to smooth graphics
     Image offScreenImage;
@@ -102,6 +109,42 @@ public class Game extends JPanel implements Runnable {
         gameOrganizer = new GameOrganizer(this);
         environment = new Environment(seed, this);
 
+        //Reset sound control variables
+        isMenuMusic = true;
+        isGameMusic = true;
+        isGameEffect = true;
+
+        //Loading audio
+        try {
+
+            //Menu background music
+            AudioInputStream sound = AudioSystem.getAudioInputStream(new File("appdata/audio/menuMusic.wav"));
+            menuMusic = AudioSystem.getClip();
+            menuMusic.open(sound);
+
+            //In-game music
+            sound = AudioSystem.getAudioInputStream(new File("appdata/audio/inGameMusic.wav"));
+            inGameMusic = AudioSystem.getClip();
+            inGameMusic.open(sound);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Volumn of game music
+        FloatControl gainControl = (FloatControl) menuMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        float range = gainControl.getMaximum() - gainControl.getMinimum();
+        float gain = (float) ((range * 0.95) + gainControl.getMinimum());
+        gainControl.setValue(gain);
+
+        gainControl = (FloatControl) inGameMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        range = gainControl.getMaximum() - gainControl.getMinimum();
+        gain = (float) ((range * 0.9) + gainControl.getMinimum());
+        gainControl.setValue(gain);
+
+        menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        inGameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+
 //        textField = new JTextField("Test");
 //        this.setLayout(null);
 //        this.add(textField);
@@ -145,17 +188,19 @@ public class Game extends JPanel implements Runnable {
         //If the speeder is intersecting with the collision bounds, then end the current game
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
             menu.setFocus(0);
-//            gameOver(Stats.speederDistance, seed, 0);
+            gameOver(Stats.speederDistance, seed, 0);
         }
 
         //If the speeder is intersecting with the sides of the obstacle, then move the speeder outside the obstacle
         else if (player.getBounds().intersects(obstacle.getLeftBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
+            player.setBumped(true);
             player.setX(obstacle.getX() - 32);
             player.setVelX(0);
             player.setVelY(clamp(player.getVelY() + 10, -25, -3));
             Stats.setKeyPress(0, 1, false);
             Stats.setKeyPress(1, 1, false);
         } else if (player.getBounds().intersects(obstacle.getRightBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
+            player.setBumped(true);
             player.setX(obstacle.getX() + obstacle.width);
             player.setVelX(0);
             player.setVelY(clamp(player.getVelY() + 7, -25, -3));
@@ -202,6 +247,8 @@ public class Game extends JPanel implements Runnable {
     //Parameters: none
     //Return: void
     public void reset() {
+
+        System.out.println("Seed: " + seed);
 
         //Reset the seed for the GameOrganizer
         gameOrganizer.setSeed(seed);
@@ -277,11 +324,11 @@ public class Game extends JPanel implements Runnable {
             int nextType = gameOrganizer.getTempType();
             long zoneCount = gameOrganizer.getCurrCounter();
 
-            if ((Stats.speederDistance+8500)/17000 == zoneCount) {
+            if ((Stats.speederDistance + 8500) / 17000 == zoneCount) {
 
                 offScreenBuffer.setColor(Color.white);
                 offScreenBuffer.setFont(new Font("Courier New", Font.PLAIN, 25));
-                offScreenBuffer.drawString("Incoming Zone: " + (nextType == 1? "Sand Spear Nest": "Diamond Swarm"), 140, 150);
+                offScreenBuffer.drawString("Incoming Zone: " + (nextType == 1 ? "Sand Spear Nest" : "Diamond Swarm"), 140, 150);
 
                 offScreenBuffer.setFont(new Font("Courier New", Font.PLAIN, 16));
                 offScreenBuffer.drawString("Total Zone Travelled: " + zoneCount, 140, 180);
@@ -314,6 +361,47 @@ public class Game extends JPanel implements Runnable {
     //Parameters: none
     //Return: void
     private void tick() throws IOException {
+
+        //Ensure according game audio is playing
+        if (gameState == state.Game || gameState == state.Pause) {
+            if (menuMusic.isActive()) {
+                menuMusic.stop();
+            }
+            if (!inGameMusic.isActive() && isGameMusic) {
+                inGameMusic.setFramePosition(0);
+                inGameMusic.start();
+            } else if (!isGameMusic) {
+                inGameMusic.stop();
+            }
+        } else {
+            if (inGameMusic.isActive()) {
+                inGameMusic.stop();
+            }
+            if (!menuMusic.isActive() && isMenuMusic) {
+                menuMusic.setFramePosition(0);
+                menuMusic.start();
+            } else if (!isMenuMusic) {
+                menuMusic.stop();
+            }
+            player.stopSounds();
+            pursuer.stopSounds();
+//            if (inGameMusic.isActive() || !menuMusic.isActive()) {
+//                menuMusic.setFramePosition(0);
+//                menuMusic.start();
+//                inGameMusic.stop();
+////                charging.stop();
+////                scratching.stop();
+////                collision.stop();
+//                player.stopSounds();
+//                pursuer.stopSounds();
+//            }
+        }
+//        if (!isMenuMusic && menuMusic.isActive()) {
+//            menuMusic.stop();
+//        }
+//        if (!isGameMusic && inGameMusic.isActive()) {
+//            inGameMusic.stop();
+//        }
 
         //Updates game components
         menu.tick();
@@ -445,8 +533,8 @@ public class Game extends JPanel implements Runnable {
         return seed;
     }
 
-    public static void setSeed(int seed) {
-        Game.seed = seed;
+    public void setSeed(int seed) {
+        this.seed = seed;
     }
 
     public Pursuer getPursuer() {
@@ -471,5 +559,29 @@ public class Game extends JPanel implements Runnable {
 
     public static void main(String[] args) throws IOException {
         new Game();
+    }
+
+    public boolean getGameEffect() {
+        return isGameEffect;
+    }
+
+    public boolean getGameMusic() {
+        return isGameMusic;
+    }
+
+    public boolean getMenuMusic() {
+        return isMenuMusic;
+    }
+
+    public void setGameEffect(boolean gameEffect) {
+        isGameEffect = gameEffect;
+    }
+
+    public void setGameMusic(boolean gameMusic) {
+        isGameMusic = gameMusic;
+    }
+
+    public void setMenuMusic(boolean menuMusic) {
+        isMenuMusic = menuMusic;
     }
 }

@@ -10,8 +10,13 @@ relative distance is reduced to a certain amount to make the user panik.
 */
 
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.*;
 
 public class Pursuer {
@@ -26,6 +31,9 @@ public class Pursuer {
     private Player player;
     private JPanel game;
 
+    //Sound effect
+    private Clip pursuerWarning;
+
     //Animation for pursuer "net"
     private Image[] frames = new Image[250];
 
@@ -37,6 +45,27 @@ public class Pursuer {
         vel = 12;
         this.player = player;
         this.game = game;
+
+        //Loading sound effects
+        try {
+
+            //Beep warning
+            AudioInputStream sound = AudioSystem.getAudioInputStream(new File("appdata/audio/pursuerWarning.wav"));
+            pursuerWarning = AudioSystem.getClip();
+            pursuerWarning.open(sound);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Set volumn of pursuer warning
+        FloatControl gainControl = (FloatControl) pursuerWarning.getControl(FloatControl.Type.MASTER_GAIN);
+        float range = gainControl.getMaximum() - gainControl.getMinimum();
+        float gain = (float) ((range * 0.8) + gainControl.getMinimum());
+        gainControl.setValue(gain);
+
+        pursuerWarning.loop(Clip.LOOP_CONTINUOUSLY);
+        pursuerWarning.stop();
 
         //Compile frames for pursuer "net" animation
         for (int i = 0; i < 250; i++) {
@@ -57,6 +86,14 @@ public class Pursuer {
 
         //Updates pursuer distance relative to speeder
         distance = Game.clamp(distance - (vel + player.velY), 0, 11000);
+
+        //Play warning sound if the pursuer is in close proximity to the player
+        if (distance < 2000) {
+            pursuerWarning.loop(Clip.LOOP_CONTINUOUSLY);
+            pursuerWarning.start();
+        } else {
+            pursuerWarning.stop();
+        }
     }
 
     //Description: renders the pursuer, if necessary
@@ -66,7 +103,7 @@ public class Pursuer {
 
         //Render animation of pursuer "net" once the pursuer is in close proximity to the speeder
         if (distance < 2000) {
-            int index = 249-(distance/8);
+            int index = 249 - (distance / 8);
             g.drawImage(frames[index], player.getRelX() - 50, player.getRelY() - 42, 132, 132, game);
         }
     }
@@ -77,5 +114,10 @@ public class Pursuer {
 
     public int getDistance() {
         return distance;
+    }
+
+    public void stopSounds() {
+        if (pursuerWarning.isActive())
+            pursuerWarning.stop();
     }
 }
