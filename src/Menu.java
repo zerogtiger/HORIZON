@@ -38,6 +38,7 @@ public class Menu implements MouseListener {
             put(Game.state.Game, 6);
             put(Game.state.Lead, 7);
             put(Game.state.GameReady, 8);
+            put(Game.state.Tutorial, 9);
         }
     };
 
@@ -91,9 +92,10 @@ public class Menu implements MouseListener {
         seedEntryTextField.setVisible(false);
 
         //Buttons to be displayed for all game states
-        buttons = new Button[9][];
+        buttons = new Button[10][];
         buttons[0] = new Button[]{
-                new Button("Start Game", 90, Game.HEIGHT - 200 + 21, 200, 27, game),
+                new Button("Start Game", 90, Game.HEIGHT - 240 + 21, 200, 27, game),
+                new Button("Tutorial", 90, Game.HEIGHT - 200 + 21, 200, 27, game),
                 new Button("Options", 90, Game.HEIGHT - 160 + 21, 200, 27, game),
                 new Button("Quit", 90, Game.HEIGHT - 120 + 21, 200, 27, game),
         };
@@ -126,6 +128,9 @@ public class Menu implements MouseListener {
                 new Button("Set Seed", 122, Game.HEIGHT - 240, 200, 27, game),
                 new Button("Leaderboard", 122, Game.HEIGHT - 200, 200, 27, game),
                 new Button("Back", 122, Game.HEIGHT - 160, 200, 27, game),
+        };
+        buttons[9] = new Button[]{
+                new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
         };
 
     }
@@ -246,8 +251,10 @@ public class Menu implements MouseListener {
         //Game over:
         else if (game.gameState == Game.state.GameOver) {
 
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+
             g.setFont(courier2);
-            g.setColor(new Color(219, 198, 191, 50));
+            g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(70, 70, Game.WIDTH - 140, Game.HEIGHT - 140);
 
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 110, 110, 138 * 3, 42 * 3, game);
@@ -274,7 +281,9 @@ public class Menu implements MouseListener {
         //Leaderboard entry:
         else if (game.gameState == Game.state.LeaderboardEntry) {
 
-            g.setColor(new Color(219, 198, 191, 50));
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
+
+            g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/gameOver.png"), 155, 170, 138 * 3, 42 * 3, game);
@@ -384,6 +393,40 @@ public class Menu implements MouseListener {
             }
         }
 
+        //Tutorial:
+        else if (game.gameState == Game.state.Tutorial) {
+
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/tutorialBackground.png"), 0, 0, 400 * 3, 225 * 3, game);
+            g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/pics/instructions.png"), 120, 110, 207 * 3, 10 * 3, game);
+
+            //Instructions text
+            g.setColor(Color.white);
+            g.setFont(new Font("Courier New", Font.PLAIN, 18));
+
+            int sx = 130, sy = 200, lineSpace = 25;
+
+            g.drawString("Master your speed through mystical landscapes as you escape from a", sx, sy);
+            g.drawString("mysterious pursuer. Dodge obstacles to avoid collisions and draw close", sx, sy + lineSpace);
+            g.drawString("alongside them to obtain charges to accelerate and outrun the pursuer.", sx, sy + 2 * lineSpace);
+            g.drawString( "The HORIZON is ahead.", sx, sy + 3 * lineSpace);
+
+            g.setFont(new Font("Courier New", Font.BOLD, 23));
+            g.drawString("Menu Navigation:", sx, sy + 5 * lineSpace);
+
+            g.setFont(new Font("Courier New", Font.PLAIN, 18));
+            g.drawString("Use either the mouse or arrow keys to navigate the game menu. Left", sx, sy + 7 * lineSpace);
+            g.drawString("click on the button or press ENTER on the keyboard to select.", sx, sy + 8 * lineSpace);
+
+            g.setFont(new Font("Courier New", Font.BOLD, 23));
+            g.drawString( "In-game operations:", sx, sy + 10 * lineSpace);
+
+            g.setFont(new Font("Courier New", Font.PLAIN, 18));
+            g.drawString("Use the left and right-arrow keys to control the direction of the", sx, sy + 12 * lineSpace);
+            g.drawString("speeder. Press the space-bar, up-arrow, or the left and right-arrow keys", sx, sy + 13 * lineSpace);
+            g.drawString("simultaneously to accelerate should the speeder have sufficient charge.", sx, sy + 14 * lineSpace);
+        }
+
+
         //Renders the buttons for each screen
         for (Button b : buttons[menuScreen]) {
             b.render(g);
@@ -403,8 +446,11 @@ public class Menu implements MouseListener {
                 game.gameState = Game.state.GameReady;
             } else if (focus == 1) {
                 focus = 0;
-                game.gameState = Game.state.Options;
+                game.gameState = Game.state.Tutorial;
             } else if (focus == 2) {
+                focus = 0;
+                game.gameState = Game.state.Options;
+            } else if (focus == 3) {
                 System.exit(0);
             }
         }
@@ -511,6 +557,13 @@ public class Menu implements MouseListener {
                 game.gameState = Game.state.Menu;
             }
         }
+
+        //Tutorial:
+        else if (game.gameState == Game.state.Tutorial) {
+            if (focus == 0) {
+                game.gameState = Game.state.Menu;
+            }
+        }
     }
 
     //Description: performs according actions depending on the current screen and button entered/pressed
@@ -527,8 +580,11 @@ public class Menu implements MouseListener {
                 game.gameState = Game.state.GameReady;
             } else if (buttons[0][1].isOver(mx, my)) {
                 focus = 0;
-                game.gameState = Game.state.Options;
+                game.gameState = Game.state.Tutorial;
             } else if (buttons[0][2].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Options;
+            } else if (buttons[0][3].isOver(mx, my)) {
                 System.exit(0);
             }
         }
@@ -637,6 +693,14 @@ public class Menu implements MouseListener {
                 focus = 0;
                 game.gameState = Game.state.Leaderboard;
             } else if (buttons[8][3].isOver(mx, my)) {
+                focus = 0;
+                game.gameState = Game.state.Menu;
+            }
+        }
+
+        //Tutorial:
+        else if (game.gameState == Game.state.Tutorial) {
+            if (buttons[9][0].isOver(mx, my)) {
                 focus = 0;
                 game.gameState = Game.state.Menu;
             }

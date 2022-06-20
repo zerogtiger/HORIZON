@@ -85,7 +85,7 @@ public class Player extends GameObject {
             //y-velocity
             if (isScratchingLeft || isScratchingRight)
                 velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
-            else if ((Stats.getKeyPress()[0][2] || Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) && Stats.CHARGE > 0) {
+            else if ((Stats.getKeyPress()[0][2] || (Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || Stats.getKeyPress()[0][3]) && Stats.CHARGE > 0) {
                 velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
                 Stats.CHARGE -= 3;
             } else {

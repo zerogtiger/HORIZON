@@ -71,7 +71,8 @@ public class Game extends JPanel implements Runnable {
         LeaderboardEntry,
         Pause,
         Lead,
-        GameReady;
+        GameReady,
+        Tutorial;
     }
 
     //Constructor
