@@ -58,7 +58,7 @@ public class Game extends JPanel implements Runnable {
     //Off-screen buffer to smooth graphics
     Image offScreenImage;
     private Graphics offScreenBuffer;
-    private long startTime, timeElapsed, frameCount = 0;
+    private long startTime, timeElapsed, frameCount = 0, tickCount = 0;
 
 //    private JTextField textField;
 
@@ -282,7 +282,6 @@ public class Game extends JPanel implements Runnable {
         paint(g);
     }
 
-    @Override
     public void paintComponent(Graphics g) {
         //super.paintComponent(g);
 //        g = bs.getDrawGraphics();
@@ -337,7 +336,7 @@ public class Game extends JPanel implements Runnable {
             ghandler.render(offScreenBuffer);
             handler.render(offScreenBuffer);
             ahandler.render(offScreenBuffer);
-//            environment.render(offScreenBuffer);
+            environment.render(offScreenBuffer);
             hud.render(offScreenBuffer);
             pursuer.render(offScreenBuffer);
         }
@@ -421,7 +420,6 @@ public class Game extends JPanel implements Runnable {
         }
 
         //Increase time elapsed and frame count
-        timeElapsed = System.currentTimeMillis() - startTime;
         frameCount++;
 
     }
@@ -479,20 +477,62 @@ public class Game extends JPanel implements Runnable {
     public void run() {
 
         //Game loop
+        this.requestFocus();
+        long lastTime = System.nanoTime();
+        double amountOfTicks = 60.0;
+        double ns = 1000000000 / amountOfTicks;
+        double delta = 0;
+        long timer = System.currentTimeMillis();
+        int frames = 0;
         while (running) {
-            try {
-                tick();
-            } catch (IOException e) {
-                e.printStackTrace();
+            long now = System.nanoTime();
+            delta += (now - lastTime) / ns;
+            lastTime = now;
+            while (delta >= 1) {
+                try {
+                    tick();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                delta--;
             }
-            this.repaint();
-            try {
-                Thread.sleep(1000 / 70);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (running)
+                this.repaint();
+            frames++;
+
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("FPS: " + frames);
+                frames = 0;
             }
+//        //Game loop
+//        while (running) {
+//            timeElapsed = System.currentTimeMillis() - startTime;
+//
+//            if ((timeElapsed+8)/16 > tickCount) {
+//                try {
+//                    tick();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("start time: " + startTime);
+//                System.out.println("Time Elapsed: " + timeElapsed);
+//                System.out.println("tick count: " + tickCount);
+//                System.out.println("frame count: " + frameCount);
+//                tickCount = (timeElapsed+8)/16;
+//            }
+//            this.repaint();
+////            try {
+////                Thread.sleep();
+////            } catch (Exception e) {
+////                e.printStackTrace();
+////            }
+//            if (timeElapsed/16 > frameCount) {
+//
+//                frameCount = timeElapsed/16;
+//            }
             //Output the average FPS of the game
-            System.out.println("FPS: " + (double) frameCount / (timeElapsed / 1000.0));
+//            System.out.println("FPS: " + (double) frameCount / (timeElapsed / 1000.0));
         }
         stop();
     }

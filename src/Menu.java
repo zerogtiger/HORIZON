@@ -471,7 +471,7 @@ public class Menu implements MouseListener {
                 focus = 0;
                 game.gameState = Game.state.Tutorial;
             } else if (focus == 2) {
-                focus = 0;
+                focus = 3;
                 game.gameState = Game.state.Options;
             } else if (focus == 3) {
                 System.exit(0);
@@ -612,7 +612,7 @@ public class Menu implements MouseListener {
                 focus = 0;
                 game.gameState = Game.state.Tutorial;
             } else if (buttons[0][2].isOver(mx, my)) {
-                focus = 0;
+                focus = 3;
                 game.gameState = Game.state.Options;
             } else if (buttons[0][3].isOver(mx, my)) {
                 System.exit(0);
