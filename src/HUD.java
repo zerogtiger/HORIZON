@@ -58,7 +58,7 @@ public class HUD {
         g2d.setStroke(new BasicStroke(1));
         g2d.drawLine(0, 40, Game.WIDTH, 40);
 
-        g.setColor((Pursuer.distance < 2000 ? new Color(208, 0, 0, 255) : Color.white));
+        g.setColor((Pursuer.distance < 2000 ? (player.getBoosting() ? new Color(21, 199, 39, 255) : new Color(208, 0, 0, 255)) : Color.white));
 
         //Pursuer position
         g.fillPolygon(new int[]{(int) ((10000 - Pursuer.distance) / 10000.0 * 600 - 15),
@@ -86,9 +86,9 @@ public class HUD {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
 
             //Message background
-            g.setColor(new Color(200, 0, 0));
-            g2d.fillRect(28, 90, (iterator < 60? 278: 197), 30);
-            g2d.fillRect(Game.WIDTH-(iterator < 60? 279: 197)-28, 90, (iterator < 60? 279: 197), 30);
+            g.setColor(player.getBoosting() ? new Color(13, 164, 31, 255) : new Color(200, 0, 0));
+            g2d.fillRect(28, 90, (iterator < 60 ? 278 : 197), 30);
+            g2d.fillRect(Game.WIDTH - (iterator < 60 ? 279 : 197) - 28, 90, (iterator < 60 ? 279 : 197), 30);
 
             //Warning message
             g2d.setFont(new Font("Courier New", Font.BOLD, 34));

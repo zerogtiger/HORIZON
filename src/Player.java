@@ -23,7 +23,7 @@ public class Player extends GameObject {
     private Queue<Tuple> playerState;
 
     //Booleans to report the state of the speeder
-    private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
+    private boolean isChargingLeft, isChargingRight, isScratchingLeft, isScratchingRight, isBumped, isBoosting;
 
     //Player distance and charge level
     private int charge, distance;
@@ -64,6 +64,14 @@ public class Player extends GameObject {
         velY = 0;
         charge = 0;
         distance = 0;
+
+        isChargingLeft = false;
+        isChargingRight = false;
+        isScratchingLeft = false;
+        isScratchingRight = false;
+        isBumped = false;
+        isBoosting = false;
+
         playerState = new LinkedList<>();
 
         //Loading sound effects
@@ -144,6 +152,9 @@ public class Player extends GameObject {
             Game.gameOver(distance, game.getSeed(), 1);
         }
 
+        //Reset speeder boosting variable
+        isBoosting = false;
+
         //Update speeder velocities depending on the key states
         //y-velocity
         if (isScratchingLeft || isScratchingRight)
@@ -151,6 +162,7 @@ public class Player extends GameObject {
         else if ((KeyInput.getKeyPress(2) || (KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || KeyInput.getKeyPress(3)) && charge > 0) {
             velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
             charge -= 3;
+            isBoosting = true;
         } else {
             if (velY < -10) {
                 velY = Game.clamp(velY + (iterator % 4 == 0 ? 1 : 0), -25, -10);
@@ -385,6 +397,10 @@ public class Player extends GameObject {
 
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public boolean getBoosting() {
+        return isBoosting;
     }
 
     public Queue<Tuple> getPlayerState() {
