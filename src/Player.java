@@ -32,11 +32,18 @@ public class Player extends GameObject {
     private final Game game;
 
     //Images of speeder postures
-    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SG.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGL1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGL2.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGR1.png"),
-            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/SGR2.png")},
+    private final Image[] speeder = {Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/normal/SG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/normal/SGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/normal/SGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/normal/SGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/normal/SGR2.png")},
+
+    //Images of speeder postures in power-up
+    speederPowerUp = {Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/powerUp/PSG.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/powerUp/PSGL1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/powerUp/PSGL2.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/powerUp/PSGR1.png"),
+            Toolkit.getDefaultToolkit().getImage("appdata/images/speeder/powerUp/PSGR2.png")},
 
     //Images of effects
     soundBarrier = new Image[9],
@@ -259,15 +266,15 @@ public class Player extends GameObject {
         //Render specific speeder posture
         g.setColor(Color.red);
         if ((KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || (!KeyInput.getKeyPress(0) && !KeyInput.getKeyPress(1)))
-            g.drawImage(speeder[0], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[0], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(0) && velX > -7)
-            g.drawImage(speeder[1], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[1], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(0))
-            g.drawImage(speeder[2], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[2], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(1) && velX < 7)
-            g.drawImage(speeder[3], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[3], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(1))
-            g.drawImage(speeder[4], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[4], getRelX(), getRelY(), 32, 48, game);
 
         //Renders charging effects
         if (isChargingLeft && velY < -8) {

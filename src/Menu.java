@@ -109,9 +109,9 @@ public class Menu implements MouseListener {
                 new Button("Back", 60, Game.HEIGHT - 40, 200, 27, game),
         };
         buttons[3] = new Button[]{
-                new Button("Toggle", 550, 228, 200, 27, game),
-                new Button("Toggle", 550, 288, 200, 27, game),
-                new Button("Toggle", 550, 348, 200, 27, game),
+                new Button("Toggle", 550, 88, 200, 27, game),
+                new Button("Toggle", 550, 148, 200, 27, game),
+                new Button("Toggle", 550, 208, 200, 27, game),
                 new Button("Back", 60, Game.HEIGHT - 50, 200, 27, game),
         };
         buttons[4] = new Button[]{
@@ -298,17 +298,17 @@ public class Menu implements MouseListener {
             //Game music options
             g.setColor(Color.white);
             g.setFont(new Font("Courier New", Font.PLAIN, 25));
-            g.drawString("Menu Background Music: ", 120, 250);
-            g.drawString("Game Background Music: ", 120, 310);
-            g.drawString("In-Game Sound Effects: ", 120, 370);
+            g.drawString("Menu Background Music: ", 120, 110);
+            g.drawString("Game Background Music: ", 120, 170);
+            g.drawString("In-Game Sound Effects: ", 120, 230);
 
             g.setFont(new Font("Courier New", Font.BOLD, 25));
             g.setColor((game.getMenuMusic() ? Color.white : Color.lightGray));
-            g.drawString(String.format("%3s", (game.getMenuMusic() ? "ON" : "OFF")), 460, 250);
+            g.drawString(String.format("%3s", (game.getMenuMusic() ? "ON" : "OFF")), 460, 110);
             g.setColor((game.getGameMusic() ? Color.white : Color.lightGray));
-            g.drawString(String.format("%3s", (game.getGameMusic() ? "ON" : "OFF")), 460, 310);
+            g.drawString(String.format("%3s", (game.getGameMusic() ? "ON" : "OFF")), 460, 170);
             g.setColor((game.getGameEffect() ? Color.white : Color.lightGray));
-            g.drawString(String.format("%3s", (game.getGameEffect() ? "ON" : "OFF")), 460, 370);
+            g.drawString(String.format("%3s", (game.getGameEffect() ? "ON" : "OFF")), 460, 230);
         }
 
         //Leaderboard entry:
