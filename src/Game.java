@@ -355,7 +355,6 @@ public class Game extends JPanel implements Runnable {
             handler.render(offScreenBuffer);
             ahandler.render(offScreenBuffer);
             environment.render(offScreenBuffer);
-            hud.render(offScreenBuffer);
             pursuer.render(offScreenBuffer);
         }
 //        if (gameState == state.LeaderboardEntry) {
@@ -364,13 +363,18 @@ public class Game extends JPanel implements Runnable {
 //        else
 //            textField.setVisible(false);
 
-        //Render the menu
-        menu.render(offScreenBuffer);
-
         //Transfer the offScreenBuffer to the screen
         g.drawImage(offScreenImage, 0, 0, WIDTH, HEIGHT, this);
 
-        drawRuler(g);
+        //Render the HUD
+        if (gameState == state.Game || gameState == state.Pause) {
+            hud.render(g);
+        }
+
+        //Render the menu
+        menu.render(g);
+
+//        drawRuler(g);
         g.dispose();
     }
 

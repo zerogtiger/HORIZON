@@ -94,10 +94,10 @@ public class Menu implements MouseListener {
         //Buttons to be displayed for all game states
         buttons = new Button[10][];
         buttons[0] = new Button[]{
-                new Button("Start Game", 90, Game.HEIGHT - 240 + 21, 200, 27, game),
-                new Button("Tutorial", 90, Game.HEIGHT - 200 + 21, 200, 27, game),
-                new Button("Options", 90, Game.HEIGHT - 160 + 21, 200, 27, game),
-                new Button("Quit", 90, Game.HEIGHT - 120 + 21, 200, 27, game),
+                new Button("Start Game", 90, Game.HEIGHT - 270 + 21, 200, 27, game),
+                new Button("Tutorial", 90, Game.HEIGHT - 230 + 21, 200, 27, game),
+                new Button("Options", 90, Game.HEIGHT - 190 + 21, 200, 27, game),
+                new Button("Quit", 90, Game.HEIGHT - 150 + 21, 200, 27, game),
         };
         buttons[1] = new Button[]{
                 new Button("Reload", 820, 420, 200, 27, game),
@@ -249,6 +249,14 @@ public class Menu implements MouseListener {
         if (game.gameState == Game.state.Menu) {
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/mainBackground2.png"), 0, 0, 400 * 3, 225 * 3, game);
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/title.png"), (Game.WIDTH - 380 * 3) / 2, 270, 380 * 3, 20 * 3, game);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.setFont(new Font("Consolas", Font.PLAIN, 12));
+            g.drawString("Tiger Ding: Art | Design | Program | Music", 10, Game.HEIGHT-23);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.setFont(new Font("Consolas", Font.PLAIN, 10));
+            g.drawString("Special thanks to PikPok for inspirations.", 10, Game.HEIGHT-10);
         }
 
         //Game over:
