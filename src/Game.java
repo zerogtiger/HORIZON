@@ -37,7 +37,7 @@ public class Game extends JPanel implements Runnable {
     private HUD hud;
 
     private Camera camera;
-    private static Player player;
+    private Player player;
     private Pursuer pursuer;
     private Phantom phantom;
 
@@ -188,7 +188,7 @@ public class Game extends JPanel implements Runnable {
     //Description: calculates the intersection situation of the player with the given object, and toggle game-state and player variables accordingly
     //Parameters: the GameObject in question
     //Return: void
-    public static void collision(GameObject obstacle) {
+    public void collision(GameObject obstacle) {
 
         //If the speeder is intersecting with the collision bounds, then end the current game
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
@@ -219,6 +219,18 @@ public class Game extends JPanel implements Runnable {
         player.setScratchingLeft(player.getLeftChargingBounds().intersects(obstacle.getRightScratchingBounds()) || player.getIsScratchingLeft());
         player.setScratchingRight(player.getRightChargingBounds().intersects(obstacle.getLeftScratchingBounds()) || player.getIsScratchingRight());
 
+    }
+
+    //Description: calculates the intersection situation of the player with the given power-up and toggle player variables accordingly
+    //Parameters: the GameObject in question
+    //Return: void
+    public void pickUpCollision(GameObject powerUp) {
+
+        //If the speeder is intersecting with the bounds, then update the player's power-up time
+        if (player.getBounds().intersects(powerUp.getBounds())) {
+            player.setPowerUpTime(360);
+            handler.removeObject(powerUp);
+        }
     }
 
     //Useless method
@@ -280,9 +292,10 @@ public class Game extends JPanel implements Runnable {
         //Reset pursuer distance
         pursuer.setDistance(10000);
 
-        //Reset speeder distance travelled and charge
+        //Reset speeder distance travelled, charge, and power-up
         player.setDistance(0);
         player.setCharge(0);
+        player.setPowerUpTime(0);
 
         //Reset the keyboard states
         keyInput.reset();
@@ -555,12 +568,12 @@ public class Game extends JPanel implements Runnable {
         stop();
     }
 
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
-    public static void setPlayer(Player player) {
-        Game.player = player;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public Camera getCamera() {

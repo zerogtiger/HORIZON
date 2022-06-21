@@ -25,8 +25,8 @@ public class Player extends GameObject {
     //Booleans to report the state of the speeder
     private boolean isChargingLeft, isChargingRight, isScratchingLeft, isScratchingRight, isBumped, isBoosting;
 
-    //Player distance and charge level
-    private int charge, distance;
+    //Player charge level, distance and power-up time
+    private int charge, distance, powerUpTime;
 
     //Game which the speeder belongs to
     private final Game game;
@@ -64,6 +64,7 @@ public class Player extends GameObject {
         velY = 0;
         charge = 0;
         distance = 0;
+        powerUpTime = 0;
 
         isChargingLeft = false;
         isChargingRight = false;
@@ -152,6 +153,9 @@ public class Player extends GameObject {
             Game.gameOver(distance, game.getSeed(), 1);
         }
 
+        //Check power-up
+        powerUpTime = Game.clamp(powerUpTime - 1, 0, 360);
+
         //Reset speeder boosting variable
         isBoosting = false;
 
@@ -159,9 +163,9 @@ public class Player extends GameObject {
         //y-velocity
         if (isScratchingLeft || isScratchingRight)
             velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
-        else if ((KeyInput.getKeyPress(2) || (KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || KeyInput.getKeyPress(3)) && charge > 0) {
+        else if ((KeyInput.getKeyPress(2) || (KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || KeyInput.getKeyPress(3)) && (charge > 0 || powerUpTime > 0)) {
             velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
-            charge -= 3;
+            charge -= (powerUpTime > 0 ? 0 : 3);
             isBoosting = true;
         } else {
             if (velY < -10) {
@@ -401,6 +405,14 @@ public class Player extends GameObject {
 
     public boolean getBoosting() {
         return isBoosting;
+    }
+
+    public void setPowerUpTime(int powerUpTime) {
+        this.powerUpTime = powerUpTime;
+    }
+
+    public int getPowerUpTime() {
+        return powerUpTime;
     }
 
     public Queue<Tuple> getPlayerState() {

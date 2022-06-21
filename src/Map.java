@@ -22,6 +22,9 @@ public class Map {
     //2D obstacle array to store obstacle placement and type information
     private int[][] obstacles = new int[height + 1][width + 1];
 
+    //2D power-up array to store power-up placement
+    private int[][] powerUp = new int[height + 1][width + 1];
+
     //2D Pair array to store the AirborneObjects information
     private Pair[][] airborneObject = new Pair[height + 1][width + 1];
 
@@ -112,6 +115,15 @@ public class Map {
             diamondSwarm.generateMap();
         }
 
+        //Generating the power-up objects
+        for (int i = 1; i <= height; i++) {
+            for (int j = 1; j <= width; j++) {
+                if (r.nextDouble() > 0.9997 && ((type == 1 && obstacles[i][j] > 100 && obstacles[i][j] < 110) || (type == 2 && obstacles[i][j] > 200 && obstacles[i][j] < 220))) {
+                    powerUp[i][j] = 100;
+                }
+            }
+        }
+
         //Debugging code: need removal
 //        this.type = 2;
 //        for (int i = 1; i <= height; i++) {
@@ -186,7 +198,6 @@ public class Map {
                         obstacles[i][j] = 0;
 
                     }
-
                 }
 
                 //Diamond Swarm:
@@ -218,6 +229,17 @@ public class Map {
 
                     }
                 }
+
+                //Add power-up pick-ups to the handler if it is in the camera's field of view
+                if (powerUp[i][j] != 0 &&
+                        !Camera.outOfFrame((j - width / 2) * obstacleSize, -i * obstacleSize,
+                                obstacleSize, obstacleSize)) {
+
+                    new PowerUp("appdata/images/powerUp/", powerUp[i][j], (j - width / 2) * obstacleSize, -i * obstacleSize,
+                            obstacleSize, obstacleSize, ID.PowerUp, handler, this, game);
+
+                    powerUp[i][j] = 0;
+                }
             }
         }
     }
@@ -229,6 +251,10 @@ public class Map {
 
     public void setObstacles(int i, int j, int value) {
         obstacles[i][j] = value;
+    }
+
+    public void setPowerUp(int i, int j, int value) {
+        powerUp[i][j] = value;
     }
 
     //Useless method: Need removal

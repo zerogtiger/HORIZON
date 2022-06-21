@@ -48,7 +48,7 @@ public class GameOrganizer {
         this.ghandler = game.getGhandler();
         this.ahandler = game.getAhandler();
 
-        this.player = Game.getPlayer();
+        this.player = game.getPlayer();
         this.pursuer = game.getPursuer();
         this.map = game.getMap();
     }

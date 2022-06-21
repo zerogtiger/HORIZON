@@ -12,5 +12,6 @@ public enum ID {
     Phantom(),
     Ground(),
     AirBorne(),
+    PowerUp(),
     Obstacle();
 }

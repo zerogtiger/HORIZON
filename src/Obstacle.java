@@ -81,7 +81,7 @@ public class Obstacle extends GameObject {
     public void tick() {
 
         //Calculates collision with the player
-        Game.collision(this);
+        game.collision(this);
 
         //Removes the object from handler if it is out of the camera's field-of-view for resource efficiency and
         // replace the value in the 2D array to be reused

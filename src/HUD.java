@@ -43,9 +43,9 @@ public class HUD {
 
         //Speeder charge display:
         //Speeder charge level
-        g.setColor(Color.orange);
-        g.fillRect(100 + 400 - player.getCharge() / 2, 75, player.getCharge() / 2, 8);
-        g.fillRect(center + 100, 75, player.getCharge() / 2, 8);
+        g.setColor(player.getPowerUpTime() > 0 ? new Color(31, 255, 54) : Color.orange);
+        g.fillRect(100 + 400 - (player.getPowerUpTime() > 0 ? 800 : player.getCharge()) / 2, 75, (player.getPowerUpTime() > 0 ? 800 : player.getCharge()) / 2, 8);
+        g.fillRect(center + 100, 75, (player.getPowerUpTime() > 0 ? 800 : player.getCharge()) / 2, 8);
 
         //Border for speeder charge
         g.setColor(Color.white);
