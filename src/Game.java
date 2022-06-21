@@ -403,6 +403,11 @@ public class Game extends JPanel implements Runnable {
             } else if (!isGameMusic) {
                 inGameMusic.stop();
             }
+
+            if (gameState == state.Pause) {
+                player.stopSounds();
+                pursuer.stopSounds();
+            }
         } else {
             if (inGameMusic.isActive()) {
                 inGameMusic.stop();
