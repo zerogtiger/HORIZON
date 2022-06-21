@@ -7,6 +7,7 @@ Enum class to store all possible IDs for the GameObject to be referenced when ma
 */
 
 public enum ID {
+
     //IDs of GameObjects:
     Player(),
     Phantom(),

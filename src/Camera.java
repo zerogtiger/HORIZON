@@ -25,8 +25,8 @@ public class Camera {
 
         //Initialize variables
         this.player = player;
-        relX = player.x - Game.WIDTH/2+16;
-        relY = player.y-Game.HEIGHT+150;
+        relX = player.x - Game.WIDTH / 2 + 16;
+        relY = player.y - Game.HEIGHT + 150;
         width = Game.WIDTH;
         height = Game.HEIGHT;
     }
@@ -37,8 +37,8 @@ public class Camera {
     public void tick() {
 
         //Update coordinates of the camera relative to the obstacles
-        relX = player.x - Game.WIDTH/2+16;
-        relY = player.y-Game.HEIGHT+150;
+        relX = player.x - Game.WIDTH / 2 + 16;
+        relY = player.y - Game.HEIGHT + 150;
     }
 
     //Description: returns the relative coordinate of the x-value given in the parameter to the camera’s field-of-view
@@ -47,7 +47,7 @@ public class Camera {
     public static int getRelX(int x) {
 
         //Relative x-coordinate of the provided absolute x-coordinate to the camera
-        return (x-relX);
+        return (x - relX);
     }
 
     //Description: returns the relative coordinate of the y-value given in the parameter to the camera’s field-of-view
@@ -56,7 +56,7 @@ public class Camera {
     public static int getRelY(int y) {
 
         //Relative y-coordinate of the provided absolute y-coordinate to the camera
-        return (y-relY);
+        return (y - relY);
     }
 
     public static int getRelX() {
@@ -73,10 +73,8 @@ public class Camera {
     public static boolean outOfFrame(GameObject object) {
 
         //Whether the obstacle is entirely out of the camera's field-of-view
-        return (object.x > relX + width || (object.x + object.width) < relX ) ||
-                (object.y > relY + height || (object.y + object.height) < relY );
-
-//        return !((object.x + object.width> relX && object.x < relX + width) && (object.y + object.height < relY && object.y < relY + height));
+        return (object.x > relX + width || (object.x + object.width) < relX) ||
+                (object.y > relY + height || (object.y + object.height) < relY);
     }
 
     //Description: verifies whether a GameObject with given location and dimensions is out of the camera’s field-of-view
@@ -85,10 +83,8 @@ public class Camera {
     public static boolean outOfFrame(int x, int y, int objectWidth, int objectHeight) {
 
         //Whether the obstacle with the coordinates and dimensions provided is entirely out of the camera's field-of-view
-        return (x > relX + width || (x + objectWidth) < relX ) ||
-                (y > relY + height || (y + objectHeight) < relY );
-
-//        return !((x + objectWidth > relX && x < relX + width) && (y + objectHeight < relY && y < relY + height));
+        return (x > relX + width || (x + objectWidth) < relX) ||
+                (y > relY + height || (y + objectHeight) < relY);
     }
 
 }

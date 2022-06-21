@@ -72,23 +72,9 @@ public class Map {
         this.game = game;
         this.type = type;
 
-
         //Initializing the map generators
         sandSpearNest = new SandSpearNest(this, obstacles, r.nextInt(10000));
         diamondSwarm = new DiamondSwarm(this, obstacles, r.nextInt(10000));
-
-//        for (int i = 1; i <= height; i++) {
-//            for (int j = 1; j <= width; j++) {
-//                obstacles[i][j] = (r.nextDouble() > 0.95 ? 1 : 2);
-//            }
-//        }
-        //Debugging map
-//        for (int i = 1; i <= height; i++) {
-//            for (int j = 1; j <= width; j++) {
-//               if (j % 6 == 0 && i%15 < 1) obstacles[i][j] = 1;
-//               else obstacles[i][j] = 2;
-//            }
-//        }
 
         //Array for direction of movement of the airborne objects
         int[][] vel = {
@@ -123,15 +109,6 @@ public class Map {
                 }
             }
         }
-
-        //Debugging code: need removal
-//        this.type = 2;
-//        for (int i = 1; i <= height; i++) {
-//            for (int j = 1; j <= width; j++) {
-//                if (j % 6 == 0 && i % 15 < 14) obstacles[i][j] = 221;
-//                else obstacles[i][j] = 201;
-//            }
-//        }
     }
 
     //Description: adds the obstacles or ground tiles from the current map that are in the camera field-of-view to the according handler
@@ -150,7 +127,7 @@ public class Map {
                             (j - width / 2) * obstacleSize, -i * obstacleSize,
                             airborneObject[i][j].x, airborneObject[i][j].y,
                             airborneObject[i][j].v, airborneObject[i][j].w,
-                            ahandler, player, this, game);
+                            ahandler, player, game);
 
                     airborneObject[i][j] = null;
                 }
@@ -209,7 +186,7 @@ public class Map {
                                     obstacleSize, obstacleSize)) {
 
                         new Obstacle(diamondSwarm.getDiamond(obstacles[i][j] - 220), obstacles[i][j],
-                                (j - width / 2) * obstacleSize,-i * obstacleSize,
+                                (j - width / 2) * obstacleSize, -i * obstacleSize,
                                 obstacleSize, obstacleSize, ID.Obstacle, handler, this, player, game);
 
                         obstacles[i][j] = 0;
@@ -255,12 +232,6 @@ public class Map {
 
     public void setPowerUp(int i, int j, int value) {
         powerUp[i][j] = value;
-    }
-
-    //Useless method: Need removal
-    public void setAirborneObject(int i, int j, int v0, int w0, int x0, int y0) {
-        if (i <= 0 && i >= height && j <= 0 && j >= width)
-            airborneObject[i][j] = new Pair(v0, w0, x0, y0);
     }
 
     public int getWidth() {

@@ -49,13 +49,41 @@ public class PowerUp extends GameObject {
         //Compile the frames of the power-up animation into the array for easy access
         frames = new Image[20];
         for (int i = 0; i < 20; i++) {
-            frames[i] = Toolkit.getDefaultToolkit().getImage(filepath + String.format("%04d", i+1) + ".png");
+            frames[i] = Toolkit.getDefaultToolkit().getImage(filepath + String.format("%04d", i + 1) + ".png");
         }
     }
 
     //Collision bound of the power-up to be used for collision calculation
     public Rectangle getBounds() {
         return new Rectangle(getRelX(), getRelY(), width, height);
+    }
+
+    //Description: updates the speeder collision situation with the current power-up and verifies whether it is still in the camera field-of-view
+    //Parameters: none
+    //Return: void
+    public void tick() {
+
+        //Forward iterator
+        iterator = (iterator + 1) % 80;
+
+        //Calculates collision with the player
+        game.pickUpCollision(this);
+
+        //Removes the object from handler if it is out of the camera's field-of-view for resource efficiency and
+        // replace the value in the 2D array to be reused
+        if (Camera.outOfFrame(this)) {
+            map.setPowerUp((-y / Map.obstacleSize), (x / Map.obstacleSize) + Map.width / 2, value);
+            handler.removeObject(this);
+        }
+    }
+
+    //Description: renders the current power-up
+    //Parameters: the Graphics object to draw the power-up
+    //Return: void
+    public void render(Graphics g) {
+        //Repeatedly draw each frame of the power-up animation at approximately 30 FPS
+        int frame = iterator % 40;
+        g.drawImage(frames[frame / 2], getRelX(), getRelY(), width, height, game);
     }
 
     public Rectangle getLeftChargingBounds() {
@@ -84,34 +112,5 @@ public class PowerUp extends GameObject {
 
     public Rectangle getRightBounds() {
         return null;
-    }
-
-    //Description: updates the speeder collision situation with the current power-up and verifies whether it is still in the camera field-of-view
-    //Parameters: none
-    //Return: void
-    public void tick() {
-
-        //Forward iterator
-        iterator = (iterator + 1)%80;
-
-        //Calculates collision with the player
-        game.pickUpCollision(this);
-
-        //Removes the object from handler if it is out of the camera's field-of-view for resource efficiency and
-        // replace the value in the 2D array to be reused
-        if (Camera.outOfFrame(this)) {
-            map.setPowerUp((-y / Map.obstacleSize), (x / Map.obstacleSize) + Map.width / 2, value);
-            handler.removeObject(this);
-        }
-
-    }
-
-    //Description: renders the current power-up
-    //Parameters: the Graphics object to draw the power-up
-    //Return: void
-    public void render(Graphics g) {
-        //Repeatedly draw each frame of the power-up animation at approximately 30 FPS
-        int frame = iterator % 40;
-        g.drawImage(frames[frame / 2], getRelX(), getRelY(), width, height, game);
     }
 }

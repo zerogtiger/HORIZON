@@ -8,7 +8,6 @@ making calculations for the game components.
 */
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.*;
 
 public class KeyInput implements KeyListener {

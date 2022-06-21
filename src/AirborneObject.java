@@ -28,14 +28,13 @@ public class AirborneObject extends GameObject {
     //Other components to be used
     private Handler handler;
     private Player player;
-    private Map map;
     private Game game;
 
     //Frames for the animation
     private Image[] frames;
 
     //Constructor
-    public AirborneObject(String filepath, ID id, int x, int y, int width, int height, int velX, int velY, Handler handler, Player player, Map map, Game game) {
+    public AirborneObject(String filepath, ID id, int x, int y, int width, int height, int velX, int velY, Handler handler, Player player, Game game) {
 
         //Super GameObject
         super(x, y, id, handler);
@@ -47,7 +46,6 @@ public class AirborneObject extends GameObject {
         this.velY = velY;
         this.handler = handler;
         this.player = player;
-        this.map = map;
         this.game = game;
 
         //Adding itself to the handler
@@ -59,7 +57,7 @@ public class AirborneObject extends GameObject {
         //Compile the frames of the drone animation into the array for easy access
         frames = new Image[30];
         for (int i = 0; i < 29; i++) {
-            frames[i] = Toolkit.getDefaultToolkit().getImage(filepath + String.format("%04d", i+1) + ".png");
+            frames[i] = Toolkit.getDefaultToolkit().getImage(filepath + String.format("%04d", i + 1) + ".png");
         }
     }
 
@@ -72,8 +70,8 @@ public class AirborneObject extends GameObject {
         iterator = (iterator + 1) % 720;
 
         //Update x and y-coordinates
-        x += velX - player.getVelX()/4;
-        y += velY - player.getVelY()/5;;
+        x += velX - player.getVelX() / 4;
+        y += velY - player.getVelY() / 5;
 
         //Removes the object from handler if the camera has moved beyond it
         if (y > Camera.getRelY() + Game.HEIGHT)

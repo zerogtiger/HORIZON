@@ -31,8 +31,8 @@ public class Environment {
         this.seed = seed;
 
         //Derive weather condition and time-of-day data from the recorded seed
-        this.weather = seed/100000;
-        this.time = (seed%100000)/10000;
+        this.weather = seed / 100000;
+        this.time = (seed % 100000) / 10000;
 
         //Initialize iterator
         iterator = 0;
@@ -53,7 +53,7 @@ public class Environment {
             sandstorm[i] = Toolkit.getDefaultToolkit().getImage("appdata/images/weather/sandstormFrames/" + String.format("%04d", i + 1) + ".png");
         }
 
-        sandstormOverlay =Toolkit.getDefaultToolkit().getImage("appdata/images/weather/sandstorm.png");
+        sandstormOverlay = Toolkit.getDefaultToolkit().getImage("appdata/images/weather/sandstorm.png");
 
         //Times-of-day:
         timesOfDay = new Image[4];
@@ -70,8 +70,8 @@ public class Environment {
 
         //Reset the seed and re-derive weather condition and time-of-day should the seed of the game change
         this.seed = seed;
-        this.weather = seed/100000;
-        this.time = (seed%100000)/10000;
+        this.weather = seed / 100000;
+        this.time = (seed % 100000) / 10000;
     }
 
     //Description: updates the iterator
@@ -97,40 +97,35 @@ public class Environment {
         */
 
         if (weather == 0) {
-            g.drawImage(clear, 0,0, Game.WIDTH, Game.HEIGHT, game);
-        }
-        else if (weather == 1) {
-            g.drawImage(overcast, 0,0, Game.WIDTH, Game.HEIGHT, game);
-        }
-        else if (weather == 2) {
+            g.drawImage(clear, 0, 0, Game.WIDTH, Game.HEIGHT, game);
+        } else if (weather == 1) {
+            g.drawImage(overcast, 0, 0, Game.WIDTH, Game.HEIGHT, game);
+        } else if (weather == 2) {
 
             //Repeatedly render the 80 frame rain overlay at approximately 30 FPS
             //Loops 70 times as the rain appears and disappears for the first and last 10 frames to ensure smooth,
             // unfragmented rain drops.
-            int temp = iterator%140/2;
+            int temp = iterator % 140 / 2;
             if (temp >= 5) {
-                g.drawImage(rain[temp], 0,0, Game.WIDTH, Game.HEIGHT, game);
+                g.drawImage(rain[temp], 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            } else {
+                g.drawImage(rain[temp], 0, 0, Game.WIDTH, Game.HEIGHT, game);
+                g.drawImage(rain[temp + 75], 0, 0, Game.WIDTH, Game.HEIGHT, game);
             }
-            else {
-                g.drawImage(rain[temp], 0,0, Game.WIDTH, Game.HEIGHT, game);
-                g.drawImage(rain[temp+75], 0,0, Game.WIDTH, Game.HEIGHT, game);
-            }
-            g.drawImage(overcast, 0,0, Game.WIDTH, Game.HEIGHT, game);
-        }
-        else if (weather == 3) {
+            g.drawImage(overcast, 0, 0, Game.WIDTH, Game.HEIGHT, game);
+        } else if (weather == 3) {
 
             //Repeatedly render the 40 frame sandstorm overlay at approximately 30 FPS
             //Loops 30 times as the sand appears and disappears for the first and last 5 frames to ensure smooth,
             // unfragmented sand movement.
-            int temp = iterator%60/2;
+            int temp = iterator % 60 / 2;
             if (temp > 5) {
-                g.drawImage(sandstorm[temp], 0,0, Game.WIDTH, Game.HEIGHT, game);
+                g.drawImage(sandstorm[temp], 0, 0, Game.WIDTH, Game.HEIGHT, game);
+            } else {
+                g.drawImage(sandstorm[temp], 0, 0, Game.WIDTH, Game.HEIGHT, game);
+                g.drawImage(sandstorm[temp + 34], 0, 0, Game.WIDTH, Game.HEIGHT, game);
             }
-            else {
-                g.drawImage(sandstorm[temp], 0,0, Game.WIDTH, Game.HEIGHT, game);
-                g.drawImage(sandstorm[temp+34], 0,0, Game.WIDTH, Game.HEIGHT, game);
-            }
-            g.drawImage(sandstormOverlay, 0,0, Game.WIDTH, Game.HEIGHT, game);
+            g.drawImage(sandstormOverlay, 0, 0, Game.WIDTH, Game.HEIGHT, game);
         }
 
         /*Renders the specified time-of-day overlay
@@ -140,6 +135,6 @@ public class Environment {
         2 --> evening
         3 --> night
         */
-        g.drawImage(timesOfDay[time], 0,0, Game.WIDTH, Game.HEIGHT, game);
+        g.drawImage(timesOfDay[time], 0, 0, Game.WIDTH, Game.HEIGHT, game);
     }
 }

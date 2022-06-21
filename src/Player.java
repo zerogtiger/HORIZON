@@ -9,10 +9,7 @@ to reflect a dynamic, airborne sensation; responsible for updating charge of the
 
 */
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
@@ -59,7 +56,7 @@ public class Player extends GameObject {
     private int iterator;
 
     //Constructor
-    public Player(int x, int y, ID id, Handler handler, int normalVelY, Game game) {
+    public Player(int x, int y, ID id, Handler handler, Game game) {
 
         //Super GameObject
         super(x, y, id, handler);
@@ -195,7 +192,6 @@ public class Player extends GameObject {
             }
         }
 
-
         //Increase charge
         if (isChargingLeft && velY < -8)
             charge += 2;
@@ -212,20 +208,6 @@ public class Player extends GameObject {
         //Update distance
         distance += -velY;
         charge = Game.clamp(charge, 0, 800);
-
-//        if ((isChargingLeft || isChargingRight) && velY < -8) {
-//            game.setCharging(true);
-//        } else {
-//            game.setCharging(false);
-//        }
-//        if (isScratchingLeft || isScratchingRight) {
-//            game.setScratching(true);
-//        } else {
-//            game.setScratching(false);
-//        }
-//        if (isBumped) {
-//            game.setCollision(true);
-//        }
 
         //Play sound effects according to speeder states
         if (game.getGameEffect()) {
@@ -249,7 +231,6 @@ public class Player extends GameObject {
             stopSounds();
         }
 
-
         //Reset speeder states
         isChargingLeft = false;
         isChargingRight = false;
@@ -266,15 +247,15 @@ public class Player extends GameObject {
         //Render specific speeder posture
         g.setColor(Color.red);
         if ((KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || (!KeyInput.getKeyPress(0) && !KeyInput.getKeyPress(1)))
-            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[0], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0 ? speederPowerUp : speeder)[0], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(0) && velX > -7)
-            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[1], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0 ? speederPowerUp : speeder)[1], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(0))
-            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[2], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0 ? speederPowerUp : speeder)[2], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(1) && velX < 7)
-            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[3], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0 ? speederPowerUp : speeder)[3], getRelX(), getRelY(), 32, 48, game);
         else if (KeyInput.getKeyPress(1))
-            g.drawImage((powerUpTime > 0? speederPowerUp: speeder)[4], getRelX(), getRelY(), 32, 48, game);
+            g.drawImage((powerUpTime > 0 ? speederPowerUp : speeder)[4], getRelX(), getRelY(), 32, 48, game);
 
         //Renders charging effects
         if (isChargingLeft && velY < -8) {

@@ -19,7 +19,6 @@ import java.awt.event.*;
 public class Menu implements MouseListener {
 
     //Various game components to be referenced to
-    private Handler handler;
     private Player player;
     private Game game;
     private Leaderboard leaderboard;
@@ -62,7 +61,7 @@ public class Menu implements MouseListener {
     private boolean[] lastKeyboardState = new boolean[4]; // 0 for up, 1 for down, 2 for enter, 4 for esc.
 
     //Constructor
-    public Menu(Player player, Game game, Leaderboard leaderboard, Handler handler) {
+    public Menu(Player player, Game game, Leaderboard leaderboard) {
 
         //Initialize variables
         focus = 0;
@@ -73,7 +72,6 @@ public class Menu implements MouseListener {
         this.game = game;
         this.player = player;
         this.leaderboard = leaderboard;
-        this.handler = handler;
         leaderboardEntryTextField = new TextField("Player");
         seedEntryTextField = new TextField(String.format("%06d", game.getSeed()));
 
@@ -242,8 +240,7 @@ public class Menu implements MouseListener {
     public void render(Graphics g) {
 
         //Fonts to be used
-        Font courier = new Font("Courier New", Font.PLAIN, 18);
-        Font courier2 = new Font("Courier New", Font.BOLD, 60);
+        Font courier = new Font("Courier New", Font.BOLD, 60);
 
         //Render different components depending on the game state
 
@@ -254,11 +251,11 @@ public class Menu implements MouseListener {
 
             g.setColor(Color.LIGHT_GRAY);
             g.setFont(new Font("Consolas", Font.PLAIN, 12));
-            g.drawString("Tiger Ding: Art | Design | Program | Music", 10, Game.HEIGHT-23);
+            g.drawString("Tiger Ding: Art | Design | Program | Music", 10, Game.HEIGHT - 23);
 
             g.setColor(Color.LIGHT_GRAY);
             g.setFont(new Font("Consolas", Font.PLAIN, 10));
-            g.drawString("Special thanks to PikPok for inspirations.", 10, Game.HEIGHT-10);
+            g.drawString("Special thanks to PikPok for inspirations.", 10, Game.HEIGHT - 10);
         }
 
         //Game over:
@@ -266,7 +263,7 @@ public class Menu implements MouseListener {
 
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/menuBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
 
-            g.setFont(courier2);
+            g.setFont(courier);
             g.setColor(new Color(35, 35, 35, 199));
             g.fillRect(120, 140, Game.WIDTH - 240, Game.HEIGHT - 280);
 
@@ -289,10 +286,6 @@ public class Menu implements MouseListener {
         //Options:
         else if (game.gameState == Game.state.Options) {
 
-//            new Button("Toggle", 120, 150, 200, 27, game),
-//                    new Button("Toggle", 120, 190, 200, 27, game),
-//                    new Button("Toggle", 120, 230, 200, 27, game),
-//
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/menuBackground/optionsBackground.png"), 0, 0, Game.WIDTH, Game.HEIGHT, game);
 
             //Game music options
@@ -348,7 +341,7 @@ public class Menu implements MouseListener {
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/distance.png"), 155, 360, 83 * 3, 5 * 3, game);
 
             g.setColor(Color.white);
-            g.setFont(courier2);
+            g.setFont(courier);
             g.drawString(String.valueOf(player.getDistance()), 155, 440);
         }
 

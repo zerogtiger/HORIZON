@@ -107,20 +107,4 @@ public abstract class GameObject {
     public int getVelY () {
         return velY;
     }
-
-//    public int getRelX() {
-//        return relX;
-//    }
-//
-//    public int getRelY() {
-//        return relY;
-//    }
-//
-//    public void setRelX(int relX) {
-//        this.relX = relX;
-//    }
-//
-//    public void setRelY(int relY) {
-//        this.relY = relY;
-//    }
 }

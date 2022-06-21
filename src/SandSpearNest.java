@@ -163,28 +163,28 @@ public class SandSpearNest {
             }
 
             //Random nest orientation
-            int add = r.nextInt(3)*20;
+            int add = r.nextInt(3) * 20;
 
             //Add values to the obstacles array to reflect portions of the nest
-            obstacles[row][column] = 141+add;
-            obstacles[row][column+1] = 142+add;
-            obstacles[row][column+2] = 143+add;
-            obstacles[row][column+3] = 144+add;
+            obstacles[row][column] = 141 + add;
+            obstacles[row][column + 1] = 142 + add;
+            obstacles[row][column + 2] = 143 + add;
+            obstacles[row][column + 3] = 144 + add;
 
-            obstacles[row+1][column] = 145+add;
-            obstacles[row+1][column+1] = 146+add;
-            obstacles[row+1][column+2] = 147+add;
-            obstacles[row+1][column+3] = 148+add;
+            obstacles[row + 1][column] = 145 + add;
+            obstacles[row + 1][column + 1] = 146 + add;
+            obstacles[row + 1][column + 2] = 147 + add;
+            obstacles[row + 1][column + 3] = 148 + add;
 
-            obstacles[row+2][column] = 149+add;
-            obstacles[row+2][column+1] = 150+add;
-            obstacles[row+2][column+2] = 151+add;
-            obstacles[row+2][column+3] = 152+add;
+            obstacles[row + 2][column] = 149 + add;
+            obstacles[row + 2][column + 1] = 150 + add;
+            obstacles[row + 2][column + 2] = 151 + add;
+            obstacles[row + 2][column + 3] = 152 + add;
 
-            obstacles[row+3][column] = 153+add;
-            obstacles[row+3][column+1] = 154+add;
-            obstacles[row+3][column+2] = 155+add;
-            obstacles[row+3][column+3] = 156+add;
+            obstacles[row + 3][column] = 153 + add;
+            obstacles[row + 3][column + 1] = 154 + add;
+            obstacles[row + 3][column + 2] = 155 + add;
+            obstacles[row + 3][column + 3] = 156 + add;
         }
     }
 
@@ -205,10 +205,4 @@ public class SandSpearNest {
         //Return the wanted image of ground
         return ground[index];
     }
-//
-//    private void addNest(int row, int column) {
-//
-//    }
-
-
 }

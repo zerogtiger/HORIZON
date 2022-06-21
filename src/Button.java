@@ -10,13 +10,10 @@ hovering and presses.
 */
 
 import javax.swing.*;
-import javax.tools.Tool;
-import java.awt.event.*;
 import java.util.*;
-import java.io.*;
 import java.awt.*;
 
-public class Button{
+public class Button {
 
     //Label for the button
     private String label;
@@ -52,14 +49,6 @@ public class Button{
         this.game = game;
     }
 
-
-//    public boolean tick() {
-//        Point p = MouseInfo.getPointerInfo().getLocation();
-//        int mx = (int) (p.getX() - game.getLocationOnScreen().getX());
-//        int my = (int) (p.getY() - game.getLocationOnScreen().getY());
-//        return (mx >= x && mx <= x + width && my >= y && my <= y + height);
-//    }
-
     //Description: renders button at specified location, with specified dimensions and styles
     //Parameters: the Graphics object to draw the button
     //Return: void
@@ -70,16 +59,16 @@ public class Button{
         g.setFont(font);
 
         //Renders the String label
-        g.drawString(label, x + 25, y+19);
+        g.drawString(label, x + 25, y + 19);
 
         //Default border
-        g.drawImage(borders[0], x, y+3, 4 * 3, 7 * 3, game);
+        g.drawImage(borders[0], x, y + 3, 4 * 3, 7 * 3, game);
 
         //Focused borders
         if (isFocused) {
-            g.drawImage(borders[0], x - 12, y+3, 4 * 3, 7 * 3, game);
-            g.drawImage(borders[1], x + width - 4 * 3, y+3, 4 * 3, 7 * 3, game);
-            g.drawImage(borders[1], x + width - 4 * 3+12, y+3, 4 * 3, 7 * 3, game);
+            g.drawImage(borders[0], x - 12, y + 3, 4 * 3, 7 * 3, game);
+            g.drawImage(borders[1], x + width - 4 * 3, y + 3, 4 * 3, 7 * 3, game);
+            g.drawImage(borders[1], x + width - 4 * 3 + 12, y + 3, 4 * 3, 7 * 3, game);
         }
     }
 

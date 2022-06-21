@@ -96,17 +96,6 @@ public class Obstacle extends GameObject {
     //Parameters: the Graphics object to draw the obstacle
     //Return: void
     public void render(Graphics g) {
-//        g.setColor(Color.lightGray);
-//        g.fillRect(getRelX(), getRelY(), width, height);
-//        Graphics2D g2d = (Graphics2D) g;
-//        g.setColor(Color.yellow);
-//        g2d.draw(getLeftChargingBounds());
-//        g2d.draw(getRightChargingBounds());
-//        g.setColor(Color.green);
-//        g2d.draw(getCollisionBounds());
-//        g.setColor(Color.cyan);
-//        g2d.draw(getLeftScratchingBounds());
-//        g2d.draw(getRightScratchingBounds());
 
         //Renders the obstacle image at the designated location, with the specified dimensions
         g.drawImage(image, getRelX(), getRelY(), width, height, game);

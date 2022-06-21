@@ -26,6 +26,7 @@ public class Window {
         this.game = game;
 
         //Set JPanel properties
+        game.setDoubleBuffered(true);
         game.setPreferredSize(new Dimension(width, height));
         game.setMaximumSize(new Dimension(width, height));
         game.setMinimumSize(new Dimension(width, height));

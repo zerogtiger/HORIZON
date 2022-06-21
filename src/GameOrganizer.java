@@ -38,10 +38,10 @@ public class GameOrganizer {
         this.seed = game.getSeed();
 
         //Set the seed for the random object as the game seed's last 4 digits
-        r = new Random(seed%10000);
-        
+        r = new Random(seed % 10000);
+
         //Generate next seed and zone type
-        tempType = r.nextInt(1,3);
+        tempType = r.nextInt(1, 3);
         tempSeed = r.nextInt(10000);
 
         this.handler = game.getHandler();
@@ -63,7 +63,7 @@ public class GameOrganizer {
 
             //Reset the player's position to the start of the new map
             player.setX(-16);
-            player.setY(Game.HEIGHT*2);
+            player.setY(Game.HEIGHT * 2);
 
             //Increase the pursuer's distance to account for the time between transitions
             pursuer.setDistance(Game.clamp(pursuer.getDistance() + 1200, 0, 11000));
@@ -75,10 +75,10 @@ public class GameOrganizer {
             zoneCounter++;
             System.out.println("new map");
         }
-        if (currCounter < (player.getDistance()+8500) / 17000) {
+        if (currCounter < (player.getDistance() + 8500) / 17000) {
 
             //Generate next seed and zone type
-            tempType = r.nextInt(1,3);
+            tempType = r.nextInt(1, 3);
             tempSeed = r.nextInt(10000);
 
             //Forward the currCounter
@@ -92,12 +92,12 @@ public class GameOrganizer {
     public void reset() {
 
         //Reset the seed and the counters
-        r.setSeed(seed%10000);
+        r.setSeed(seed % 10000);
         zoneCounter = -1;
         currCounter = 0;
 
         //Generate next seed and zone type
-        tempType = r.nextInt(1,3);
+        tempType = r.nextInt(1, 3);
         tempSeed = r.nextInt(10000);
     }
 

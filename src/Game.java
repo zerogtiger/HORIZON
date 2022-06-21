@@ -58,9 +58,6 @@ public class Game extends JPanel implements Runnable {
     //Off-screen buffer to smooth graphics
     Image offScreenImage;
     private Graphics offScreenBuffer;
-    private long startTime, timeElapsed, frameCount = 0, tickCount = 0;
-
-//    private JTextField textField;
 
     //Seed for game
     private static int seed;
@@ -103,12 +100,12 @@ public class Game extends JPanel implements Runnable {
         leaderboard = new Leaderboard();
         keyInput = new KeyInput();
 
-        player = new Player(-16, HEIGHT * 2, ID.Player, handler, 0, this);
+        player = new Player(-16, HEIGHT * 2, ID.Player, handler, this);
         phantom = new Phantom(-16, HEIGHT * 2, ID.Phantom, handler, new LinkedList<>(), this);
         pursuer = new Pursuer(player, this);
         camera = new Camera(player);
 
-        menu = new Menu(player, this, leaderboard, handler);
+        menu = new Menu(player, this, leaderboard);
         hud = new HUD(player, this);
 
         gameOrganizer = new GameOrganizer(this);
@@ -150,30 +147,8 @@ public class Game extends JPanel implements Runnable {
         menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
         inGameMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-//        textField = new JTextField("Test");
-//        this.setLayout(null);
-//        this.add(textField);
-//        textField.setBounds(25, 20, 200, 25);
-//        textField.setBackground(new Color(255,255,255));
-//        textField.setFont(new Font("Monospaced", Font.BOLD, 18));
-//        textField.setVisible(false);
-        this.setDoubleBuffered(true);
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        this.setMaximumSize(new Dimension(WIDTH, HEIGHT));
-        this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-        this.setFocusable(true);
-        this.addKeyListener(this.getKeyInput());
-        this.addMouseListener(this.getMenu());
-
-        frame = new JFrame("HORIZON極速狂飆");
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("appdata/images/icon.png"));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(this);
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        this.start();
+        //Window of game
+        new Window(WIDTH, HEIGHT, "HORIZON極速狂飆", this);
     }
 
     //Description: clamps the given value within the given range
@@ -231,17 +206,6 @@ public class Game extends JPanel implements Runnable {
             player.setPowerUpTime(360);
             handler.removeObject(powerUp);
         }
-    }
-
-    //Useless method
-    public static int reverseClamp(int val, int min, int max) {
-        if (val < min || val > max)
-            return val;
-        else if (Math.abs(val - min) > Math.abs(max - val))
-            return max;
-        else if (Math.abs(val - min) < Math.abs(max - val))
-            return min;
-        return val;
     }
 
     //Description: performs the according end-of-game procedures
@@ -309,23 +273,8 @@ public class Game extends JPanel implements Runnable {
         paint(g);
     }
 
+    //PaintComponent method
     public void paintComponent(Graphics g) {
-        //super.paintComponent(g);
-//        g = bs.getDrawGraphics();
-
-//        g.setColor(new Color(59, 56, 53));
-//        g.fillRect(0, 0, WIDTH + 15, HEIGHT + 15);
-//
-//        if (gameState == state.Game || gameState == state.Pause) {
-//            ghandler.render(g);
-//            handler.render(g);
-//            ahandler.render(g);
-//            environment.render(g);
-//            hud.render(g);
-//            pursuer.render(g);
-//        }
-//        menu.render(g);
-//        g.dispose();
 
         //Set up the offscreen buffer the first time paint() is called
         if (offScreenBuffer == null) {
@@ -335,8 +284,6 @@ public class Game extends JPanel implements Runnable {
 
         //Clear the offScreenBuffer
         offScreenBuffer.clearRect(0, 0, this.getWidth(), this.getHeight());
-
-        //    super.paintComponent(g);
 
         //Painting the background
         offScreenBuffer.setColor(new Color(59, 56, 53));
@@ -366,11 +313,6 @@ public class Game extends JPanel implements Runnable {
             environment.render(offScreenBuffer);
             pursuer.render(offScreenBuffer);
         }
-//        if (gameState == state.LeaderboardEntry) {
-//            textField.setVisible(true);
-//        }
-//        else
-//            textField.setVisible(false);
 
         //Transfer the offScreenBuffer to the screen
         g.drawImage(offScreenImage, 0, 0, WIDTH, HEIGHT, this);
@@ -383,7 +325,6 @@ public class Game extends JPanel implements Runnable {
         //Render the menu
         menu.render(g);
 
-//        drawRuler(g);
         g.dispose();
     }
 
@@ -420,23 +361,7 @@ public class Game extends JPanel implements Runnable {
             }
             player.stopSounds();
             pursuer.stopSounds();
-//            if (inGameMusic.isActive() || !menuMusic.isActive()) {
-//                menuMusic.setFramePosition(0);
-//                menuMusic.start();
-//                inGameMusic.stop();
-////                charging.stop();
-////                scratching.stop();
-////                collision.stop();
-//                player.stopSounds();
-//                pursuer.stopSounds();
-//            }
         }
-//        if (!isMenuMusic && menuMusic.isActive()) {
-//            menuMusic.stop();
-//        }
-//        if (!isGameMusic && inGameMusic.isActive()) {
-//            inGameMusic.stop();
-//        }
 
         //Updates game components
         menu.tick();
@@ -455,29 +380,6 @@ public class Game extends JPanel implements Runnable {
             environment.tick();
         }
 
-        //Increase time elapsed and frame count
-        frameCount++;
-
-    }
-
-    //Require removal
-    public void drawRuler(Graphics g) {
-        Color[] colors = {new Color(0, 200, 0),
-                new Color(200, 0, 0),
-                new Color(50, 100, 200),
-                new Color(200, 200, 0)};
-        int curr = 0;
-        for (int i = 0; i < 60; i++) {
-            g.setColor(colors[i % 4]);
-            g.fillRect(curr, 0, 20, 4);
-            curr += 20;
-        }
-        curr = 0;
-        for (int i = 0; i < 34; i++) {
-            g.setColor(colors[i % 4]);
-            g.fillRect(0, curr, 4, 20);
-            curr += 20;
-        }
     }
 
     //Description: starts the game thread
@@ -489,8 +391,6 @@ public class Game extends JPanel implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
-        startTime = System.currentTimeMillis();
-        timeElapsed = 0;
     }
 
     //Description: stops the game thread
@@ -541,34 +441,6 @@ public class Game extends JPanel implements Runnable {
                 System.out.println("FPS: " + frames);
                 frames = 0;
             }
-//        //Game loop
-//        while (running) {
-//            timeElapsed = System.currentTimeMillis() - startTime;
-//
-//            if ((timeElapsed+8)/16 > tickCount) {
-//                try {
-//                    tick();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                System.out.println("start time: " + startTime);
-//                System.out.println("Time Elapsed: " + timeElapsed);
-//                System.out.println("tick count: " + tickCount);
-//                System.out.println("frame count: " + frameCount);
-//                tickCount = (timeElapsed+8)/16;
-//            }
-//            this.repaint();
-////            try {
-////                Thread.sleep();
-////            } catch (Exception e) {
-////                e.printStackTrace();
-////            }
-//            if (timeElapsed/16 > frameCount) {
-//
-//                frameCount = timeElapsed/16;
-//            }
-            //Output the average FPS of the game
-//            System.out.println("FPS: " + (double) frameCount / (timeElapsed / 1000.0));
         }
         stop();
     }

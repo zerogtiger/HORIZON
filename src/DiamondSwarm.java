@@ -9,7 +9,6 @@ the map and generating the obstacles.
 
 */
 
-
 import java.awt.*;
 import java.util.*;
 

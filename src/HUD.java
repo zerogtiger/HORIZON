@@ -14,7 +14,6 @@ public class HUD {
 
     //Helper value to locate the center of the screen
     private int center = Game.WIDTH / 2;
-    private int width = 70;
 
     //Game components to be referenced to
     private Game game;

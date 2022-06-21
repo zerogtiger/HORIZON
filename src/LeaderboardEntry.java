@@ -10,7 +10,6 @@ with the appropriate placement identifiers at the appropriate location on the sc
 
 import java.awt.*;
 import java.util.*;
-import java.io.*;
 
 public class LeaderboardEntry {
 
@@ -129,7 +128,7 @@ public class LeaderboardEntry {
 
         //Actual entry data
         g.setFont(new Font("Consolas", Font.PLAIN, 18));
-        g.setColor((isInitialized? Color.white: Color.gray));
+        g.setColor((isInitialized ? Color.white : Color.gray));
         g.drawString(toString(), x + 73, y + 26);
     }
 
