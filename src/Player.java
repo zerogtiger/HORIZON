@@ -25,6 +25,9 @@ public class Player extends GameObject {
     //Booleans to report the state of the speeder
     private boolean isChargingLeft = false, isChargingRight = false, isScratchingLeft = false, isScratchingRight = false, isBumped = false;
 
+    //Player distance and charge level
+    private int charge, distance;
+
     //Game which the speeder belongs to
     private final Game game;
 
@@ -59,6 +62,8 @@ public class Player extends GameObject {
         this.game = game;
         velX = 0;
         velY = 0;
+        charge = 0;
+        distance = 0;
         playerState = new LinkedList<>();
 
         //Loading sound effects
@@ -136,65 +141,43 @@ public class Player extends GameObject {
 
         //Check pursuer distance
         if (Pursuer.distance <= 0) {
-            Game.gameOver(Stats.speederDistance, game.getSeed(), 1);
+            Game.gameOver(distance, game.getSeed(), 1);
         }
 
         //Update speeder velocities depending on the key states
-        if (Stats.debug == 0) {
-            //y-velocity
-            if (isScratchingLeft || isScratchingRight)
-                velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
-            else if ((Stats.getKeyPress()[0][2] || (Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || Stats.getKeyPress()[0][3]) && Stats.CHARGE > 0) {
-                velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
-                Stats.CHARGE -= 3;
-            } else {
-                if (velY < -10) {
-                    velY = Game.clamp(velY + (iterator % 4 == 0 ? 1 : 0), -25, -10);
-                } else {
-                    velY = Game.clamp(velY - (iterator % 5 == 0 ? 1 : 0), -10, 0);
-                }
-            }
-
-            //x-velocity
-            if (Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]) {
-                velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
-            } else if (Stats.getKeyPress()[0][1] && !Stats.getKeyPress()[0][0]) {
-                velX = Game.clamp(velX + (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
-            } else {
-                if (velX > 0) {
-                    velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
-                } else if (velX < 0) {
-                    velX = Game.clamp(velX + (iterator % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
-                }
-            }
+        //y-velocity
+        if (isScratchingLeft || isScratchingRight)
+            velY = Game.clamp(velY + (iterator % 3 == 0 ? 1 : 0), -25, -3);
+        else if ((KeyInput.getKeyPress(2) || (KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || KeyInput.getKeyPress(3)) && charge > 0) {
+            velY = Game.clamp(velY - (iterator % 3 == 0 ? 1 : 0), -25, 0);
+            charge -= 3;
         } else {
-            if (Stats.getKeyPress()[1][3] && Stats.getKeyPress()[1][4])
-                velY = 0;
-            else if (Stats.getKeyPress()[1][3])
-                velY = -8;
-            else if (Stats.getKeyPress()[1][4])
-                velY = 8;
-            else
-                velY = 0;
-            if (Stats.getKeyPress()[1][0]) {
-                velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
-            } else if (Stats.getKeyPress()[1][1]) {
-                velX = Game.clamp(velX + (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
+            if (velY < -10) {
+                velY = Game.clamp(velY + (iterator % 4 == 0 ? 1 : 0), -25, -10);
             } else {
-                if (velX > 0) {
-                    velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
-                } else if (velX < 0) {
-                    velX = Game.clamp(velX + (iterator % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
-                }
+                velY = Game.clamp(velY - (iterator % 5 == 0 ? 1 : 0), -10, 0);
             }
-
         }
+
+        //x-velocity
+        if (KeyInput.getKeyPress(0) && !KeyInput.getKeyPress(1)) {
+            velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX > -7 ? 2 : 1) : 0), -10, 10);
+        } else if (KeyInput.getKeyPress(1) && !KeyInput.getKeyPress(0)) {
+            velX = Game.clamp(velX + (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), -10, 10);
+        } else {
+            if (velX > 0) {
+                velX = Game.clamp(velX - (iterator % 3 == 0 ? (velX < 7 ? 2 : 1) : 0), 0, 10);
+            } else if (velX < 0) {
+                velX = Game.clamp(velX + (iterator % 3 == 1 ? (velX > -7 ? 2 : 1) : 0), -10, 0);
+            }
+        }
+
 
         //Increase charge
         if (isChargingLeft && velY < -8)
-            Stats.CHARGE += 2;
+            charge += 2;
         if (isChargingRight && velY < -8)
-            Stats.CHARGE += 2;
+            charge += 2;
 
         //Save state of speeder into queue
         playerState.add(new Tuple(x, y, velX, velY, isChargingLeft, isChargingRight, isScratchingLeft, isScratchingRight));
@@ -204,8 +187,8 @@ public class Player extends GameObject {
         x += velX;
 
         //Update distance
-        Stats.speederDistance += -velY;
-        Stats.CHARGE = Game.clamp(Stats.CHARGE, 0, 800);
+        distance += -velY;
+        charge = Game.clamp(charge, 0, 800);
 
 //        if ((isChargingLeft || isChargingRight) && velY < -8) {
 //            game.setCharging(true);
@@ -259,15 +242,15 @@ public class Player extends GameObject {
 
         //Render specific speeder posture
         g.setColor(Color.red);
-        if ((Stats.getKeyPress()[0][0] && Stats.getKeyPress()[0][1]) || (!Stats.getKeyPress()[0][0] && !Stats.getKeyPress()[0][1]))
+        if ((KeyInput.getKeyPress(0) && KeyInput.getKeyPress(1)) || (!KeyInput.getKeyPress(0) && !KeyInput.getKeyPress(1)))
             g.drawImage(speeder[0], getRelX(), getRelY(), 32, 48, game);
-        else if (Stats.getKeyPress()[0][0] && velX > -7)
+        else if (KeyInput.getKeyPress(0) && velX > -7)
             g.drawImage(speeder[1], getRelX(), getRelY(), 32, 48, game);
-        else if (Stats.getKeyPress()[0][0])
+        else if (KeyInput.getKeyPress(0))
             g.drawImage(speeder[2], getRelX(), getRelY(), 32, 48, game);
-        else if (Stats.getKeyPress()[0][1] && velX < 7)
+        else if (KeyInput.getKeyPress(1) && velX < 7)
             g.drawImage(speeder[3], getRelX(), getRelY(), 32, 48, game);
-        else if (Stats.getKeyPress()[0][1])
+        else if (KeyInput.getKeyPress(1))
             g.drawImage(speeder[4], getRelX(), getRelY(), 32, 48, game);
 
         //Renders charging effects
@@ -386,6 +369,22 @@ public class Player extends GameObject {
             scratching.stop();
         if (collision.isActive())
             collision.stop();
+    }
+
+    public int getCharge() {
+        return charge;
+    }
+
+    public void setCharge(int charge) {
+        this.charge = charge;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     public Queue<Tuple> getPlayerState() {

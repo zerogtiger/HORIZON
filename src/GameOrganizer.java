@@ -59,7 +59,7 @@ public class GameOrganizer {
     public void tick() {
 
         //Generate a new map if the speeder traversed through another zone
-        if (zoneCounter < Stats.speederDistance / 17000) {
+        if (zoneCounter < player.getDistance() / 17000) {
 
             //Reset the player's position to the start of the new map
             player.setX(-16);
@@ -75,7 +75,7 @@ public class GameOrganizer {
             zoneCounter++;
             System.out.println("new map");
         }
-        if (currCounter < (Stats.speederDistance+8500) / 17000) {
+        if (currCounter < (player.getDistance()+8500) / 17000) {
 
             //Generate next seed and zone type
             tempType = r.nextInt(1,3);

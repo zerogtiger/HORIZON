@@ -35,7 +35,6 @@ public class Game extends JPanel implements Runnable {
     private final Handler ahandler;
 
     private HUD hud;
-    private Stats stats;
 
     private Camera camera;
     private static Player player;
@@ -101,17 +100,16 @@ public class Game extends JPanel implements Runnable {
         ghandler = new Handler();
         ahandler = new Handler();
 
-        hud = new HUD();
-        stats = new Stats();
-
         leaderboard = new Leaderboard();
-        menu = new Menu(this, leaderboard, handler);
         keyInput = new KeyInput();
 
         player = new Player(-16, HEIGHT * 2, ID.Player, handler, 0, this);
-        phantom = new Phantom(-16, HEIGHT*2, ID.Phantom, handler, new LinkedList<>(), this);
+        phantom = new Phantom(-16, HEIGHT * 2, ID.Phantom, handler, new LinkedList<>(), this);
         pursuer = new Pursuer(player, this);
         camera = new Camera(player);
+
+        menu = new Menu(player, this, leaderboard, handler);
+        hud = new HUD(player, this);
 
         gameOrganizer = new GameOrganizer(this);
         environment = new Environment(seed, this);
@@ -195,7 +193,7 @@ public class Game extends JPanel implements Runnable {
         //If the speeder is intersecting with the collision bounds, then end the current game
         if (player.getBounds().intersects(obstacle.getCollisionBounds()) && player.getY() >= obstacle.getY() + obstacle.height) {
             menu.setFocus(0);
-            gameOver(Stats.speederDistance, seed, 0);
+            gameOver(player.getDistance(), seed, 0);
         }
 
         //If the speeder is intersecting with the sides of the obstacle, then move the speeder outside the obstacle
@@ -204,15 +202,13 @@ public class Game extends JPanel implements Runnable {
             player.setX(obstacle.getX() - 32);
             player.setVelX(0);
             player.setVelY(clamp(player.getVelY() + 10, -25, -3));
-            Stats.setKeyPress(0, 1, false);
-            Stats.setKeyPress(1, 1, false);
+            KeyInput.setKeyPress(1, false);
         } else if (player.getBounds().intersects(obstacle.getRightBounds()) && player.getY() < obstacle.getY() + obstacle.getHeight()) {
             player.setBumped(true);
             player.setX(obstacle.getX() + obstacle.width);
             player.setVelX(0);
             player.setVelY(clamp(player.getVelY() + 7, -25, -3));
-            Stats.setKeyPress(0, 0, false);
-            Stats.setKeyPress(1, 0, false);
+            KeyInput.setKeyPress(0, false);
         }
 
         //Set the charging states for the left and right sides depending on the intersection situation
@@ -274,7 +270,7 @@ public class Game extends JPanel implements Runnable {
         phantom.reset();
         if (!isSeedChanged) {
             Queue<Tuple> tempPlayerState = player.getPlayerState();
-            phantom = new Phantom(-16, HEIGHT*2, ID.Phantom, handler, tempPlayerState, this);
+            phantom = new Phantom(-16, HEIGHT * 2, ID.Phantom, handler, tempPlayerState, this);
         }
         player.setPlayerState(new LinkedList<>());
 
@@ -285,8 +281,8 @@ public class Game extends JPanel implements Runnable {
         pursuer.setDistance(10000);
 
         //Reset speeder distance travelled and charge
-        Stats.speederDistance = 0;
-        Stats.CHARGE = 0;
+        player.setDistance(0);
+        player.setCharge(0);
 
         //Reset the keyboard states
         keyInput.reset();
@@ -341,7 +337,7 @@ public class Game extends JPanel implements Runnable {
             int nextType = gameOrganizer.getTempType();
             long zoneCount = gameOrganizer.getCurrCounter();
 
-            if ((Stats.speederDistance + 8500) / 17000 == zoneCount) {
+            if ((player.getDistance() + 8500) / 17000 == zoneCount) {
 
                 offScreenBuffer.setColor(Color.white);
                 offScreenBuffer.setFont(new Font("Courier New", Font.PLAIN, 25));
@@ -596,7 +592,7 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void setSeed(int seed) {
-        if (this.seed%10000 != seed%10000) {
+        if (this.seed % 10000 != seed % 10000) {
             isSeedChanged = true;
         }
         this.seed = seed;

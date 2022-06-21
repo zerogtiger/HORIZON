@@ -20,6 +20,7 @@ public class Menu implements MouseListener {
 
     //Various game components to be referenced to
     private Handler handler;
+    private Player player;
     private Game game;
     private Leaderboard leaderboard;
 
@@ -61,7 +62,7 @@ public class Menu implements MouseListener {
     private boolean[] lastKeyboardState = new boolean[4]; // 0 for up, 1 for down, 2 for enter, 4 for esc.
 
     //Constructor
-    public Menu(Game game, Leaderboard leaderboard, Handler handler) {
+    public Menu(Player player, Game game, Leaderboard leaderboard, Handler handler) {
 
         //Initialize variables
         focus = 0;
@@ -70,6 +71,7 @@ public class Menu implements MouseListener {
         iterator = 0;
         isInvalid = false;
         this.game = game;
+        this.player = player;
         this.leaderboard = leaderboard;
         this.handler = handler;
         leaderboardEntryTextField = new TextField("Player");
@@ -176,36 +178,36 @@ public class Menu implements MouseListener {
         }
 
         //Update the button focus for the current screen if a key is pressed
-        if ((lastKeyboardState[0] != Stats.getKeyPress()[0][3] || lastKeyboardState[1] != Stats.getKeyPress()[0][4])
-                || lastKeyboardState[2] != Stats.getKeyPress()[0][5] || lastKeyboardState[3] != Stats.getKeyPress()[0][6]) {
+        if ((lastKeyboardState[0] != KeyInput.getKeyPress(3) || lastKeyboardState[1] != KeyInput.getKeyPress(4))
+                || lastKeyboardState[2] != KeyInput.getKeyPress(5) || lastKeyboardState[3] != KeyInput.getKeyPress(6)) {
 
             //Perform the button's functionality if ENTER is either pressed or lifted && is currently pressed
-            if (lastKeyboardState[2] != Stats.getKeyPress()[0][5] && Stats.getKeyPress()[0][5]) {
+            if (lastKeyboardState[2] != KeyInput.getKeyPress(5) && KeyInput.getKeyPress(5)) {
                 buttonEntered();
             }
 
             //Shift the focus upwards cyclically if UP is either pressed or lifted && is currently pressed
-            else if (lastKeyboardState[0] != Stats.getKeyPress()[0][3] && Stats.getKeyPress()[0][3]) {
+            else if (lastKeyboardState[0] != KeyInput.getKeyPress(3) && KeyInput.getKeyPress(3)) {
                 focus = (focus + buttons[menuScreen].length - 1) % buttons[menuScreen].length;
             }
 
             //Shift the focus downwards cyclically if DOWN is either pressed or lifted && is currently pressed
-            else if (lastKeyboardState[1] != Stats.getKeyPress()[0][4] && Stats.getKeyPress()[0][4]) {
+            else if (lastKeyboardState[1] != KeyInput.getKeyPress(4) && KeyInput.getKeyPress(4)) {
                 focus = (focus + 1) % buttons[menuScreen].length;
             }
 
             //Enter the Pause screen if the ESCAPE key is pressed
-            else if (lastKeyboardState[3] != Stats.getKeyPress()[0][6] && Stats.getKeyPress()[0][6] && Game.gameState == Game.state.Game) {
+            else if (lastKeyboardState[3] != KeyInput.getKeyPress(6) && KeyInput.getKeyPress(6) && Game.gameState == Game.state.Game) {
                 Game.gameState = Game.state.Pause;
             }
 
             //Must check if state changed for computer to read the actively changing key
 
             //Update all keyboard states
-            lastKeyboardState[0] = Stats.getKeyPress()[0][3];
-            lastKeyboardState[1] = Stats.getKeyPress()[0][4];
-            lastKeyboardState[2] = Stats.getKeyPress()[0][5];
-            lastKeyboardState[3] = Stats.getKeyPress()[0][6];
+            lastKeyboardState[0] = KeyInput.getKeyPress(3);
+            lastKeyboardState[1] = KeyInput.getKeyPress(4);
+            lastKeyboardState[2] = KeyInput.getKeyPress(5);
+            lastKeyboardState[3] = KeyInput.getKeyPress(6);
         }
 
         //Reset the focus for the current screen
@@ -272,7 +274,7 @@ public class Menu implements MouseListener {
             g.drawImage(Toolkit.getDefaultToolkit().getImage("appdata/images/text/distance.png"), 155, 380, 83 * 3, 5 * 3, game);
 
             g.setColor(Color.white);
-            g.drawString(String.valueOf(Stats.speederDistance), 155, 460);
+            g.drawString(String.valueOf(player.getDistance()), 155, 460);
         }
 
         //Leaderboard:
@@ -347,7 +349,7 @@ public class Menu implements MouseListener {
 
             g.setColor(Color.white);
             g.setFont(courier2);
-            g.drawString(String.valueOf(Stats.speederDistance), 155, 440);
+            g.drawString(String.valueOf(player.getDistance()), 155, 440);
         }
 
         //Main game:

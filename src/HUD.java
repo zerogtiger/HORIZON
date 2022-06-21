@@ -16,8 +16,18 @@ public class HUD {
     private int center = Game.WIDTH / 2;
     private int width = 70;
 
+    //Game components to be referenced to
+    private Game game;
+    private Player player;
+
     //Iterator to help display animation
     private int iterator;
+
+    //Constructor
+    public HUD(Player player, Game game) {
+        this.player = player;
+        this.game = game;
+    }
 
     public void tick() {
         iterator = (iterator + 1) % 120;
@@ -34,8 +44,8 @@ public class HUD {
         //Speeder charge display:
         //Speeder charge level
         g.setColor(Color.orange);
-        g.fillRect(100 + 400 - Stats.CHARGE / 2, 75, Stats.CHARGE / 2, 8);
-        g.fillRect(center + 100, 75, Stats.CHARGE / 2, 8);
+        g.fillRect(100 + 400 - player.getCharge() / 2, 75, player.getCharge() / 2, 8);
+        g.fillRect(center + 100, 75, player.getCharge() / 2, 8);
 
         //Border for speeder charge
         g.setColor(Color.white);
@@ -94,8 +104,8 @@ public class HUD {
         g.setFont(new Font("Courier New", Font.BOLD, 34));
 
         //Centering the distance
-        int digits = String.valueOf(Stats.speederDistance).length();
-        g.drawString(String.valueOf(Stats.speederDistance), 600 - 10 * digits, 85);
+        int digits = String.valueOf(player.getDistance()).length();
+        g.drawString(String.valueOf(player.getDistance()), 600 - 10 * digits, 85);
 
     }
 

@@ -13,8 +13,12 @@ import java.awt.event.*;
 
 public class KeyInput implements KeyListener {
 
+    //Boolean array to keep track of key states
+    //0 for left, 1 for right, 2 for space, 3 for up, 4 for down, 5 for enter, 6 for esc.
+    private static boolean[] keyPress;
 
     public KeyInput() {
+        keyPress = new boolean[7];
     }
 
     public void keyTyped(KeyEvent e) {
@@ -27,10 +31,8 @@ public class KeyInput implements KeyListener {
     public void reset() {
 
         //Reset every key-state to false
-        for (int i = 0; i <= 1; i++) {
-            for (int j = 0; j <= 6; j++) {
-                Stats.setKeyPress(i,j, false);
-            }
+        for (int i = 0; i <= 6; i++) {
+            keyPress[i] = false;
         }
     }
 
@@ -38,88 +40,69 @@ public class KeyInput implements KeyListener {
     //Parameters: the reported KeyEvent
     //Return: void
     public void keyPressed(KeyEvent e) {
+
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_D) {
-            Stats.debug = 1;
-        }
-        if (Stats.debug == 0) {
 
-            //Update the key-state to true if a key of interest is pressed
-            if (key == KeyEvent.VK_LEFT)
-                Stats.setKeyPress(0,0, true);
-            if (key == KeyEvent.VK_RIGHT)
-                Stats.setKeyPress(0,1, true);
-            if (key == KeyEvent.VK_SPACE)
-                Stats.setKeyPress(0,2, true);
-            if (key == KeyEvent.VK_UP)
-                Stats.setKeyPress(0,3, true);
-            if (key == KeyEvent.VK_DOWN)
-                Stats.setKeyPress(0,4, true);
-            if (key == KeyEvent.VK_ENTER)
-                Stats.setKeyPress(0,5, true);
-            if (key == KeyEvent.VK_ESCAPE)
-                Stats.setKeyPress(0,6, true);
-        } else {
-            if (key == KeyEvent.VK_LEFT)
-                Stats.setKeyPress(1,0, true);
-            if (key == KeyEvent.VK_RIGHT)
-                Stats.setKeyPress(1,1, true);
-            if (key == KeyEvent.VK_SPACE)
-                Stats.setKeyPress(1,2, true);
-            if (key == KeyEvent.VK_UP)
-                Stats.setKeyPress(1,3, true);
-            if (key == KeyEvent.VK_DOWN)
-                Stats.setKeyPress(1,4, true);
-            if (key == KeyEvent.VK_ENTER)
-                Stats.setKeyPress(1,5, true);
-            if (key == KeyEvent.VK_ESCAPE)
-                Stats.setKeyPress(1,6, true);
+        //Update the key-state to true if a key of interest is pressed
+        if (key == KeyEvent.VK_LEFT) {
+            keyPress[0] = true;
         }
-
+        if (key == KeyEvent.VK_RIGHT) {
+            keyPress[1] = true;
+        }
+        if (key == KeyEvent.VK_SPACE) {
+            keyPress[2] = true;
+        }
+        if (key == KeyEvent.VK_UP) {
+            keyPress[3] = true;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            keyPress[4] = true;
+        }
+        if (key == KeyEvent.VK_ENTER) {
+            keyPress[5] = true;
+        }
+        if (key == KeyEvent.VK_ESCAPE) {
+            keyPress[6] = true;
+        }
     }
 
     //Description: toggles the state of the released key to false if it is a key of interest
     //Parameters: the reported KeyEvent
     //Return: void
     public void keyReleased(KeyEvent e) {
+
         int key = e.getKeyCode();
-        if (key == KeyEvent.VK_D) {
-            Stats.debug = 0;
-        }
-        if (Stats.debug == 0) {
 
-            //Update the key-state to false if a key of interest is released
-            if (key == KeyEvent.VK_LEFT)
-                Stats.setKeyPress(0,0, false);
-            if (key == KeyEvent.VK_RIGHT)
-                Stats.setKeyPress(0,1, false);
-            if (key == KeyEvent.VK_SPACE)
-                Stats.setKeyPress(0,2, false);
-            if (key == KeyEvent.VK_UP)
-                Stats.setKeyPress(0,3, false);
-            if (key == KeyEvent.VK_DOWN)
-                Stats.setKeyPress(0,4, false);
-            if (key == KeyEvent.VK_ENTER)
-                Stats.setKeyPress(0,5, false);
-            if (key == KeyEvent.VK_ESCAPE)
-                Stats.setKeyPress(0,6, false);
-        } else {
-            if (key == KeyEvent.VK_LEFT)
-                Stats.setKeyPress(1,0, false);
-            if (key == KeyEvent.VK_RIGHT)
-                Stats.setKeyPress(1,1, false);
-            if (key == KeyEvent.VK_SPACE)
-                Stats.setKeyPress(1,2, false);
-            if (key == KeyEvent.VK_UP)
-                Stats.setKeyPress(1,3, false);
-            if (key == KeyEvent.VK_DOWN)
-                Stats.setKeyPress(1,4, false);
-            if (key == KeyEvent.VK_ENTER)
-                Stats.setKeyPress(1,5, false);
-            if (key == KeyEvent.VK_ESCAPE)
-                Stats.setKeyPress(1,6, false);
+        //Update the key-state to false if a key of interest is released
+        if (key == KeyEvent.VK_LEFT) {
+            keyPress[0] = false;
         }
-
+        if (key == KeyEvent.VK_RIGHT) {
+            keyPress[1] = false;
+        }
+        if (key == KeyEvent.VK_SPACE) {
+            keyPress[2] = false;
+        }
+        if (key == KeyEvent.VK_UP) {
+            keyPress[3] = false;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            keyPress[4] = false;
+        }
+        if (key == KeyEvent.VK_ENTER) {
+            keyPress[5] = false;
+        }
+        if (key == KeyEvent.VK_ESCAPE) {
+            keyPress[6] = false;
+        }
     }
 
+    public static boolean getKeyPress(int index) {
+        return keyPress[index];
+    }
+
+    public static void setKeyPress(int index, boolean state) {
+        keyPress[index] = state;
+    }
 }
