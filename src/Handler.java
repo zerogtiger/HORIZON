@@ -12,7 +12,7 @@ import java.awt.*;
 public class Handler {
 
     //List to store all GameObjects to be updated and rendered
-    LinkedList<GameObject> object = new LinkedList<>();
+    ArrayList<GameObject> object = new ArrayList<>();
 
     //Description: updates all GameObjects in the object list
     //Parameters: none
