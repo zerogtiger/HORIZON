@@ -486,7 +486,7 @@ public class Menu implements MouseListener {
             if (focus == 0) {
                 game.gameState = Game.state.Game;
                 game.reset();
-                System.out.println("Game Reset");
+//                System.out.println("Game Reset");
             } else if (focus == 1) {
                 focus = 0;
                 game.gameState = Game.state.GameReady;
@@ -574,11 +574,11 @@ public class Menu implements MouseListener {
                     game.setSeed(Integer.parseInt(seedEntryTextField.getText()));
                     game.reset();
                     game.gameState = Game.state.Game;
-                    System.out.println("Game Reset seed");
+//                    System.out.println("Game Reset seed");
                 } else if (!seedEntryTextField.isVisible()) {
                     game.gameState = Game.state.Game;
                     game.reset();
-                    System.out.println("Game Reset");
+//                    System.out.println("Game Reset");
                 }
             } else if (focus == 1) {
                 seedEntryTextField.setVisible(!seedEntryTextField.isVisible());
@@ -628,7 +628,7 @@ public class Menu implements MouseListener {
                 focus = 0;
                 game.gameState = Game.state.Game;
                 game.reset();
-                System.out.println("Game Reset");
+//                System.out.println("Game Reset");
             } else if (buttons[1][1].isOver(mx, my)) {
                 focus = 0;
                 game.gameState = Game.state.GameReady;
@@ -719,12 +719,12 @@ public class Menu implements MouseListener {
                     game.setSeed(Integer.parseInt(seedEntryTextField.getText()));
                     game.gameState = Game.state.Game;
                     game.reset();
-                    System.out.println("Game Reset");
+//                    System.out.println("Game Reset");
                 } else if (!seedEntryTextField.isVisible()) {
                     focus = 0;
                     game.gameState = Game.state.Game;
                     game.reset();
-                    System.out.println("Game Reset");
+//                    System.out.println("Game Reset");
                 }
             } else if (buttons[8][1].isOver(mx, my)) {
                 seedEntryTextField.setVisible(!seedEntryTextField.isVisible());
@@ -757,7 +757,7 @@ public class Menu implements MouseListener {
         for (String tempString : temp) {
             sb.append(tempString);
         }
-        System.out.println(Arrays.toString(temp));
+//        System.out.println(Arrays.toString(temp));
         return sb.toString();
     }
 

@@ -73,7 +73,7 @@ public class GameOrganizer {
 
             //Forward the zoneCounter
             zoneCounter++;
-            System.out.println("new map");
+//            System.out.println("new map");
         }
         if (currCounter < (player.getDistance() + 8500) / 17000) {
 

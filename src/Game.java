@@ -227,7 +227,7 @@ public class Game extends JPanel implements Runnable {
     //Return: void
     public void reset() {
 
-        System.out.println("Seed: " + seed);
+//        System.out.println("Seed: " + seed);
 
         //Reset the seed for the GameOrganizer
         gameOrganizer.setSeed(seed);
