@@ -1,5 +1,7 @@
 # HORIZON極速狂飆
-ICS3U ISU Game Assignment; written in Java JDK 17.
+ICS3U ISU Game Assignment
+
+<sub><sup>Written in Java JDK 17.</sup></sub>
 
 ## Credits & Tribute
 
