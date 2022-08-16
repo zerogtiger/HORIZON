@@ -1,4 +1,5 @@
-# HORIZON極速狂飆
+![](horizonPromotionalPrint2.png)
+
 ICS3U ISU Game Assignment
 
 <sub><sup>Written in Java JDK 17</sup></sub>
