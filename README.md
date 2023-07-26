@@ -1,4 +1,4 @@
-![](horizonPromotionalPrint2.png)
+![Promotional print](horizonPromotionalPrint2.png)
 
 ICS3U ISU Game Assignment
 
@@ -23,6 +23,8 @@ There are currently four known bugs of the game, which are listed and explained 
 - Phantom end-of-zone disappearance: This is a half-bug due to the game mechanism. At the end of a zone, the phantom, if travelling before the speeder, will disappear as it is teleported to the beginning of the map and later, followed by the speeder, during which time the phantom will reappear and to the user, it appears as if the phantom disappeared from the game for a brief second. 
 
 ## Additional Information
+
+See this game in action via the [promotional video](https://bit.ly/HorizonICS3U)!
 
 Fork this project on [GitHub](https://github.com/zerogtiger/horizon)! 
 
