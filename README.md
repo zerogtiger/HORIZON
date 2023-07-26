@@ -12,7 +12,7 @@ Thanks to JetBrains for creating Intellj, the great Java IDE, which massively im
 
 Thanks to Amplify Music for creating Launchpad, the tool used to create all in-game music.
 
-Credits of the game concept and original art design goes to PikPok. I could only do my best to replicate your great designs!
+Credits of the game concept and original art design goes to PikPok. I could only do my best to build on top of your great designs!
 
 ## Known Bugs
 
